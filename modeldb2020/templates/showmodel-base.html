@@ -1,104 +1,35 @@
-{% extends "bigrightcol.html" %}
+{% extends "bigleftcol.html" %}
 {% block sidecolumn %}
-    <div class="well">
-        <p>{{Model.notes.value}}</p>
-        {% if Model.model_type %}
-            <p><b>Model Type:</b>
-                {% for item in Model.model_type.value %}
-                    {% if not forloop.first %}
-                        ;
-                    {% endif %}
-                    <a href="/ModelList.cshtml?id={{item.object_id}}">{{item.object_name}}</a>
-                {% endfor %}
-            </p>
-        {% endif %}         
-        {% if Model.neurons %}
-            <p><b>Cell Type(s):</b>
-                {% for item in Model.neurons.value %}
-                    {% if not forloop.first %}
-                        ;
-                    {% endif %}
-                    <a href="/ModelList.cshtml?id={{item.object_id}}">{{item.object_name}}</a>
-                {% endfor %}
-            </p>
-        {% endif %}         
-        {% if Model.currents %}
-            <p><b>Currents:</b>
-                {% for item in Model.currents.value %}
-                    {% if not forloop.first %}
-                        ;
-                    {% endif %}
-                    <a href="/ModelList.cshtml?id={{item.object_id}}">{{item.object_name}}</a>
-                {% endfor %}
-            </p>
-        {% endif %}
-        {% if Model.receptors %}
-            <p><b>Receptors:</b>
-                {% for item in Model.receptors.value %}
-                    {% if not forloop.first %}
-                        ;
-                    {% endif %}
-                    <a href="/ModelList.cshtml?id={{item.object_id}}">{{item.object_name}}</a>
-                {% endfor %}
-            </p>
-        {% endif %}
-        {% if Model.genes %}
-            <p><b>Genes:</b>
-                {% for item in Model.genes.value %}
-                    {% if not forloop.first %}
-                        ;
-                    {% endif %}
-                    <a href="/ModelList.cshtml?id={{item.object_id}}">{{item.object_name}}</a>
-                {% endfor %}
-            </p>
-        {% endif %}
-        {% if Model.transmitters %}
-            <p><b>Transmitters:</b>
-                {% for item in Model.transmitters.value %}
-                    {% if not forloop.first %}
-                        ;
-                    {% endif %}
-                    <a href="/ModelList.cshtml?id={{item.object_id}}">{{item.object_name}}</a>
-                {% endfor %}
-            </p>
-        {% endif %}
-        {% if Model.model_concept %}
-            <p><b>Model Concept(s):</b>
-                {% for item in Model.model_concept.value %}
-                    {% if not forloop.first %}
-                        ;
-                    {% endif %}
-                    <a href="/ModelList.cshtml?id={{item.object_id}}">{{item.object_name}}</a>
-                {% endfor %}
-            </p>
-        {% endif %}  
-        {% if Model.modeling_application %}
-            <p><b>Simulation Environment:</b>
-                {% for item in Model.modeling_application.value %}
-                    {% if not forloop.first %}
-                        ;
-                    {% endif %}
-                    <a href="/ModelList.cshtml?id={{item.object_id}}">{{item.object_name}}</a>
-                {% endfor %}
-            </p>
-        {% endif %}        
-
-        {% if Model.implemented_by %}
-            <p><b>Implementer(s):</b>
-                {% for item in Model.implemented_by.value %}
-                    {% if not forloop.first %}
-                        ;
-                    {% endif %}
-                    <a href="/ModelList.cshtml?id={{item.object_id}}">{{item.object_name}}</a>
-                {% endfor %}
-            </p>
-        {% endif %}        
-    </div>
+<div class="well">
+    ShapePlot goes here
+    {% block belowshapeplot %}
+    {% endblock %}
+</div>
 {% endblock %}
 
 
 {% block header %}
-<h3>{{Model.name}} &nbsp; <a href="/eavBinDown?o={{Model.id}}"><i title="Download zip" class="fas fa-download"></i></a></h3><br/>
+<h3 style="text-align:center">{{Model.name}} &nbsp; <a href="/eavBinDown?o={{Model.id}}"><i title="Download zip" class="fas fa-download"></i></a></h3><br/>
+
+<ul class="nav nav-tabs green" role="tablist">
+    <li class="nav-item">
+      <a href="?model={{Model.id}}&tab=1" class="nav-link {% if tab == 1 %} active {% endif %}" role="tab" aria-expanded="true" aria-selected="true">Overview</a>
+    </li>
+    <li class="nav-item">
+        <a href="?model={{Model.id}}&tab=2" class="nav-link {% if tab == 2 %} active {% endif %}" role="tab"  aria-expanded="false" aria-selected="false">Files</a>
+      </li>
+    <li class="nav-item">
+      <a href="?model={{Model.id}}&tab=3" class="nav-link {% if tab == 3 %} active {% endif %}" role="tab" aria-expanded="false" aria-selected="false">Mechanisms</a>
+    </li>
+    <li class="nav-item dropdown">
+    </li><li class="nav-item">
+      <a href="?model={{Model.id}}&tab=4" class="nav-link {% if tab == 4 %} active {% endif %}" role="tab" aria-expanded="false" aria-selected="false">Parameters</a>
+    </li>
+    <li class="nav-item">
+        <a href="?model={{Model.id}}&tab=7" class="nav-link {% if tab == 7 %} active {% endif %}" role="tab" aria-expanded="false" aria-selected="false">Citations</a>
+      </li>
+    
+  </ul>
 
 {% endblock %}
 

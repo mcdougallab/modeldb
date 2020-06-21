@@ -1,64 +1,113 @@
 {% extends "showmodel-base.html" %}
 
-{% block maincol %}
-<ul class="nav nav-tabs">
-    <li class="nav-item"><a class="nav-link active" href="/modeldb/showmodel?model={{Model.id}}">Files</a></li>
-    <li class="nav-item"><a class="nav-link" href="/modeldb/showmodel?model={{Model.id}}&tab=7">Citations</a></li>
-    <li class="nav-item"><a class="nav-link disabled" href="#">ModelView</a></li>
-    {% if Model.simPFid %}
-      <li class="nav-item"><a class="nav-link" href="http://sim.neuroinf.jp/modules/xoonips/detail.php?item_id={{Model.simPFid.value}}">Simulation Platform <sup><i class="fas fa-external-link-alt"></i></sup></a></li>
-    {% endif %}
-    {% if Model.gitrepo %}
-      <li class="nav-item"><a class="nav-link" href="https://github.com/ModelDBRepository/{{Model.id}}">Versions <sup><i class="fas fa-external-link-alt"></i></sup></a></li>
-    {% endif %}  
-</ul>
+{% block leftcol %}
 
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-        {% for breadcrumb in breadcrumbs %}
-            <li class="breadcrumb-item {% if forloop.last %}active" aria-current="page{% endif %}">{{breadcrumb | safe}}</li>
-        {% endfor %}
-        {% if not is_folder %}
-            <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-                <a class="btn" style="margin-top: -7px" href="/getModelFile?model={{Model.id}}&file={{filename}}"><i class="fas fa-file-download" title="Download file"></i></a>
-            </div>
-        {% else %}
-            <li/>
-        {% endif %}
-    </ol>
-</nav>
-{% if is_folder %}
-    <hr/>
-    <ul class="nav thin" style="display: block !important;">
-        {% for item in content %}
-            {% if item.name %}
-                <li style="padding-bottom: 0.5em"><a href="/showmodel?model={{Model.id}}&file={{filename}}/{{item.name}}">
-                    {% if item.type == 'jpg' or item.type == 'pdf' or item.type == 'gif' %}
-                        <i class="fas fa-file-image"></i>
-                    {% elif item.type == 'folder' %}
-                        <i class="fas fa-folder"></i>
-                    {% elif item.type == 'py' %}
-                        <i class="fab fa-python"></i>
-                    {% elif item.type == 'js' %}
-                        <i class="fab fa-js"></i>
-                    {% elif item.type == 'hoc' or item.type == 'mod' or item.type == 'cpp' or item.type == 'h' %}
-                        <i class="far fa-file-code"></i>
-                    {% else %}
-                        <i class="fas fa-file"></i>
-                    {% endif %}
-                    &nbsp; {{item.name}}
-                </a></li>
-            {% endif %}
-        {% endfor %}
-    </ul>
-{% else %}
-    {% if extension == 'jpg' or extension == 'jpeg' or extension == 'gif' or extension == 'png' or extension == 'bmp' %}
-        <img src="/getModelFile?model={{Model.id}}&file={{filename}}"></img>
-    {% else %}
-        <!-- iframe height solution adapted from https://stackoverflow.com/questions/819416/adjust-width-and-height-of-iframe-to-fit-with-content-in-it -->
-        <!-- TODO: replace with something that handles window resizes -->
-        <iframe src="/getModelFile?model={{Model.id}}&file={{filename}}&embed=True" onload='javascript:(function(o){o.style.height=(64+o.contentWindow.document.body.scrollHeight)+"px";}(this));' style="height:200px;width:100%;border:none;overflow:hidden;"></iframe>
+<div>
+    <p>{{Model.notes.value}}</p>
+    {% if Model.model_type %}
+        <p><b>Model Type:</b>
+            {% for item in Model.model_type.value %}
+                {% if not forloop.first %}
+                    ;
+                {% endif %}
+                <a href="/ModelList.cshtml?id={{item.object_id}}">{{item.object_name}}</a>
+            {% endfor %}
+        </p>
+    {% endif %}         
+    {% if Model.neurons %}
+        <p><b>Cell Type(s):</b>
+            {% for item in Model.neurons.value %}
+                {% if not forloop.first %}
+                    ;
+                {% endif %}
+                <a href="/ModelList.cshtml?id={{item.object_id}}">{{item.object_name}}</a>
+            {% endfor %}
+        </p>
+    {% endif %}         
+    {% if Model.currents %}
+        <p><b>Currents:</b>
+            {% for item in Model.currents.value %}
+                {% if not forloop.first %}
+                    ;
+                {% endif %}
+                <a href="/ModelList.cshtml?id={{item.object_id}}">{{item.object_name}}</a>
+            {% endfor %}
+        </p>
     {% endif %}
-{% endif %}
+    {% if Model.receptors %}
+        <p><b>Receptors:</b>
+            {% for item in Model.receptors.value %}
+                {% if not forloop.first %}
+                    ;
+                {% endif %}
+                <a href="/ModelList.cshtml?id={{item.object_id}}">{{item.object_name}}</a>
+            {% endfor %}
+        </p>
+    {% endif %}
+    {% if Model.genes %}
+        <p><b>Genes:</b>
+            {% for item in Model.genes.value %}
+                {% if not forloop.first %}
+                    ;
+                {% endif %}
+                <a href="/ModelList.cshtml?id={{item.object_id}}">{{item.object_name}}</a>
+            {% endfor %}
+        </p>
+    {% endif %}
+    {% if Model.transmitters %}
+        <p><b>Transmitters:</b>
+            {% for item in Model.transmitters.value %}
+                {% if not forloop.first %}
+                    ;
+                {% endif %}
+                <a href="/ModelList.cshtml?id={{item.object_id}}">{{item.object_name}}</a>
+            {% endfor %}
+        </p>
+    {% endif %}
+    {% if Model.model_concept %}
+        <p><b>Model Concept(s):</b>
+            {% for item in Model.model_concept.value %}
+                {% if not forloop.first %}
+                    ;
+                {% endif %}
+                <a href="/ModelList.cshtml?id={{item.object_id}}">{{item.object_name}}</a>
+            {% endfor %}
+        </p>
+    {% endif %}  
+    {% if Model.modeling_application %}
+        <p><b>Simulation Environment:</b>
+            {% for item in Model.modeling_application.value %}
+                {% if not forloop.first %}
+                    ;
+                {% endif %}
+                <a href="/ModelList.cshtml?id={{item.object_id}}">{{item.object_name}}</a>
+            {% endfor %}
+        </p>
+    {% endif %}        
+
+    {% if Model.implemented_by %}
+        <p><b>Implementer(s):</b>
+            {% for item in Model.implemented_by.value %}
+                {% if not forloop.first %}
+                    ;
+                {% endif %}
+                <a href="/ModelList.cshtml?id={{item.object_id}}">{{item.object_name}}</a>
+            {% endfor %}
+        </p>
+    {% endif %}        
+</div>
+<hr width="75%">
+
+<!-- iframe height solution adapted from https://stackoverflow.com/questions/819416/adjust-width-and-height-of-iframe-to-fit-with-content-in-it -->
+<!-- TODO: replace with something that handles window resizes -->
+<iframe src="/getModelFile?model={{Model.id}}&file={{filename}}&embed=True" onload='javascript:(function(o){o.style.height=(64+o.contentWindow.document.body.scrollHeight)+"px";}(this));' style="height:200px;width:100%;border:none;overflow:hidden;"></iframe>
+
 {% endblock %}
 
+{% block belowshapeplot %}
+<hr width="75%"/>
+{% if Model.simPFid %}
+    <a href="http://sim.neuroinf.jp/modules/xoonips/detail.php?item_id={{Model.simPFid.value}}">Simulation Platform <sup><i class="fas fa-external-link-alt"></i></sup></a><br>
+{% endif %}
+<a href="https://github.com/ModelDBRepository/{{Model.id}}">View on GitHub <sup><i class="fas fa-external-link-alt"></i></sup></a><br>
+{% endblock %}

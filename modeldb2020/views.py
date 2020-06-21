@@ -97,9 +97,12 @@ def showmodel(request):
 
     if tab_id != 7:
         filename = request.GET.get('file')
-        if filename is None:
+        if tab_id != 2:
             filename = model.readme_file
-        filename = filename.replace('\\', '/').strip('/')
+            filename = filename.replace('\\', '/').strip('/')
+        elif tab_id == 2 and filename is None:
+            filename = model.readme_file
+            filename = filename.replace('\\', '/').strip('/').split('/')[0]
 
         original_file_valid = model.has_path(filename)
         if not original_file_valid:
@@ -109,7 +112,7 @@ def showmodel(request):
         filename = filename.split('/')
         breadcrumbs = []
         for i, name in enumerate(filename):
-            link = '/showmodel?model=%s&file=%s' % (model_id, '/'.join(filename[0: i + 1]))
+            link = '/showmodel?tab=2&model=%s&file=%s' % (model_id, '/'.join(filename[0: i + 1]))
             breadcrumbs.append('<a href="%s">%s</a>' % (link, name))
         if original_file_valid:
             breadcrumbs[-1] = name
@@ -132,9 +135,13 @@ def showmodel(request):
             'is_folder': is_folder,
             'content': content,
             'filename': original_filename,
+            'tab': tab_id,
             'extension': original_filename.split('.')[-1].lower()
         }
-        return render(request, 'showmodel.html', context)
+        if tab_id == 2:
+            return render(request, 'showmodel2.html', context)
+        else:
+            return render(request, 'showmodel.html', context)
     else:
         papers = model.papers
         references = [[paper for paper in model_paper.references] for model_paper in papers]
@@ -155,6 +162,7 @@ def showmodel(request):
         context = {
             'title': 'ModelDB: Model Citations',
             'Model': model,
+            'tab': tab_id,
             'citation_data': citation_data
         }
         return render(request, 'showmodel7.html', context)
