@@ -10,6 +10,7 @@ mongodb = MongoClient()
 sdb = mongodb[settings.security['db_name']]
 sdb.authenticate(settings.security['mongodb_user'], settings.security['mongodb_pw'])
 
+# TODO: force object_id to be string here so we don't have to do it later
 def load_collection(name):
     new_collection = {str(item['id']): item for item in getattr(sdb, name).find()}
     # expand parent data (if any) into reciprocal parent-child data
@@ -53,6 +54,16 @@ class ModelDB(models.Model):
     
     def has_model(self, id_):
         return id_ in modeldb
+
+    def object_by_id(self, object_id):
+        object_id = str(object_id)
+        test_list = [modeldb, currents, genes, regions, receptors, transmitters, simenvironments, modelconcepts, modeltypes, celltypes, papers]
+        classes = [Model, Current, Gene, Region, Receptor, Transmitter, SimEnvironment, ModelConcept, ModelType, CellType, Paper]
+        for test, kind in zip(test_list, classes):
+            if object_id in test:
+                return kind(object_id)
+        return None
+
     
     def model(self, id_):
         return Model(id_)
@@ -100,7 +111,7 @@ def hasanytitle(present, wanted, add_star=False):
 
 class SenseLabClass:
     def __init__(self, _id):
-        self._id = _id
+        self._id = str(_id)
     
     @property
     def name(self):
@@ -126,7 +137,8 @@ class SenseLabClass:
         for model_id, data in modeldb.items():
             if self.attr_name in data:
                 for obj in data[self.attr_name]['value']:
-                    if obj['object_id'] == self._id:
+                    # TODO: see the TODO on load_collection that will allow removing this str()
+                    if str(obj['object_id']) == self._id:
                         result.append({'id': model_id, 'name': data['name']})
                         break
         return sorted(result, key=lambda item: item['name'])
@@ -297,8 +309,114 @@ class Model:
         return self._readme_file, self._file_hierarchy
 
 
+class Paper:
+    def __init__(self, paper_id):
+        self._id = paper_id
+    
+    @property
+    def _raw(self):
+        return papers[self._id]
 
+    @property
+    def authors(self):
+        try:
+            return [item['object_name'] for item in self._raw['authors']['value']]
+        except:
+            return ''
+    
+    @property
+    def year(self):
+        try:
+            return self._raw['year']['value']
+        except:
+            return ''
 
+    @property
+    def model_link(self):
+        try:
+            return self._raw['model_link']
+        except:
+            return ''
+    
+    @property
+    def title(self):
+        try:
+            return self._raw['title']['value']
+        except:
+            return ''
+
+    @property
+    def journal(self):
+        try:
+            return self._raw['journal']['value']    
+        except:
+            return ''
+
+    @property
+    def volume(self):
+        try:
+            return self._raw.get('volume', {'value': ''})['value']    
+        except:
+            return ''
+
+    @property
+    def url(self):
+        try:
+            return self._raw['url']['value']
+        except:
+            return ''
+
+    @property
+    def doi(self):
+        try:
+            return self._raw['doi']['value']
+        except:
+            return ''
+
+    @property
+    def pubmed(self):
+        try:
+            return self._raw['pubmed_id']['value']
+        except:
+            return ''
+
+    @property
+    def html(self):
+        url = self.doi
+        if not url:
+            url = self.url
+        else:
+            url = 'https://doi.org/' + url
+        
+        if url:
+            link_prefix = '<a href="{}">'.format(url)
+            link_suffix = '</a>'
+        else:
+            link_prefix = link_suffix = ''
+
+        pubmed = self.pubmed
+        if pubmed:
+            pubmed = ' [<a href="https://www.ncbi.nlm.nih.gov/pubmed?holding=modeldb&term={}">PubMed</a>]'.format(pubmed)
+
+        return ', '.join(self.authors) + '. ({}). '.format(self.year) + self.title + ' <i>' + link_prefix + self.journal + link_suffix + '</i> ' + self.volume + pubmed
+    
+    def __getitem__(self, item):
+        return getattr(self, item)
+    
+    @property
+    def references(self):
+        return [Paper(item['object_id']) for item in self._raw['references']['value']]
+    
+    @property
+    def citations(self):
+        if self._id in cites_paper_unsorted:
+            return [Paper(item) for item in cites_paper_unsorted[self._id]]
+        else:
+            return []
+    
+    @property
+    def name(self):
+        return self._raw['name']
 
 
 refresh()

@@ -31,18 +31,16 @@ def modellist(request):
     print('modellist')
     if object_id is None:
         return listbymodelname(request)
-    '''
+    
     obj = ModelDB.object_by_id(object_id)
     print(obj)
     if obj is None:
         return listbymodelname(request)
     context = {
-        'title': 'ModelDB: Models that contain {}'.format(obj.name),
+        'title': f'ModelDB: Models that contain {obj.name}',
         'obj': obj
     }
-    return render(request, 'modeldb/modellist.html', context)
-    '''
-    return HttpResponse("Not implemented")
+    return render(request, 'modellist.html', context)
 
 def listbymodelname(request):
     context = {
