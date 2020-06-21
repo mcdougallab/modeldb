@@ -1,0 +1,25 @@
+{% extends "main.html" %}
+
+{% block head %}
+    <style>
+        td {
+            padding-right: 1em;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <form method="post" action="/login">
+        {% csrf_token %} 
+        <input name="next" type="hidden" value="{{next}}" />
+        <table>
+            <tr>
+                <td>Username</td><td><input type="text" name="username" id="username" value="" style="width:10em;"/></td>
+            </tr>
+            <tr>
+                <td>Password</td><td><input type="password" name="password" id="password" value="" style="width:10em;"/></td>
+            </tr>
+        </table>
+        <input type="submit" name="login" id="login" value="Login">
+    </form>
+{% endblock %}

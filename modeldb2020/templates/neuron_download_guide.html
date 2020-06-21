@@ -1,0 +1,129 @@
+{% extends "main.html" %}
+
+{% block head %}
+<style>
+.modellist>li {
+    padding-top: 1em;
+}
+.spaceabove {
+    padding-top: 0.5em;
+    display: block;
+}
+</style>
+    {% endblock %}
+{% block content %}
+<div class="row">
+        <div class="col-lg-12">
+            <div style="padding-top:20px">
+                <div style="padding-top:20px">
+                            
+
+
+
+
+                    <h2>
+                    Help on How to Download and Run NEURON Models from ModelDB</h2>
+                    
+                    <p>
+                      NEURON: <a href="http://www.neuron.yale.edu/neuron/download">If you do
+                    not already have NEURON click here 
+                    to go to the download and install NEURON page.</a>
+                    <br>
+                    After you have downloaded and extraced the zip archive from ModelDB:
+                    Change directory (cd) to the directory that contains the mosinit.hoc file and if under unix 
+                    type nrnivmodl and press enter to compile the mechanism (.mod)  files. If under windows run mknrndll to
+                    compile the mod  files. On the mac drag the model folder to the mknrndll  application. Then the
+                    model is ready to be  run. A default way to run the model is given by the mosinit.hoc file
+                    (which is executed on startup during Auto-Launch) and is executed by either double clicking on
+                    the file (PC or MAC) or by typing nrngui mosinit.hoc on the command line (PC or unix).  Check
+                    the readme file for more information on running the model; sometimes a startup file name is identified
+                    in the readme (see below).
+                    
+                    
+                    </p><p>
+                    <b>RUNNING NEURON MODELS:</b>
+                    </p><ul>
+                    Platform specific help for running NEURON models.<br>
+                    <br>
+                    Unix/Linux:<br>
+                    1. download the zip file<br>
+                    2. unzip name.zip<br>
+                    3. cd name<br>
+                    4. nrnivmodl<br>
+                    5. nrniv mosinit.hoc (or nrniv -python mosinit.py) or replace mosinit.hoc with other startup file name.<br>
+                    <br>
+                    MAC OS X:<br>
+                    1. download the zip file <br>
+                    2. unzip by double clicking on new icon<br>
+                    3. drag new folder (folder A) over mknrndll icon - this creates a nested folder (folder A/x86_64)<br>
+                    4. open folder A and locate mosinit or other startup file<br>
+                    5. drag file called mosinit.hoc (or other startup file) over 'nrngui' icon (if file is mosinit.py drag over 'nrngui-python')<br>
+                    <br>
+                    Windows:<br>
+                    1. download the zip file<br>
+                    2. use mknrndll to compile the mod files<br>
+                    3. move the nrnmech.dll file to the same folder containing the mosinit.hoc (or other startup file).<br>
+                    4. double click the mosinit.hoc (or other startup file).<br>
+                    <br>  
+                    Check the readme file for more information on running the model.
+                    <br>
+                    </ul>
+                    
+                    <p>
+                    <b>AUTO-LAUNCHING MODELS:</b>
+                    
+                    </p><ul>Start by clicking on the "Auto-Launch button".  If <a href="http://www.neuron.yale.edu/neuron/download">
+                    NEURON 5.1 or above
+                    is installed</a> on your PC the model will automatically download and start executing (if you
+                    are using Internet Explorer) after you press return a couple of 
+                    times to confirm that this is what you
+                    really want to do. Under Firefox and many other browsers when you click the auto-launch button, the browser will present you with a list of options.
+                    Click the checkbox at the bottom that says always do this action and select to open an application (assuming that NEURON is installed).
+                    Browse to the mos2nrn file (mos2nrn.exe in windows, mos2nrn in unix, or mos2nrn.app in MAC OS X) and select that
+                    (under the directories c:/nrn/bin in windows, ~/neuron/nrn/i686/bin or /usr/local/nrn/i686/bin (i686 may be different on your platform, e.g. x86_64) in unix, or 
+                    the /Applications/NEURON-X.Y/ in MAC OS X).
+                    <br>
+                    Technical note: you will probably not need to but if you find a browser menu where you
+                    would like to set a MIMEtype, use "application/mos2nrn" and Suffixes "nrnzip". You can enter "NEURON archive" under description but this
+                    is for humans to read and unnecessary for function.Then press OK to close the boxes.
+                    
+                    Historical note: mosinit is named for Mosaic initialization.  Mosaic was an early (1993) internet browser.
+                    </ul>
+                    
+                    <p>
+                    <b>WARNING:</b>
+                    
+                    </p><ul> Running models on your machine is inherently
+                    insecure since models are able to execute any program or script
+                    consistent with the permissions of the
+                    user. We make a good faith effort at&nbsp;the ModelDB&nbsp;site to publicly provide
+                    models that are associated with published papers and do not
+                    knowingly provide models containing malicious or destructive
+                    code, viruses, worms, etc.  We take several steps to ensure the
+                    safety of running our publicly available models.  
+                    These include making a cursory examination
+                    of each models code, test-running each model, and not 
+                    accepting anonymous models.
+                    However if we were "hacked" our verified files
+                    might be replaced with malicious ones.
+                    Therefore please inform us if running a model 
+                    causes any kind of problem on your machine
+                    so that we may remove the model as soon as possible from the database.
+                    It is also possible for you to "audit" the auto-launched programs.  The
+                    auto-launched files are identical to the zip files except for having their name
+                    and MIME type changed (this allows browsers to send them to a program
+                    for execution rather than prompting to save them as a file). </ul>
+                    
+                    
+                    <br>
+                    Please do not hesitate to email the <i><a href="mailto:tom.morse@yale.edu?Subject=ModelDB:">ModelDB Administrator</a></i>
+                    to ask questions, suggest improvements,or send comments.
+                    <br><font size="-1">Last Modified:&nbsp;<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%B %d, %Y" startspan -->July 29th, 2015</font><!--webbot bot="Timestamp" endspan i-checksum="30095" -->
+                    
+                    
+                    
+                                            </div>
+                                            </div></div></div>                       
+
+
+{% endblock %}

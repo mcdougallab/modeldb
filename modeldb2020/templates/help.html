@@ -1,0 +1,313 @@
+{% extends "main.html" %}
+
+{% load static %}
+
+
+{% block head %}
+<style>
+.modellist>li {
+    padding-top: 1em;
+}
+.spaceabove {
+    padding-top: 0.5em;
+    display: block;
+}
+</style>
+    {% endblock %}
+{% block content %}
+<div class="row">
+        <div class="col-lg-12">
+            <div style="padding-top:20px">
+                <h2>Frequently asked questions</h2>
+                <h4>Citations</h4>
+                <a class="spaceabove" data-toggle="collapse" href="#citemodeldb">How do I cite ModelDB?</a>
+                <div class="collapse indented" id="citemodeldb">
+                    <div class="card card-body">
+                        <p>To cite ModelDB, we suggest the following recent paper:</p>
+                        <p class="indented">
+                            McDougal RA, Morse TM, Carnevale T, Marenco L, Wang R, Migliore M, Miller PL, Shepherd GM, Hines ML. 
+                            <a href="http://doi.org/10.1007/s10827-016-0623-7">Twenty years of ModelDB and beyond: building essential modeling tools for the future of neuroscience.</a>
+                            <i>J Comput Neurosci</i>. 2017; 42(1):1-10.
+                        </p>
+                        <p>For examples when using code from ModelDB or sharing code on ModelDB, see our <a href="/modeldb/howtocite">how to cite</a> page, linked from the bottom of every ModelDB page.</p>
+                    </div>
+                </div>
+                <a class="spaceabove" data-toggle="collapse" href="#citeusedmodel">How do I cite a model that I used from ModelDB?</a>
+                <div class="collapse indented" id="citeusedmodel">
+                    <div class="card card-body">
+                        <p>If you use models from ModelDB, or information derived from those models, you should cite both ModelDB and the paper(s) that described the models. These papers appear under "reference(s):" in the model description page (ShowModel). Here is an example:
+                        </p>
+                        <p class="indented">(after citing the papers that the models came from) ... "These network models used in the present study were obtained from ModelDB (McDougal et al, 2017; accession numbers 76883, 83514, and 83562)."</p>
+                    </div>
+                </div>
+                
+                <h4>Sharing models</h4>
+                <a class="spaceabove" data-toggle="collapse" href="#sharereviewers">Can I share the source code for my submitted model publication with the reviewers?</a>
+                <div class="collapse indented" id="sharereviewers">
+                    <div class="card card-body">
+                        <p>Yes. You may upload your source code as a private model on ModelDB; simply include the read-only password in your cover letter to the editor when submitting your manuscript.
+                        </p>
+                    </div>
+                </div>
+                <a class="spaceabove" data-toggle="collapse" href="#unpublished">Can I make an unpublished or under review model publicly available?</a>
+                <div class="collapse indented" id="unpublished">
+                    <div class="card card-body">
+                        <p>No. You can however use a read-only password (access code) to allow reviewers or collaborators see your model before it is made public. There is also a write access password that you can assign to share with collaborators.
+                        </p>
+                    </div>
+                </div>
+                <a class="spaceabove" data-toggle="collapse" href="#sharecode">How do I mention that my model's code is available on ModelDB in a paper?</a>
+                <div class="collapse indented" id="sharecode">
+                    <div class="card card-body">
+                        <p>When you use ModelDB to provide models from your publications you should include a statement in the text of your paper similar to one of the following examples:</p>
+                        <p class="indented">"Source code is available in ModelDB (McDougal et al. 2017) at http://modeldb.yale.edu/3454."</p>
+                        <p class="indented">"The ModelDB (McDougal et al. 2017) accession number for the Kv3.1 channel models reported in this paper is 3454."</p>
+                        <p>See <a data-toggle="collapse" href="#citemodeldb">How do I cite ModelDB?</a> above for the McDougal et al. 2017 citation.</p>
+                    </div>
+                </div>
+                
+                
+                
+                <a class="spaceabove" data-toggle="collapse" href="#howprepare">How should I prepare my model zip file for upload?</a>
+                <div class="collapse indented" id="howprepare">
+                    <div class="card card-body">
+                        <p>
+                            Note: For extra help specific for NEURON models, click <a href="https://senselab.med.yale.edu/ModelDB/guide_NEURON_upload.html">here</a>.
+                        </p>
+                        <p>
+                                </p><ol>
+                        <li>Create a directory that contains all the necessary model files and subdirectories.
+                        </li><li>
+                            In the same directory, put a file (called readme.html, index.html, readme.txt, or README)
+                            that contains specific information and instructions
+                            on how to use the model. HTML is best because it allows formatting, images, links, and word-wrap.
+                            ModelDB will display this file by default in the Model Files window of the model description page
+                            (ShowModel.cshtml).
+                        </li><li>
+                            Zip up the directory. On macOS (do not use the method of right-clicking to select Compress "Folder" because
+                            it makes an archive which contains extra folders __MACOSX and files .DS_Store only used by the mac) and
+                            unix/linux systems an appropriate terminal window command
+                            for creating a zip file called ca1neuron.zip from a directory ca1nrn would be
+                            <br><br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<tt>zip -r ca1neuron.zip ca1nrn</tt>
+                            <br><br>
+                            On MSWin systems create your zip file by right clicking in the Windows Explorer dialog box on the background of the right part of
+                            the screen where your model files top level folder is displayed.  Select "Send to" and then mouse off to the side to select "compressed (zipped) folder" from the pop-up menu.
+                            If desired, change the name
+                            of the newly created zip file making sure you retain the ".zip" file extension.
+                        </li><li>The zip file is now ready to be uploaded to ModelDB.
+                    </li></ol>
+                
+                        <p></p>
+                    </div>
+                </div>
+                
+                
+                <a class="spaceabove" data-toggle="collapse" href="#howsubmit">How do I submit a model to ModelDB?</a>
+                <div class="collapse indented" id="howsubmit">
+                    <div class="card card-body">
+                        <p><b>Step 0 (optional):</b> Log in to ModelDB. This is not required, however it will make it easier for you to keep track of your models later.</p>
+                        <p><b>Step 1:</b> On the ModelDB homepage, click "<a href="https://senselab.med.yale.edu/ModelDB/SubmitModel.cshtml">Submit Model</a>" to begin model submission.</p>
+                        <center><img src="{% static "modeldb/modeldb-homepage.png" %}" style="width: 30em; max-width:100%"></center>
+                        <p><b>Step 2:</b> Enter your name and email address (so we can reach you), upload a zip file containing your model code, and (if not logged in) enter a password. Enter the citation information for your model in any format, if known. Note: only models with a valid citation can be made publicly available, however unpublished model codes may be shared with reviewers, collaborators, etc by entering a read access code.</p>
+                        <center><img src="{% static "modeldb/automatedpart2.png" %}" style="width: 30em; max-width:100%"></center>
+                        <p><b>Step 3:</b> Click "Let us find ModelDB keywords for you!" and paste in the abstract for the paper that goes with your model and/or enter additional keywords describing your model.</p>
+                        <center><img src="{% static "modeldb/automatedpart3.png" %}" style="width: 30em; max-width:100%"></center>
+                        <p><b>Step 4:</b> Click "Submit", review the suggested metadata tags, deselect any that do not describe your model, and click "accept selected keywords".</p>
+                        <center><img src="{% static "modeldb/automatedpart4.png" %}" style="width: 30em; max-width:100%"></center>
+                        <p><b>Step 5:</b> Review the categorized metadata, add additional metadata (e.g. if your model has sodium channels but those were not previously suggested, annotate this at this time). This is not strictly required, however the more relevant metadata you include, the easier it will be for others to find your model. Click "submit" when finished. You will receive an email with links for accessing your model.</p>
+                        <center><img src="{% static "modeldb/automatedpart5.png" %}" style="width: 30em; max-width:100%"></center>
+                        <p><b>Step 6 (optional):</b> Follow the prompts to provide additional information about your ion channel models for Ion Channel Genealogy.</p>
+                        <p><b>Note:</b> At this point, your model is not yet publicly accessible. If the accompanying paper is published, click "request to make public" on the model page to request review by a curator in preparation to make the model public. We may contact you if we have questions.</p>
+                    </div>
+                </div>
+                
+                
+                
+                <a class="spaceabove" data-toggle="collapse" href="#missingmodel">Why isn't my newly created model appearing in search, etc?</a>
+                <div class="collapse indented" id="missingmodel">
+                    <div class="card card-body">
+                        <p>All models are created in private mode, and they remain that way until you request that they be made public. Do this by selecting "request to make public" on the ShowModel page. A curator will then review your model and may contact you with questions before making it public.</p>
+                    </div>
+                </div>
+                
+                <a class="spaceabove" data-toggle="collapse" href="#makepublic">How do I request to make my model publicly available?</a>
+                <div class="collapse indented" id="makepublic">
+                    <div class="card card-body">
+                        <p>All models are created in private mode, and they remain that way until you request that they be made public. Do this by selecting "request to make public" on the ShowModel page. A curator will then review your model and may contact you with questions before making it public.</p>
+                    </div>
+                </div>
+                
+                <a class="spaceabove" data-toggle="collapse" href="#viewprivate">How do I view my private models?</a>
+                <div class="collapse indented" id="viewprivate">
+                    <div class="card card-body">
+                        <p>If the models were created while you were logged in, log in then click <a href="https://senselab.med.yale.edu/ModelDB/ListByModelName.cshtml?c=19&amp;sm=p">Show my private models</a> on the navigation pane (on wide windows, this is displayed in the left column; otherwise navigation is available under the site menu).</p>
+                        <p>The <a href="https://senselab.med.yale.edu/ModelDB/forgotSubmittedModels.cshtml">forgot submitted models</a> page allows you to receive an email listing all private models associated with your email address. If you have forgotten the access code for a given model, you can click on the model's link in the email and then select "forgot access code". The next page will prompt you to reenter your email address; doing so and clicking submit will send you an email with a password reset link.</p>
+                    </div>
+                </div>
+                
+                <a class="spaceabove" data-toggle="collapse" href="#changemodel">Can I edit a public model?</a>
+                <div class="collapse indented" id="changemodel">
+                    <div class="card card-body">
+                        <p>
+                            It is not possible to directly change a model after it is made public, due to the need to keep the public models curated. Instead, email the ModelDB Administrator (link in the footer) with the requested changes. A curator may contact you for additional information. Once accepted, the changes become the default version and all previous versions remain accessible via git.
+                        </p>
+                    </div>
+                </div>
+                
+                <h4>Using ModelDB</h4>
+                
+                <a class="spaceabove" data-toggle="collapse" href="#whatdo">What can I do with ModelDB?</a>
+                <div class="collapse indented" id="whatdo">
+                    <div class="card card-body">
+                        Using ModelDB, you can:
+                        <ul>
+                            <li>Find a model described in a paper, download it, and experiment to understand the model's predictions.</li>
+                            <li>Find a model described in a paper. Use ModelView to understand the model's structure.</li>
+                            <li>Locate models and modeling papers on a given topic (e.g. Alzheimer's).</li>
+                            <li>Locate mod components (e.g. L-type calcium channels) for potential reuse.</li>
+                            <li>Search for simulator keywords (e.g. FInitializeHander) to find examples of how to use them.</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <a class="spaceabove" data-toggle="collapse" href="#howsearch">How do I search ModelDB?</a>
+                <div class="collapse indented" id="howsearch">
+                    <div class="card card-body">
+                        Use the "search" box in the upper left corner to find model entries
+                        <ul>
+                            <li>by accession number</li>
+                            <li>by a particular author</li>
+                            <li>by keyword (cell type, region, receptor, gene, transmitter, topic, simulator)</li>
+                            <li>use <a href="/modeldb/searchFulltext.cshtml">advanced search</a> for ion currents: because these are short they are problematic to search with free text</li>
+                            <li>use <a href="/modeldb/searchFulltext.cshtml">advanced search</a> for a combined keyword and full text search</li>
+                            <li>prefix case sensitive words with <tt>^</tt></li>
+                            <li>use <tt>*</tt> for completions</li>
+                            <li>use <tt>year:</tt> to search for models from given year; e.g. <tt>year:2015</tt></li>
+                            <li>use <tt>file:</tt> to restrict results to a given filename; e.g. <tt>calcium file:*.mod</tt></li>
+                        </ul>
+                        
+                        <p>The <a href="/modeldb/searchFulltext.cshtml">advanced search</a> link under
+                        the search box allows searching via both full text and attributes simultaneously.
+                        </p>
+                        <p>Searching for papers by author instead of models is also supported; to do
+                        so, go <a href="/ModelDB/FindPapers.cshtml">here</a>.</p>
+                    </div>
+                </div>
+                
+                <a class="spaceabove" data-toggle="collapse" href="#howdownload">How do I download and/or run a model from ModelDB?</a>
+                <div class="indented collapse" id="howdownload" style="">
+                    <div class="card card-body">
+                        <p>
+                
+                            All locally stored models can
+                            be downloaded as a single file by pressing the
+                            "Download&nbsp;zip file" button.  Some models can be run directly from the web page.
+                            For these models there will be a button labeled "Auto-launch".
+                        </p><div>
+                            <b>DOWNLOADING MODELS:</b>
+                
+                            <div class="indented">
+                                <p>ModelDB models are associated with many simulators and simulation environments.
+                                For some models the code is supplied externally and in these cases you will need to follow the links
+                                to the web sites where the code is made available.  If you have any trouble finding the code at these
+                                external sites please email the ModelDB administrator which model (accession number) you were unable to find.
+                                For models supplied internally in ModelDB, when you press the Download button, depending on your browser's settings, the file will
+                                be downloaded to a previously choosen location (typically "Downloads" folder) or you will be asked to save the file in
+                                a directory and, if you want, you can change the name of the file. Once the file is downloaded you can expand the zip
+                                file with the unzip program that comes with your operating system (double clicking the zip file in windows explorer (mswin) or a finder window (mac)
+                                will usually automatically invoke an unzip program). In general you will need to install a simulator or simulation environment. Links below provide
+                                additional instructions for some simulators used by ModelDB models:</p>
+                                <center>
+                                    <a href="http://briansimulator.org/download/">Brian</a> •
+                                    <a href="https://gcc.gnu.org/install/download.html">C/C++</a> •
+                                    <a href="https://gcc.gnu.org/install/download.html">FORTRAN</a> •
+                                    <a href="http://genesis-sim.org/">GENESIS</a> •
+                                    <a href="http://www.mathworks.com/downloads/web_downloads/">MATLAB</a> •
+                                    <a href="/ModelDB/NEURON_DwnldGuide.cshtml">NEURON</a> •
+                                    <a href="https://www.python.org/downloads/">Python</a> •
+                                    <a href="http://www.math.pitt.edu/~bard/xpp/download.html">XPPAUT</a>
+                                </center>
+                            </div>
+                        </div>
+                            
+                        <p>
+                            <b>WARNING:</b>
+                
+                            </p><p class="indented">
+                                Running models on your machine is inherently
+                                insecure since models are able to execute any program or script
+                                consistent with the permissions of the
+                                user. We make a good faith effort at ModelDB to publicly provide
+                                models that are associated with published papers and do not
+                                knowingly provide models containing malicious or destructive
+                                code, viruses, worms, etc.  We take several steps to ensure the
+                                safety of running our publicly available models.
+                                These include making a cursory examination
+                                of each models code, test-running each model, and not
+                                accepting anonymous models.
+                                However if we were "hacked" our verified files
+                                might be replaced with malicious ones.
+                                Therefore please inform us if running a model
+                                causes any kind of problem on your machine
+                                so that we may remove the model as soon as possible from the database.
+                            </p>
+                
+                    </div>
+                </div>
+                
+                <a class="spaceabove" data-toggle="collapse" href="#howerror">What do I do if I think I've found an error in a model on ModelDB?</a>
+                <div class="collapse indented" id="howerror">
+                    <div class="card card-body">
+                        <p>If you think you've found an error in a model available through ModelDB, please contact the ModelDB administrator (link in footer) with a description of the issue. Possible errors include but are not limited to: logic errors, flipped signs, missing parentheses, etc. Note that every model is by definition an approximation, so missing ion channels, channels with the wrong kinetics, non-physiological parameter values are generally not considered modeling errors.</p>
+                    </div>
+                </div>
+                
+                
+                <a class="spaceabove" data-toggle="collapse" href="#howmodelview">How can I graphically see the model structure?</a>
+                <div class="collapse indented" id="howmodelview">
+                    <div class="card card-body">
+                        <p>Many models have a "Model Views" tab at the top of their ShowModel page. Click that tab, then select a figure under "Load Model Views". Two or more floating containers will appear, one with an expandable tree, the other(s) with graphical representations of the neuron(s). The tree may be expanded to see more information; e.g. on the view for "Figure 3" of <a href="https://senselab.med.yale.edu/ModelDB/showmodel.cshtml?model=87284#tabs-3">model 87284 (Morse et al., 2010)</a>, clicking "1 cell with morphology", "root soma", "18 inserted mechanisms", "kad (kadist.mod)", "gkabar" will show the distribution of A type potassium currents governed by the kinetics in kadist.mod.</p>
+                    </div>
+                </div>
+                
+                <a class="spaceabove" data-toggle="collapse" href="#nomodelview">Why isn't ModelView available for a particular model?</a>
+                <div class="collapse indented" id="nomodelview">
+                    <div class="card card-body">
+                        <p>At the moment, ModelView only supports some NEURON and NeuroML models with a small number of cells. If the model you're interested in meets these criteria but still does not have a ModelView available, we may simply not have enabled it yet. Email the ModelDB administrator (link in footer) to request that we enable ModelView on a specific model.</p>
+                    </div>
+                </div>
+                
+                
+                <a class="spaceabove" data-toggle="collapse" href="#hownewmodels">How can I find out about newly available models?</a>
+                <div class="collapse indented" id="hownewmodels">
+                    <div class="card card-body">
+                        Follow our Twitter feed, <a href="https://twitter.com/senselabproject">@SenseLabProject</a> to see new model announcements.
+                    </div>
+                </div>
+                
+                <a class="spaceabove" data-toggle="collapse" href="#learnmore">Where can I go to learn more about ModelDB?</a>
+                <div class="collapse indented" id="learnmore">
+                    <div class="card card-body">
+                        Overview:
+                        <ul>
+                            <li class="spaced">McDougal RA, Morse TM, Carnevale T, Marenco L, Wang R, Migliore M, Miller PL, Shepherd, GM, Hines ML (2017). Twenty years of ModelDB and beyond: building essential modeling tools for the future of neuroscience. <a href="https://doi.org/10.1007/s10827-016-0623-7">Journal of Computational Neuroscience</a>, 42(1), 1-10.</li>
+                            <li class="spaced">Migliore M, Carnevale NT, Shepherd GM (2004) ModelDB: A Database to Support Computational Neuroscience. <a href="http://dx.doi.org/10.1023/B:JCNS.0000023869.22017.2e">J Comput Neurosci</a> 17:7-11</li>
+                            <li class="spaced">Migliore M, Morse TM, Davison, AP, Marenco L, Shepherd GM, Hines ML. (2003) ModelDB: Making models publicly accessible to support computational neuroscience. <a href="http://dx.doi.org/10.1385/NI:1:1:135">Neuroinformatics</a> 1:135-139.</li>
+                        </ul>
+                        ModelView:
+                        <ul>
+                            <li class="spaced">McDougal RA, Morse TM, Hines ML, Shepherd GM (2015). ModelView for ModelDB: online presentation of model structure. <a href="http://doi.org/10.1007/s12021-015-9269-2">Neuroinformatics</a>, 13(4), 459-470.</li>
+                        </ul>
+                        Metadata Prediction:
+                        <ul>
+                            <li class="spaced">McDougal RA, Dalal I, Morse TM, Shepherd GM (2019). Automated Metadata Suggestion During Repository Submission. <a href="http://doi.org/10.1007/s12021-018-9403-z">Neuroinformatics</a>.</li>
+                        </ul>
+                        
+                    </div>
+                </div>
+                
+                
+                                        </div></div>
+</div>
+{% endblock %}

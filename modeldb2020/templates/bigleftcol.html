@@ -1,0 +1,16 @@
+{% extends "main.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        {% block leftcol %}
+        {% endblock %}
+    </div>
+    <!-- Blog Sidebar Widgets Column -->
+    <div class="col-md-4">
+        <!-- Side Widget Well... e.g. put divs with class well here -->
+        {% block sidecolumn %}
+        {% endblock %}
+    </div>
+</div>
+{% endblock %}
