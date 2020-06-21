@@ -1,0 +1,111 @@
+{% extends "bigrightcol.html" %}
+{% block sidecolumn %}
+    <div class="well">
+        <p>{{Model.notes.value}}</p>
+        {% if Model.model_type %}
+            <p><b>Model Type:</b>
+                {% for item in Model.model_type.value %}
+                    {% if not forloop.first %}
+                        ;
+                    {% endif %}
+                    <a href="/ModelList.cshtml?id={{item.object_id}}">{{item.object_name}}</a>
+                {% endfor %}
+            </p>
+        {% endif %}         
+        {% if Model.neurons %}
+            <p><b>Cell Type(s):</b>
+                {% for item in Model.neurons.value %}
+                    {% if not forloop.first %}
+                        ;
+                    {% endif %}
+                    <a href="/ModelList.cshtml?id={{item.object_id}}">{{item.object_name}}</a>
+                {% endfor %}
+            </p>
+        {% endif %}         
+        {% if Model.currents %}
+            <p><b>Currents:</b>
+                {% for item in Model.currents.value %}
+                    {% if not forloop.first %}
+                        ;
+                    {% endif %}
+                    <a href="/ModelList.cshtml?id={{item.object_id}}">{{item.object_name}}</a>
+                {% endfor %}
+            </p>
+        {% endif %}
+        {% if Model.receptors %}
+            <p><b>Receptors:</b>
+                {% for item in Model.receptors.value %}
+                    {% if not forloop.first %}
+                        ;
+                    {% endif %}
+                    <a href="/ModelList.cshtml?id={{item.object_id}}">{{item.object_name}}</a>
+                {% endfor %}
+            </p>
+        {% endif %}
+        {% if Model.genes %}
+            <p><b>Genes:</b>
+                {% for item in Model.genes.value %}
+                    {% if not forloop.first %}
+                        ;
+                    {% endif %}
+                    <a href="/ModelList.cshtml?id={{item.object_id}}">{{item.object_name}}</a>
+                {% endfor %}
+            </p>
+        {% endif %}
+        {% if Model.transmitters %}
+            <p><b>Transmitters:</b>
+                {% for item in Model.transmitters.value %}
+                    {% if not forloop.first %}
+                        ;
+                    {% endif %}
+                    <a href="/ModelList.cshtml?id={{item.object_id}}">{{item.object_name}}</a>
+                {% endfor %}
+            </p>
+        {% endif %}
+        {% if Model.model_concept %}
+            <p><b>Model Concept(s):</b>
+                {% for item in Model.model_concept.value %}
+                    {% if not forloop.first %}
+                        ;
+                    {% endif %}
+                    <a href="/ModelList.cshtml?id={{item.object_id}}">{{item.object_name}}</a>
+                {% endfor %}
+            </p>
+        {% endif %}  
+        {% if Model.modeling_application %}
+            <p><b>Simulation Environment:</b>
+                {% for item in Model.modeling_application.value %}
+                    {% if not forloop.first %}
+                        ;
+                    {% endif %}
+                    <a href="/ModelList.cshtml?id={{item.object_id}}">{{item.object_name}}</a>
+                {% endfor %}
+            </p>
+        {% endif %}        
+
+        {% if Model.implemented_by %}
+            <p><b>Implementer(s):</b>
+                {% for item in Model.implemented_by.value %}
+                    {% if not forloop.first %}
+                        ;
+                    {% endif %}
+                    <a href="/ModelList.cshtml?id={{item.object_id}}">{{item.object_name}}</a>
+                {% endfor %}
+            </p>
+        {% endif %}        
+    </div>
+{% endblock %}
+
+
+{% block header %}
+<h3>{{Model.name}} &nbsp; <a href="/eavBinDown?o={{Model.id}}"><i title="Download zip" class="fas fa-download"></i></a></h3><br/>
+
+{% endblock %}
+
+{% block head %}
+<style>
+    .thin>li>a {
+        padding: 5px 10px !important
+    }
+</style>
+{% endblock %}

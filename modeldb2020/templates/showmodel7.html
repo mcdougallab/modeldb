@@ -1,0 +1,50 @@
+{% extends "showmodel-base.html" %}
+{% block maincol %}
+<ul class="nav nav-tabs">
+    <li class="nav-item"><a class="nav-link" href="/showmodel?model={{Model.id}}">Files</a></li>
+    <li class="nav-item"><a class="nav-link active" href="/showmodel?model={{Model.id}}&tab=7">Citations</a></li>
+    <li class="nav-item"><a class="nav-link disabled" href="#">ModelView</a></li>
+    {% if Model.simPFid %}
+      <li class="nav-item"><a class="nav-link" href="http://sim.neuroinf.jp/modules/xoonips/detail.php?item_id={{Model.simPFid.value}}">Simulation Platform <sup><i class="fas fa-external-link-alt"></i></sup></a></li>
+    {% endif %}
+    {% if Model.gitrepo %}
+      <li class="nav-item"><a class="nav-link" href="https://github.com/ModelDBRepository/{{Model.id}}">Versions <sup><i class="fas fa-external-link-alt"></i></sup></a></li>
+    {% endif %}  
+</ul>
+{% for ref in citation_data %}
+<!--div class="row"-->
+<h4>{{ref.0.html | safe}}</h4>
+<!--/div -->
+<div class="row">
+    <div class="col-md-6">
+        <div><b>References and models cited by this paper</b></div>
+        {% for my_ref in ref.1 %}
+        <p>{{my_ref.html | safe}}
+            {% if my_ref.model_link %}
+                <ul>
+                    {% for link in my_ref.model_link %}
+                        <li><a href="/showmodel?model={{link.id}}">{{link.name}} [Model]</a></li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </p>
+        {% endfor %}
+    </div>
+    <div class="col-md-6">
+        <div><b>References and models that cite this paper</b></div>
+        {% for my_ref in ref.2 %}
+        <p>{{my_ref.html | safe}}</p>
+        {% if my_ref.model_link %}
+        <ul>
+            {% for link in my_ref.model_link %}
+                <li><a href="/showmodel?model={{link.id}}">{{link.name}} [Model]</a></li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endfor %}
+    </div>
+</div>
+{% endfor %}
+  
+{% endblock %}
+

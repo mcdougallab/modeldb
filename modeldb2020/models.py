@@ -1,4 +1,7 @@
 import json
+import zipfile
+import os
+import fnmatch
 from pymongo import MongoClient
 from django.db import models
 from . import settings
@@ -8,7 +11,7 @@ sdb = mongodb[settings.security['db_name']]
 sdb.authenticate(settings.security['mongodb_user'], settings.security['mongodb_pw'])
 
 def load_collection(name):
-    new_collection = {item['id']: item for item in getattr(sdb, name).find()}
+    new_collection = {str(item['id']): item for item in getattr(sdb, name).find()}
     # expand parent data (if any) into reciprocal parent-child data
     for item in new_collection.values():
         if 'parent' in item:
@@ -47,6 +50,12 @@ class ModelDB(models.Model):
 
     def __getitem__(self, name):
         return getattr(self, name)
+    
+    def has_model(self, id_):
+        return id_ in modeldb
+    
+    def model(self, id_):
+        return Model(id_)
 
     @property
     def num_models(self):
@@ -57,6 +66,37 @@ class ModelDB(models.Model):
 
 
 
+def hasany(present, wanted, add_star=False):
+    # if we don't want anything, then we're always happy
+    if not wanted:
+        return True
+    if present is None:
+        return False
+    for check in wanted:
+        if add_star:
+            check = '*' + check + '*'
+        check = check.lower().strip()
+        if check:
+            for item in present['value']:
+                if fnmatch.fnmatch(item['object_name'].lower(), check):
+                    return True
+    return False
+
+def hasanytitle(present, wanted, add_star=False):
+    # if we don't want anything, then we're always happy
+    if not wanted:
+        return True
+    if present is None:
+        return False
+    for check in wanted:
+        if add_star:
+            check = '*' + check + '*'
+        check = check.lower().strip()
+        if check:
+            for item in present:
+                if fnmatch.fnmatch(item.lower(), check):
+                    return True
+    return False
 
 class SenseLabClass:
     def __init__(self, _id):
@@ -161,6 +201,104 @@ class CellType(SenseLabClass):
     def __init__(self, _id):
         SenseLabClass.__init__(self, _id)
         self._data = celltypes[_id]
+
+class Model:
+    def __init__(self, model_id):
+        self._model = modeldb[model_id]
+        self._zip = None
+        self._readme_file = None
+        self._setup_filetree()
+    
+    @property
+    def papers(self):
+        return [ModelDB.object_by_id(item['object_id']) for item in self._model['model_paper']['value']]
+
+    def __getattr__(self, key):
+        if key in self._model:
+            return self._model[key]
+        else:
+            return None
+
+    def zip(self):
+        if self._zip is None:
+            self._zip = zipfile.ZipFile(os.path.join(settings.security["modeldb_zip_dir"], str(self._model['id']) + '.zip'))
+        return self._zip
+    
+    @property
+    def readme_file(self):
+        return self._readme_file
+
+    @property
+    def file_hierarchy(self):
+        return self._file_hierarchy
+    
+    def has_path(self, path):
+        return path in self.zip().namelist() or self.has_folder(path)
+    
+    def file(self, path):
+        return self.zip().read(path)
+    
+    def has_folder(self, path):
+        name_list = self.zip().namelist()
+        path = path.strip('/') + '/'
+        return any(item.startswith(path) for item in name_list)
+ 
+    def zip_file(self):
+        filename = str(self._model['id']) + '.zip'
+        with open(os.path.join(settings.security["modeldb_zip_dir"], filename), 'rb') as f:
+            return f.read()
+
+    def folder_contents(self, path, _hierarchy=None):
+        def _filter(items):
+            return sorted([{'name': item['name'], 'type': item['type'].lower()} for item in items], key=lambda item: item['name'].lower())
+        if _hierarchy is None:
+            _hierarchy = self.file_hierarchy
+        if '/' in path:
+            first, rest = path.split('/', 1)
+        else:
+            first, rest = path, None
+        for item in _hierarchy:
+            if item['name'] == first:
+                if rest:
+                    return self.folder_contents(rest, _hierarchy=item['contents'])
+                return _filter(item['contents'])
+        assert(False)
+        
+    def _setup_filetree(self):
+        if self._readme_file is None:
+            file_hierarchy = []
+            readme_file = None
+            first_file = ''
+            for subfilename in self.zip().namelist():
+                if not first_file and os.path.split(subfilename)[1]:
+                    first_file = subfilename
+                if ('readme' in subfilename.lower() or subfilename.lower() in ('index.html', 'index.htm')) and readme_file is None:
+                    readme_file = subfilename
+                path = subfilename.split('/')
+                my_file_hierarchy = file_hierarchy
+                for i, item in enumerate(path):
+                    for mfh in my_file_hierarchy:
+                        if mfh['name'] == item:
+                            my_file_hierarchy = mfh['contents']
+                            break
+                    else:
+                        my_file_hierarchy.append({'name': item})
+                        if i != len(path) - 1:
+                            my_file_hierarchy[-1]['type'] = 'folder'
+                            my_file_hierarchy[-1]['contents'] = []
+                            my_file_hierarchy = my_file_hierarchy[-1]['contents']
+                        else:
+                            if '.' not in item:
+                                my_file_hierarchy[-1]['type'] = 'file'
+                            else:
+                                my_file_hierarchy[-1]['type'] = item.split('.')[-1]
+            self._readme_file = readme_file if readme_file else first_file
+            self._file_hierarchy = file_hierarchy
+        return self._readme_file, self._file_hierarchy
+
+
+
+
 
 
 refresh()

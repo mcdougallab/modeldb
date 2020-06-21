@@ -29,5 +29,8 @@ urlpatterns = [
     re_path(r'^(?:modeldb/)?listbymodelname(?:\.(?:cs)?html)?$(?i)', views.listbymodelname, name='listbymodelname'),
     re_path(r'^(?:modeldb/)?modellist(?:\.(?:cs)?html)?$(?i)', views.modellist, name='modellist'),
     re_path(r'^(?:modeldb/)?help(?:menu)?(?:\.(?:cs)?html)?$(?i)', views.static, dict(page='help', title='Help'), name='help'),
+    re_path(r'^(?:modeldb/)?showmodel(?:\.(?:cs)?html)?(?:\.asp)?$(?i)', views.showmodel, name='showmodel'),
+    re_path(r'^(?:modeldb/)?eavbindown(?:\.(?:cs)?html)?$(?i)', views.download_zip, name='download_zip'),    
+    re_path(r'^(?:modeldb/)?getmodelfile(?:\.(?:cs)?html)?$(?i)', views.download, name='download_file'),    
     path('admin/', admin.site.urls),
 ]
