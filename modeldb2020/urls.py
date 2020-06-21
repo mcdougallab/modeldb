@@ -31,6 +31,14 @@ urlpatterns = [
     re_path(r'^(?:modeldb/)?help(?:menu)?(?:\.(?:cs)?html)?$(?i)', views.static, dict(page='help', title='Help'), name='help'),
     re_path(r'^(?:modeldb/)?showmodel(?:\.(?:cs)?html)?(?:\.asp)?$(?i)', views.showmodel, name='showmodel'),
     re_path(r'^(?:modeldb/)?eavbindown(?:\.(?:cs)?html)?$(?i)', views.download_zip, name='download_zip'),    
-    re_path(r'^(?:modeldb/)?getmodelfile(?:\.(?:cs)?html)?$(?i)', views.download, name='download_file'),    
+    re_path(r'^(?:modeldb/)?getmodelfile(?:\.(?:cs)?html)?$(?i)', views.download, name='download_file'),
+    re_path(r'^(?:modeldb/)findbycurrent(?:\.(?:cs)?html)?$(?i)', views.findbycurrent, name='findbycurrent'),
+    re_path(r'^(?:modeldb/)findbyregionlist(?:\.(?:cs)?html)?$(?i)', views.findbyregionlist, name='findbyregion'), 
+    re_path(r'^(?:modeldb/)findbyregiontable(?:\.(?:cs)?html)?$(?i)', views.findbyregionlist, name='findbyregion'), # not clear that we want to keep table as a separate thing
+    re_path(r'^(?:modeldb/)findbyreceptor(?:\.(?:cs)?html)?$(?i)', views.findbyreceptor, name='findbyreceptor'),
+    re_path(r'^(?:modeldb/)findbytransmitter(?:\.(?:cs)?html)?$(?i)', views.findbytransmitter, name='findbytransmitter'),
+    re_path(r'^(?:modeldb/)findbygenelist(?:\.(?:cs)?html)?$(?i)', views.findbygene, name='findbygene'),
+    re_path(r'^(?:modeldb/)findbyconcept(?:\.(?:cs)?html)?$(?i)', views.findbyconcept, name='findbyconcept'),
+    re_path(r'^(?:modeldb/)findbysimulator(?:\.(?:cs)?html)?$(?i)', views.findbysimulator, name='findbysimulator'),
     path('admin/', admin.site.urls),
 ]

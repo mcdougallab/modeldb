@@ -5,6 +5,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.clickjacking import xframe_options_exempt
 from . import settings
 from . import models
+from .models import currents, genes, regions, receptors, transmitters, simenvironments, modelconcepts, modeltypes, celltypes, papers
+
 
 ModelDB = models.ModelDB()
 
@@ -249,3 +251,78 @@ def magic(item):
         return item.authors + [item.year]
     else:
         return [item.name, item.year]
+
+def findbyregionlist(request):
+    context = {
+        'title': 'ModelDB: Browse by current',
+        'content': _render_tree(celltypes, '/ModelDB/ModelList'),
+        'header': 'Find models of a particular neuron',
+        'subhead': 'Click on a neuron/cell to show a list of models of that type.'
+    }
+    return render(request, 'treepage.html', context)
+
+def findbycurrent(request):
+    context = {
+        'title': 'ModelDB: Browse by current',
+        'content': _render_tree(currents, '/ModelDB/ModelList'),
+        'header': 'Find models that contain a particular ionic current',
+        'subhead': 'Click on an ionic current to show a list of models that contain or implement that current.<br/><br/>Click <a href="/neurondb/ndbregions">here</a> to view brief definitions of currents in NeuronDB.'
+    }
+    return render(request, 'treepage.html', context)
+
+def findbyreceptor(request):
+    context = {
+        'title': 'ModelDB: Browse by receptor',
+        'content': _render_tree(receptors, '/ModelDB/ModelList'),
+        'header': 'Find models that contain a particular ionic current',
+        'subhead': 'Click on a receptor to show a list of models that contain or implement that receptor.<br/>'
+    }
+    return render(request, 'treepage.html', context)
+
+def findbytransmitter(request):
+    context = {
+        'title': 'ModelDB: Browse by neurotransmitter',
+        'content': _render_tree(transmitters, '/ModelDB/ModelList'),
+        'header': 'Find models that contain a particular neurotransmitter',
+        'subhead': 'Click on a neurotransmitter to show a list of models that implement a mechanism for release of that transmitter.<br/>'
+    }
+    return render(request, 'treepage.html', context)
+
+def findbygene(request):
+    context = {
+        'title': 'ModelDB: Browse by gene',
+        'content': _render_tree(genes, '/ModelDB/ModelList'),
+        'header': 'Find models containing a particular gene',
+        'subhead': 'Click on a gene name to show a list of electrical or chemical models of the associated channel or receptor.<br/>'
+    }
+    return render(request, 'treepage.html', context)
+
+def findbyconcept(request):
+    context = {
+        'title': 'ModelDB: Browse by concept',
+        'content': _render_tree(modelconcepts, '/ModelDB/ModelList'),
+        'header': 'Find models by concept',
+        'subhead': 'Click on a concept to show a list of models that incorporate or demonstrate that concept.<br/>'
+    }
+    return render(request, 'treepage.html', context)
+
+def findbysimulator(request):
+    context = {
+        'title': 'ModelDB: Browse by simulation environment',
+        'content': _render_tree(simenvironments, '/ModelDB/ModelList'),
+        'header': 'Find models by simulation environment',
+        'subhead': 'Click on a link to show a list of models implemented in that simulation environment or programming language.<br/>'
+    }
+    return render(request, 'treepage.html', context)
+
+def _render_tree_element(obj, collection, base_link):
+    subtree = ''
+    if 'children' in obj:
+        subtree = '<ul>{}</ul>'.format('\n'.join(_render_tree_element(collection[child], collection, base_link) for child in sorted(obj['children'], key=lambda _id: collection[_id]['name'].lower())))
+    return f'<li><a href="{base_link}?id={obj["id"]}">{obj["name"]}{subtree}</li>'
+
+def _render_tree(collection, base_link):
+    root_nodes = [item for item in collection.values() if not 'parent' in item or item['parent'] is None]
+    print('root_nodes', root_nodes)
+    root_nodes = sorted(root_nodes, key=lambda obj: obj['name'].lower())
+    return '<ul>{}</ul>'.format('\n'.join(_render_tree_element(node, collection, base_link) for node in root_nodes))
