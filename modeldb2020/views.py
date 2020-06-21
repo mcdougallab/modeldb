@@ -266,7 +266,7 @@ def findbycurrent(request):
         'title': 'ModelDB: Browse by current',
         'content': _render_tree(currents, '/ModelDB/ModelList'),
         'header': 'Find models that contain a particular ionic current',
-        'subhead': 'Click on an ionic current to show a list of models that contain or implement that current.<br/><br/>Click <a href="/neurondb/ndbregions">here</a> to view brief definitions of currents in NeuronDB.'
+        'subhead': 'Click on an ionic current to show a list of models that contain or implement that current.<br/><br/>Click <a href="https://senselab.med.yale.edu/neurondb/ndbregions">here</a> to view brief definitions of currents in NeuronDB.'
     }
     return render(request, 'treepage.html', context)
 
