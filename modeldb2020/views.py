@@ -2,10 +2,10 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login, logout
 from . import settings
+from . import models
 
-ModelDB = {
-    'num_models': 1600
-}
+ModelDB = models.ModelDB()
+
 
 def index(request):
     context = {
@@ -15,6 +15,7 @@ def index(request):
     }
     return render(request, 'index.html', context)
 
+
 def static(request, page='', title=''):
     context = {
         'title': f'ModelDB: {title}',
@@ -22,6 +23,33 @@ def static(request, page='', title=''):
     }
     return render(request, f'{page}.html', context)
 
+
+def modellist(request):
+    object_id = request.GET.get('id')
+    print('modellist')
+    if object_id is None:
+        return listbymodelname(request)
+    '''
+    obj = ModelDB.object_by_id(object_id)
+    print(obj)
+    if obj is None:
+        return listbymodelname(request)
+    context = {
+        'title': 'ModelDB: Models that contain {}'.format(obj.name),
+        'obj': obj
+    }
+    return render(request, 'modeldb/modellist.html', context)
+    '''
+    return HttpResponse("Not implemented")
+
+def listbymodelname(request):
+    context = {
+        'title': 'ModelDB: Models List',
+        'all_models': ModelDB.models_by_name()
+    }
+    return render(request, 'listbymodelname.html', context)
+
+    
 
 def my_logout(request):
     logout(request)

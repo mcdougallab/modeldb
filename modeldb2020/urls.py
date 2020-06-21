@@ -19,13 +19,15 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='index'),
-    re_path(r'^index.html$(?i)', views.index, name='index'),
-    re_path('^login$(?i)', views.my_login, name='login'),
-    re_path('^logout$(?i)', views.my_logout, name='logout'),
-    re_path(r'^neuron_dwnldguide(?:\.(?:cs)?html)?$(?i)', views.static, {'page': 'neuron_download_guide', 'title': 'NEURON download help'}, name='neuron_download_guide'),
-    re_path(r'^howtocite(?:\.(?:cs)?html)?$(?i)', views.static, {'page': 'howtocite', 'title': 'How to cite ModelDB'}, name='howtocite'),
-    re_path(r'^mdbresources(?:\.(?:cs)?html)?$(?i)', views.static, dict(page='mdbresources', title='Web resources for ModelDB'), name='mdbresources'),
-    re_path(r'^eco(?:\.(?:cs)?html)?$(?i)', views.static, dict(page='eco', title='An ecosystem of computational neuroscience resources'), name='eco'),
+    re_path(r'^(?:modeldb/)?index.html$(?i)', views.index, name='index'),
+    re_path('^(?:modeldb/)?login$(?i)', views.my_login, name='login'),
+    re_path('^(?:modeldb/)?logout$(?i)', views.my_logout, name='logout'),
+    re_path(r'^(?:modeldb/)?neuron_dwnldguide(?:\.(?:cs)?html)?$(?i)', views.static, {'page': 'neuron_download_guide', 'title': 'NEURON download help'}, name='neuron_download_guide'),
+    re_path(r'^(?:modeldb/)?howtocite(?:\.(?:cs)?html)?$(?i)', views.static, {'page': 'howtocite', 'title': 'How to cite ModelDB'}, name='howtocite'),
+    re_path(r'^(?:modeldb/)?mdbresources(?:\.(?:cs)?html)?$(?i)', views.static, dict(page='mdbresources', title='Web resources for ModelDB'), name='mdbresources'),
+    re_path(r'^(?:modeldb/)?eco(?:\.(?:cs)?html)?$(?i)', views.static, dict(page='eco', title='An ecosystem of computational neuroscience resources'), name='eco'),
+    re_path(r'^(?:modeldb/)?listbymodelname(?:\.(?:cs)?html)?$(?i)', views.listbymodelname, name='listbymodelname'),
+    re_path(r'^(?:modeldb/)?modellist(?:\.(?:cs)?html)?$(?i)', views.modellist, name='modellist'),
     re_path(r'^(?:modeldb/)?help(?:menu)?(?:\.(?:cs)?html)?$(?i)', views.static, dict(page='help', title='Help'), name='help'),
     path('admin/', admin.site.urls),
 ]

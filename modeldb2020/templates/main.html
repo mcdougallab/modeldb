@@ -52,10 +52,12 @@
       .navbar-toggler {
             position: absolute;
             right: 0em;
-      }      
-      a {
-        color: teal;
-      }
+      } 
+      /*     
+        a {
+            color: teal;
+        }
+      */
       .dropdown-submenu {
         position: relative;
       }
@@ -169,21 +171,28 @@
                 </div>
             </li>
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" role="button" aria-expanded="False">Other Resources</a>
+                <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" role="button" aria-expanded="False">Analysis</a>
                 <ul class="dropdown-menu">
-                  <li class="dropdown-item"><a href="#">SenseLab mailing list</a></li>
-                  <li class="dropdown-item"><a href="/mdbresources">Related resources</a></li>
-                  <li class="dropdown-item"><a href="/eco">Computational Neuroscience ecosystem</a></li>
-                  <li class="dropdown-item"><a href="https://github.com/modeldbrepository">Models in a git repository</a></li>
+                    <li class="dropdown-item"><a href="#">Modeled cell mechanisms</a></li>
                   </ul>
             </li>
-            <li class="nav-item">
-                <a href="/help" class="nav-link">Help</a>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" role="button" aria-expanded="False">More</a>
+                <ul class="dropdown-menu">
+                    <li class="dropdown-item"><a href="/help">Help</a></li>
+                    <hr style="width:75%"/>
+                    <li class="dropdown-item"><a href="#">SenseLab mailing list</a></li>
+                    <li class="dropdown-item"><a href="/mdbresources">Related resources</a></li>
+                    <li class="dropdown-item"><a href="/eco">Computational Neuroscience ecosystem</a></li>
+                    <li class="dropdown-item"><a href="https://github.com/modeldbrepository">Models in a git repository</a></li>
+                  </ul>
             </li>
           </ul>
           <form class="form-inline navbar-form">
             <input class="form-control" type="text" placeholder="Search">
-            <button class="btn btn-success-outline" type="submit"><i class="fa fa-search"></i></button>
+            <!--
+                <button class="btn btn-success-outline" type="submit"><i class="fa fa-search"></i></button>
+            -->
           </form>
         </div>
       </nav>
