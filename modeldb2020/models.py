@@ -16,8 +16,9 @@ def load_collection(name):
     # expand parent data (if any) into reciprocal parent-child data
     for item in new_collection.values():
         if 'parent' in item:
+            item['parent'] = str(item['parent'])
             new_collection[item['parent']].setdefault('children', [])
-            new_collection[item['parent']]['children'].append(item['id'])
+            new_collection[item['parent']]['children'].append(str(item['id']))
     return new_collection
 
 
