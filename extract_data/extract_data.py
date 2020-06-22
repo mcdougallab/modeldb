@@ -50,17 +50,11 @@ def get_model_metadata(object_id):
         del result['more_cells']
     return result
 
-'''
+
 sdb.drop_collection('models')
 for _id in modeldb_ids:
     sdb.models.insert_one(get_model_metadata(_id))
     print(f'added model {_id}')
-'''
-
-
-
-
-
 
 
 def get_metadata(object_id):
@@ -83,8 +77,8 @@ def get_metadata(object_id):
     return result
 
 for class_name, class_id in [
-        #['publication_facts', 195],
-        #['currents', 17],
+        ['publication_facts', 195],
+        ['currents', 17],
         ['papers', 42],
         ['genes', 126],
         ['regions', 144],
