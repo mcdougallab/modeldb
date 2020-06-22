@@ -144,28 +144,52 @@ def showmodel(request):
             return render(request, 'showmodel.html', context)
     else:
         papers = model.papers
-        references = [[paper for paper in model_paper.references] for model_paper in papers]
-        sorted_references=[]
-        for reference_group in references:
-            tmp_sorted_list=sorted(reference_group, key=magic)
-            sorted_references.append(tmp_sorted_list)
-        #citations = [[paper.html for paper in model_paper.citations] for model_paper in papers]
-        citations = [[paper for paper in model_paper.citations] for model_paper in papers]
-        sorted_citations=[]
-        for citation_group in citations:
-            #tmp_sorted_list=sorted(citation_group, key=lambda item: item.authors+[item.year])
-            tmp_sorted_list=sorted(citation_group, key=magic)# lambda item: item.authors+[item.year])
-            #except:
-            #    tmp_sorted_list = citation_group
-            sorted_citations.append(tmp_sorted_list)
-        citation_data = zip(papers, sorted_references, sorted_citations)
+        citation_data = _prep_citations(papers)
         context = {
             'title': 'ModelDB: Model Citations',
             'Model': model,
             'tab': tab_id,
-            'citation_data': citation_data
+            'citation_data': citation_data,
+            'showtabs': True
         }
         return render(request, 'showmodel7.html', context)
+
+def mdbcitations(request):
+    # TODO: probably can't always assume ints? maybe should recast existing to str?
+    paper_id = str(request.GET.get('id', -1))
+    # TODO: handle not having a model argument more gracefully
+    if paper_id == '-1':
+        return HttpResponse('Forbidden', status=403)
+    # TODO: we actually know what datatype this is
+    papers = [ModelDB.object_by_id(paper_id)]
+    citation_data = _prep_citations(papers)
+    context = {
+        'title': 'ModelDB: Paper information',
+        'Model': None,
+        'citation_data': citation_data,
+        'showtabs': False
+    }
+    return render(request, 'showmodel7.html', context)
+
+
+def _prep_citations(papers):
+    references = [[paper for paper in model_paper.references] for model_paper in papers]
+    sorted_references=[]
+    for reference_group in references:
+        tmp_sorted_list=sorted(reference_group, key=magic)
+        sorted_references.append(tmp_sorted_list)
+    #citations = [[paper.html for paper in model_paper.citations] for model_paper in papers]
+    citations = [[paper for paper in model_paper.citations] for model_paper in papers]
+    sorted_citations=[]
+    for citation_group in citations:
+        #tmp_sorted_list=sorted(citation_group, key=lambda item: item.authors+[item.year])
+        tmp_sorted_list=sorted(citation_group, key=magic)# lambda item: item.authors+[item.year])
+        #except:
+        #    tmp_sorted_list = citation_group
+        sorted_citations.append(tmp_sorted_list)
+    return zip(papers, sorted_references, sorted_citations)
+
+
 
 def download_zip(request):
     model_id = request.GET.get('o', -1)

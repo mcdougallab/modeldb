@@ -1,44 +1,45 @@
 {% extends "main.html" %}
 
 {% block header %}
-    {% include "showmodel-tabs.html" %}
+    {% if showtabs %}
+        {% include "showmodel-tabs.html" %}
+    {% endif %}
 {% endblock %}
 
 {% block content %}
-{% for ref in citation_data %}
-<!--div class="row"-->
-<h4>{{ref.0.html | safe}}</h4>
-<!--/div -->
-<div class="row">
-    <div class="col-md-6">
-        <div><b>References and models cited by this paper</b></div>
-        {% for my_ref in ref.1 %}
-        <p>{{my_ref.html | safe}}
-            {% if my_ref.model_link %}
+    {% for ref in citation_data %}
+        <!--div class="row"-->
+        <h4>{{ref.0.html | safe}}</h4>
+        <!--/div -->
+        <div class="row">
+            <div class="col-md-6">
+                <div><b>References and models cited by this paper</b></div>
+                {% for my_ref in ref.1 %}
+                <p>{{my_ref.html | safe}}
+                    {% if my_ref.model_link %}
+                        <ul>
+                            {% for link in my_ref.model_link %}
+                                <li><a href="/showmodel?model={{link.id}}">{{link.name}} [Model]</a></li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </p>
+                {% endfor %}
+            </div>
+            <div class="col-md-6">
+                <div><b>References and models that cite this paper</b></div>
+                {% for my_ref in ref.2 %}
+                <p>{{my_ref.html | safe}}</p>
+                {% if my_ref.model_link %}
                 <ul>
                     {% for link in my_ref.model_link %}
                         <li><a href="/showmodel?model={{link.id}}">{{link.name}} [Model]</a></li>
                     {% endfor %}
                 </ul>
             {% endif %}
-        </p>
         {% endfor %}
-    </div>
-    <div class="col-md-6">
-        <div><b>References and models that cite this paper</b></div>
-        {% for my_ref in ref.2 %}
-        <p>{{my_ref.html | safe}}</p>
-        {% if my_ref.model_link %}
-        <ul>
-            {% for link in my_ref.model_link %}
-                <li><a href="/showmodel?model={{link.id}}">{{link.name}} [Model]</a></li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-{% endfor %}
-    </div>
-</div>
-{% endfor %}
-  
+            </div>
+        </div>
+    {% endfor %}
 {% endblock %}
 

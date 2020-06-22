@@ -416,19 +416,22 @@ class Paper:
         if pubmed:
             pubmed = ' [<a href="https://www.ncbi.nlm.nih.gov/pubmed?holding=modeldb&term={}">PubMed</a>]'.format(pubmed)
 
-        return ', '.join(self.authors) + '. ({}). '.format(self.year) + self.title + ' <i>' + link_prefix + self.journal + link_suffix + '</i> ' + self.volume + pubmed
+        base_info = ', '.join(self.authors) + f'. ({self.year}).'
+        base_info = f'<a href="/mdbcitations?id={self._id}">{base_info}</a>'
+        return base_info + f' {self.title} <i>' + link_prefix + self.journal + link_suffix + '</i> ' + self.volume + pubmed
     
     def __getitem__(self, item):
         return getattr(self, item)
     
     @property
     def references(self):
-        print('references for', self._id)
-        return [Paper(item['object_id']) for item in self._raw['references']['value']]
+        if 'references' in self._raw:
+            return [Paper(item['object_id']) for item in self._raw['references']['value']]
+        else:
+            return []
     
     @property
     def citations(self):
-        print('citations for', self._id)
         if self._id in cites_paper_unsorted:
             return [Paper(item) for item in cites_paper_unsorted[self._id]]
         else:
