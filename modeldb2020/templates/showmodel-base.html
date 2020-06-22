@@ -1,4 +1,10 @@
 {% extends "bigleftcol.html" %}
+
+
+{% block header %}
+  {% include "showmodel-tabs.html" %}
+{% endblock %}
+
 {% block sidecolumn %}
 <div class="well">
     ShapePlot goes here
@@ -8,30 +14,6 @@
 {% endblock %}
 
 
-{% block header %}
-<h3 style="text-align:center">{{Model.name}} &nbsp; <a href="/eavBinDown?o={{Model.id}}"><i title="Download zip" class="fas fa-download"></i></a></h3><br/>
-
-<ul class="nav nav-tabs green" role="tablist">
-    <li class="nav-item">
-      <a href="?model={{Model.id}}&tab=1" class="nav-link {% if tab == 1 %} active {% endif %}" role="tab" aria-expanded="true" aria-selected="true">Overview</a>
-    </li>
-    <li class="nav-item">
-        <a href="?model={{Model.id}}&tab=2" class="nav-link {% if tab == 2 %} active {% endif %}" role="tab"  aria-expanded="false" aria-selected="false">Files</a>
-      </li>
-    <li class="nav-item">
-      <a href="?model={{Model.id}}&tab=3" class="nav-link {% if tab == 3 %} active {% endif %}" role="tab" aria-expanded="false" aria-selected="false">Mechanisms</a>
-    </li>
-    <li class="nav-item dropdown">
-    </li><li class="nav-item">
-      <a href="?model={{Model.id}}&tab=4" class="nav-link {% if tab == 4 %} active {% endif %}" role="tab" aria-expanded="false" aria-selected="false">Parameters</a>
-    </li>
-    <li class="nav-item">
-        <a href="?model={{Model.id}}&tab=7" class="nav-link {% if tab == 7 %} active {% endif %}" role="tab" aria-expanded="false" aria-selected="false">Citations</a>
-      </li>
-    
-  </ul>
-
-{% endblock %}
 
 {% block head %}
 <style>

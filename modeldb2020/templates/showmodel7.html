@@ -1,16 +1,10 @@
-{% extends "showmodel-base.html" %}
-{% block maincol %}
-<ul class="nav nav-tabs">
-    <li class="nav-item"><a class="nav-link" href="/showmodel?model={{Model.id}}">Files</a></li>
-    <li class="nav-item"><a class="nav-link active" href="/showmodel?model={{Model.id}}&tab=7">Citations</a></li>
-    <li class="nav-item"><a class="nav-link disabled" href="#">ModelView</a></li>
-    {% if Model.simPFid %}
-      <li class="nav-item"><a class="nav-link" href="http://sim.neuroinf.jp/modules/xoonips/detail.php?item_id={{Model.simPFid.value}}">Simulation Platform <sup><i class="fas fa-external-link-alt"></i></sup></a></li>
-    {% endif %}
-    {% if Model.gitrepo %}
-      <li class="nav-item"><a class="nav-link" href="https://github.com/ModelDBRepository/{{Model.id}}">Versions <sup><i class="fas fa-external-link-alt"></i></sup></a></li>
-    {% endif %}  
-</ul>
+{% extends "main.html" %}
+
+{% block header %}
+    {% include "showmodel-tabs.html" %}
+{% endblock %}
+
+{% block content %}
 {% for ref in citation_data %}
 <!--div class="row"-->
 <h4>{{ref.0.html | safe}}</h4>

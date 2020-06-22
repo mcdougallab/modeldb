@@ -25,7 +25,7 @@ def load_collection(name):
 def refresh():
     global modeldb, currents, genes, regions, receptors
     global transmitters, simenvironments, modelconcepts
-    global modeltypes, celltypes, papers
+    global modeltypes, celltypes, papers, cites_paper_unsorted
 
     modeldb = load_collection('models')
     currents = load_collection('currents')
@@ -38,6 +38,23 @@ def refresh():
     modeltypes = load_collection('modeltypes')
     celltypes = load_collection('celltypes')
     papers = load_collection('papers')
+
+    # Prepare dictionary used to provide the "references that cite a paper" on citation display pages
+
+    cites_paper_unsorted={}  # will contain value key pairs like 
+    # cites_paper_unsorted[paper_obj_id]=[list of obj ids of refs that cite paper_obj_id]
+
+    # Loop over all the papers.  Actually the citing_paper_obj_id is not necessarily "citing" until it is found to have refs a line below
+    for citing_paper_obj_id in papers:
+        citing_paper_obj_id = str(citing_paper_obj_id)
+        if 'references' in papers[citing_paper_obj_id]:
+            # loop over the list of references in the paper:
+            for ref in papers[citing_paper_obj_id]['references']['value']:
+                cited_paper_obj_id = str(ref['object_id'])
+                cites_paper_unsorted.setdefault(cited_paper_obj_id, [])
+                cites_paper_unsorted[cited_paper_obj_id].append(citing_paper_obj_id)
+
+    print('cites_paper_unsorted', cites_paper_unsorted['126976'])
 
 class ModelDB(models.Model):
     class Meta:
@@ -57,14 +74,7 @@ class ModelDB(models.Model):
         return id_ in modeldb
 
     def object_by_id(self, object_id):
-        object_id = str(object_id)
-        test_list = [modeldb, currents, genes, regions, receptors, transmitters, simenvironments, modelconcepts, modeltypes, celltypes, papers]
-        classes = [Model, Current, Gene, Region, Receptor, Transmitter, SimEnvironment, ModelConcept, ModelType, CellType, Paper]
-        for test, kind in zip(test_list, classes):
-            if object_id in test:
-                return kind(object_id)
-        return None
-
+        return _object_by_id(object_id)
     
     def model(self, id_):
         return Model(id_)
@@ -76,7 +86,14 @@ class ModelDB(models.Model):
     def models_by_name(self):
         return sorted([{'id': key, 'name': model['name']} for key, model in modeldb.items()], key=lambda item: item['name'])
 
-
+def _object_by_id(object_id):
+    object_id = str(object_id)
+    test_list = [modeldb, currents, genes, regions, receptors, transmitters, simenvironments, modelconcepts, modeltypes, celltypes, papers]
+    classes = [Model, Current, Gene, Region, Receptor, Transmitter, SimEnvironment, ModelConcept, ModelType, CellType, Paper]
+    for test, kind in zip(test_list, classes):
+        if object_id in test:
+            return kind(object_id)
+    return None
 
 def hasany(present, wanted, add_star=False):
     # if we don't want anything, then we're always happy
@@ -224,7 +241,7 @@ class Model:
     
     @property
     def papers(self):
-        return [ModelDB.object_by_id(item['object_id']) for item in self._model['model_paper']['value']]
+        return [_object_by_id(item['object_id']) for item in self._model['model_paper']['value']]
 
     def __getattr__(self, key):
         if key in self._model:
@@ -312,11 +329,11 @@ class Model:
 
 class Paper:
     def __init__(self, paper_id):
-        self._id = paper_id
+        self._id = str(paper_id)
     
     @property
     def _raw(self):
-        return papers[self._id]
+        return papers[str(self._id)]
 
     @property
     def authors(self):
@@ -406,10 +423,12 @@ class Paper:
     
     @property
     def references(self):
+        print('references for', self._id)
         return [Paper(item['object_id']) for item in self._raw['references']['value']]
     
     @property
     def citations(self):
+        print('citations for', self._id)
         if self._id in cites_paper_unsorted:
             return [Paper(item) for item in cites_paper_unsorted[self._id]]
         else:
