@@ -1,4 +1,5 @@
 import re
+import html
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login, logout
@@ -276,9 +277,9 @@ def download(request):
                 if extension == 'hoc':
                     extension = 'c'
                 if extension in ('py', 'cpp', 'c', 'bas', 'js', 'cxx', 'h', 'f90', 'f95', 'json', 'java', 'md', 'r', 'sql', 'vba', 'vbs', 'yaml', 'yml', 'pl', 'lisp', 'lua', 'hs', 'go', 'css', 'c++', 'hpp', 'cs'):
-                    contents = f'<link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/styles/vs.min.css" rel="stylesheet" /><script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/highlight.min.js"></script><script>hljs.initHighlightingOnLoad();</script><pre><code class="{extension}">{contents.decode("utf-8")}</code></pre>'
+                    contents = f'<link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/styles/vs.min.css" rel="stylesheet" /><script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/highlight.min.js"></script><script>hljs.initHighlightingOnLoad();</script><pre><code class="{extension}">{html.escape(contents.decode("utf-8"))}</code></pre>'
                 else:
-                    contents = '<pre>' + contents.decode('utf-8') + '</pre>'
+                    contents = f'<pre>{html.escape(contents.decode("utf-8"))}</pre>'
             except:
                 contents = 'This file is not encoded as UTF-8. Download it to view.'
             contents = f'<html><body>{contents}</body></html>'
