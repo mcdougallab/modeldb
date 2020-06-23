@@ -10,6 +10,8 @@ from .models import currents, genes, regions, receptors, transmitters, simenviro
 
 ModelDB = models.ModelDB()
 
+# need this because f-strings cannot include a backslash
+_newline = '\n'
 
 def index(request):
     context = {
@@ -80,6 +82,19 @@ def my_login(request):
     }
     return render(request, 'login.html', context)
 
+def showmodel_redirect(request, model_id=None):
+    if model_id is None:
+        return HttpResponse('Forbidden', status=403)
+    # TODO: handle a missing model more gracefully
+    if not ModelDB.has_model(model_id):
+        return HttpResponse('Forbidden', status=403)
+    tab_id = int(request.GET.get('tab', 1))
+    if tab_id == 1:
+        tab_string = ''
+    else:
+        tab_string = f'&tab={tab_id}'
+    return redirect(f'/showmodel?model={model_id}{tab_string}')
+
 def showmodel(request):
     # TODO: probably can't always assume ints? maybe should recast existing to str?
     model_id = request.GET.get('model', -1)
@@ -112,12 +127,12 @@ def showmodel(request):
         filename = filename.split('/')
         breadcrumbs = []
         for i, name in enumerate(filename):
-            link = '/showmodel?tab=2&model=%s&file=%s' % (model_id, '/'.join(filename[0: i + 1]))
-            breadcrumbs.append('<a href="%s">%s</a>' % (link, name))
+            link = f'/showmodel?tab=2&model={model_id}&file={"/".join(filename[0: i + 1])}'
+            breadcrumbs.append(f'<a href="{link}">{name}</a>')
         if original_file_valid:
             breadcrumbs[-1] = name
         else:
-            breadcrumbs[0] = '<span style="color:red!important">Requested file does not exist</span>; showing ' + breadcrumbs[0]
+            breadcrumbs[0] = f'<span style="color:red!important">Requested file does not exist</span>; showing {breadcrumbs[0]}'
         
         if is_folder:
             content = model.folder_contents(original_filename)
@@ -200,7 +215,7 @@ def download_zip(request):
         return HttpResponse('Forbidden', status=403)
     filename = str(model_id) + '.zip'    
     response = HttpResponse(content_type="application/zip")
-    response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    response['Content-Disposition'] = f'attachment; filename={filename}'
     response.write(ModelDB.model(model_id).zip_file())
     return response
 
@@ -253,20 +268,23 @@ def download(request):
             contents = re.sub('src="(.*?)"|src=\'(.*?)\'', lambda match: _remap_src(model_id, match, base_filename), contents)
             contents = re.sub('href="(.*?)"|href=\'(.*?)\'', lambda match: _remap_href(model_id, match, base_filename), contents)
             # have to specify a base target otherwise will try to load links inside the iframe
-            contents = '<base target="_parent">' + contents
+            contents = f'<base target="_parent">{contents}'
         else:
             try:
                 # TODO: be smarter about handling extensions
-                if extension in ('py', 'cpp', 'c', 'bas', 'js', 'cxx', 'h'):
-                    contents = '<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/styles/vs.min.css" rel="stylesheet" /><script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/highlight.min.js"></script><script>hljs.initHighlightingOnLoad();</script><pre><code class="%s">%s</code></pre>' % (extension, contents.decode('utf-8'))
+                # workaround for HOC using C
+                if extension == 'hoc':
+                    extension = 'c'
+                if extension in ('py', 'cpp', 'c', 'bas', 'js', 'cxx', 'h', 'f90', 'f95', 'json', 'java', 'md', 'r', 'sql', 'vba', 'vbs', 'yaml', 'yml', 'pl', 'lisp', 'lua', 'hs', 'go', 'css', 'c++', 'hpp', 'cs'):
+                    contents = f'<link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/styles/vs.min.css" rel="stylesheet" /><script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/highlight.min.js"></script><script>hljs.initHighlightingOnLoad();</script><pre><code class="{extension}">{contents.decode("utf-8")}</code></pre>'
                 else:
                     contents = '<pre>' + contents.decode('utf-8') + '</pre>'
             except:
                 contents = 'This file is not encoded as UTF-8. Download it to view.'
-            contents = '<html><body>' + (contents) + '</body></html>'
+            contents = f'<html><body>{contents}</body></html>'
     else:
         response = HttpResponse(content_type="application/octet-stream")
-        response['Content-Disposition'] = 'attachment; filename=%s' % filename
+        response['Content-Disposition'] = f'attachment; filename={filename}'
     response.write(contents)
     return response    
 
@@ -342,11 +360,11 @@ def findbysimulator(request):
 def _render_tree_element(obj, collection, base_link):
     subtree = ''
     if 'children' in obj:
-        subtree = '<ul>{}</ul>'.format('\n'.join(_render_tree_element(collection[child], collection, base_link) for child in sorted(obj['children'], key=lambda _id: collection[_id]['name'].lower())))
+        subtree = f"<ul>{_newline.join(_render_tree_element(collection[child], collection, base_link) for child in sorted(obj['children'], key=lambda _id: collection[_id]['name'].lower()))}</ul>"
     return f'<li><a href="{base_link}?id={obj["id"]}">{obj["name"]}{subtree}</li>'
 
 def _render_tree(collection, base_link):
     root_nodes = [item for item in collection.values() if not 'parent' in item or item['parent'] is None]
     print('root_nodes', root_nodes)
     root_nodes = sorted(root_nodes, key=lambda obj: obj['name'].lower())
-    return '<ul>{}</ul>'.format('\n'.join(_render_tree_element(node, collection, base_link) for node in root_nodes))
+    return f'<ul>{_newline.join(_render_tree_element(node, collection, base_link) for node in root_nodes)}</ul>'
