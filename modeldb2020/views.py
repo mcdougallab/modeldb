@@ -86,10 +86,10 @@ def my_login(request):
 
 def showmodel_redirect(request, model_id=None):
     if model_id is None:
-        return HttpResponse('Forbidden', status=403)
+        return HttpResponse('404 not found', status=404)
     # TODO: handle a missing model more gracefully
     if not ModelDB.has_model(model_id):
-        return HttpResponse('Forbidden', status=403)
+        return HttpResponse('404 not found', status=404)
     tab_id = int(request.GET.get('tab', 1))
     if tab_id == 1:
         tab_string = ''
@@ -104,11 +104,11 @@ def showmodel(request):
     # TODO: handle not having a model argument more gracefully
     if model_id == -1:
         print('model_id == -1')
-        return HttpResponse('Forbidden', status=403)
+        return HttpResponse('404 not found', status=404)
     # TODO: handle a missing model more gracefully
     if not ModelDB.has_model(model_id):
         print('did not pass has_model')
-        return HttpResponse('Forbidden', status=403)
+        return HttpResponse('404 not found', status=404)
 
     model = ModelDB.model(model_id)
 
@@ -143,7 +143,7 @@ def showmodel(request):
 
         # TODO: handle a file specification
         if not ModelDB.has_model(model_id):
-            return HttpResponse('Forbidden', status=403)
+            return HttpResponse('404 not found', status=404)
 
         context = {
             'title': 'ModelDB: Show Model',
