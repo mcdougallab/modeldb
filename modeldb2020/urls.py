@@ -44,6 +44,6 @@ urlpatterns = [
     re_path(r'^(?:modeldb/)?findbysimulator(?:\.(?:cs)?html)?$(?i)', views.findbysimulator, name='findbysimulator'),
     re_path(r'^(?:modeldb/)?(?:mdb)?citations(?:\.(?:cs)?html)?$(?i)', views.mdbcitations, name='mdbcitations'),
     #path('admin/', admin.site.urls),
-    re_path(r'^api/v1/(?i)', include(urls_api_v1)),
+    re_path(r'^api/v1/', include(urls_api_v1)),
     path('<slug:model_id>', views.showmodel_redirect, name='showmodel_redirect')
 ]
