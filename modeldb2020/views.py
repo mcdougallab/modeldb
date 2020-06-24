@@ -1,5 +1,6 @@
 import re
 import html
+import json
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login, logout
@@ -369,3 +370,81 @@ def _render_tree(collection, base_link):
     print('root_nodes', root_nodes)
     root_nodes = sorted(root_nodes, key=lambda obj: obj['name'].lower())
     return f'<ul>{_newline.join(_render_tree_element(node, collection, base_link) for node in root_nodes)}</ul>'
+
+def _update_search_query(query, item, name):
+    if item:
+        query.append({'name': name, 'search': item.strip(';')})
+
+def _parse_search(item):
+    if item:
+        return [term.strip() for term in item.split(';')]
+    else:
+        return []
+
+def _get_names(collection_data):
+    return json.dumps(sorted([item['name'] for item in collection_data.values()]))
+
+def search(request):
+    my_transmitters = request.GET.get('transmitters')
+    my_receptors = request.GET.get('receptors')
+    my_genes = request.GET.get('genes')
+    my_simenvironment = request.GET.get('simenvironment')
+    my_modelconcepts = request.GET.get('modelconcepts')
+    my_celltypes = request.GET.get('celltypes')
+    my_modeltype = request.GET.get('modeltype')
+    my_brainregions = request.GET.get('brainregions')
+    my_channels = request.GET.get('channels')
+    my_authors = None
+    my_title = request.GET.get('title')
+
+    if my_transmitters or my_receptors or my_genes or my_simenvironment or my_modelconcepts or my_celltypes or my_modeltype or my_brainregions or my_channels or my_authors or my_title:
+        query = []
+        _update_search_query(query, my_channels, 'Currents')
+        _update_search_query(query, my_transmitters, 'Transmitters')
+        _update_search_query(query, my_receptors, 'Receptors')
+        _update_search_query(query, my_genes, 'Genes')
+        _update_search_query(query, my_simenvironment, 'Simulation Environment')
+        _update_search_query(query, my_modelconcepts, 'Model Concepts')
+        _update_search_query(query, my_celltypes, 'Cell Types')
+        _update_search_query(query, my_modeltype, 'Model Type')
+        _update_search_query(query, my_brainregions, 'Brain Region/Organism')
+        _update_search_query(query, my_title, 'Title')
+        _update_search_query(query, my_authors, 'Author')
+
+        results = ModelDB.find_models(
+            channels = _parse_search(my_channels),
+            transmitters = _parse_search(my_transmitters),
+            receptors = _parse_search(my_receptors),
+            genes = _parse_search(my_genes),
+            simenvironment = _parse_search(my_simenvironment),
+            modelconcepts = _parse_search(my_modelconcepts),
+            celltypes = _parse_search(my_celltypes),
+            modeltype = _parse_search(my_modeltype),
+            brainregions = _parse_search(my_brainregions),
+            title = _parse_search(my_title),
+            authors = _parse_search(my_authors)
+        )
+
+        # do the actual search
+        context = {
+            'title': 'ModelDB: search',
+            'query': query,
+            'results': results
+        }
+        return render(request, 'searchresults.html', context)
+    else:
+
+        context = {
+            'title': 'ModelDB: search',
+            'modeltype_tags': _get_names(modeltypes),
+            'receptors_tags': _get_names(receptors),
+            'genes_tags': _get_names(genes),
+            'channels_tags': _get_names(currents),
+            'brainregions_tags': _get_names(regions),
+            'celltypes_tags': _get_names(celltypes),
+            'modelconcepts_tags': _get_names(modelconcepts),
+            'transmitters_tags': _get_names(transmitters),
+            'simenvironment_tags': _get_names(simenvironments),
+            'ModelDB': ModelDB
+        }
+        return render(request, 'search.html', context)

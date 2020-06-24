@@ -22,6 +22,7 @@ urlpatterns = [
     re_path(r'^(?:modeldb/)?index.html$(?i)', views.index, name='index'),
     re_path('^(?:modeldb/)?login$(?i)', views.my_login, name='login'),
     re_path('^(?:modeldb/)?logout$(?i)', views.my_logout, name='logout'),
+    re_path(r'^(?:modeldb/)?search(?:fulltext)?(?:\.(?:cs)?html)?$(?i)', views.search, name='search'),
     re_path(r'^(?:modeldb/)?neuron_dwnldguide(?:\.(?:cs)?html)?$(?i)', views.static, {'page': 'neuron_download_guide', 'title': 'NEURON download help'}, name='neuron_download_guide'),
     re_path(r'^(?:modeldb/)?howtocite(?:\.(?:cs)?html)?$(?i)', views.static, {'page': 'howtocite', 'title': 'How to cite ModelDB'}, name='howtocite'),
     re_path(r'^(?:modeldb/)?mdbresources(?:\.(?:cs)?html)?$(?i)', views.static, dict(page='mdbresources', title='Web resources for ModelDB'), name='mdbresources'),

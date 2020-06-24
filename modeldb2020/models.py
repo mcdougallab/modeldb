@@ -63,7 +63,24 @@ class ModelDB(models.Model):
             ('can_admin', 'Can do admin'),
             ('can_pipeline', 'Can use pipeline')
         ]
-    
+
+    def find_models(self, channels=[], transmitters=[], receptors=[], genes=[], simenvironment=[], modelconcepts=[], celltypes=[], modeltype=[],
+                    brainregions=[], title=[], authors=[]):
+        result = []
+        for model in modeldb.values():
+            
+            if (hasany(model.get('transmitters'), transmitters) and hasany(model.get('receptors'), receptors) and hasany(model.get('genes'), genes)
+                and hasany(model.get('modeling_application'), simenvironment) and hasany(model.get('model_concept'), modelconcepts)
+                and hasany(model.get('neurons'), celltypes) and hasany(model.get('model_type'), modeltype)
+                and hasany(model.get('currents'), channels)
+                #and hasany(model.get('authors'), authors)
+                and hasanytitle([model.get('name')], title, add_star=True)
+                and hasany(model.get('brainregions'), brainregions)):
+                result.append(self.model(model['id']))
+        
+        return result
+
+
     def get_models(self):
         return modeldb
 
@@ -234,7 +251,9 @@ class CellType(SenseLabClass):
 
 class Model:
     def __init__(self, model_id):
-        self._model = modeldb[model_id]
+        print('model_id', model_id)
+        print(modeldb.keys())
+        self._model = modeldb[str(model_id)]
         self._zip = None
         self._readme_file = None
         self._setup_filetree()

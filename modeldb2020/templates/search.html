@@ -1,0 +1,141 @@
+{% extends "main.html" %}
+
+{% block head %}
+<style>
+	label {
+		display: inline-block;
+		width: 15em;
+		text-align: right
+	}
+	input {
+		width: 20em;
+	}
+  .ui-autocomplete {
+    max-height: 200px;
+    overflow-y: auto;
+    /* prevent horizontal scrollbar */
+    overflow-x: hidden;
+  }
+</style>
+<!-- using jQuery UI for autocomplete -->
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+<script type="text/javascript">
+$(function() {
+    function split( val ) {
+      return val.split( /;\s*/ );
+    }
+    function extractLast( term ) {
+      return split( term ).pop();
+    }
+    function setup_autocomplete(id, taglist) {
+     $( "#" + id)
+      // don't navigate away from the field on tab when selecting an item
+      .bind( "keydown", function( event ) {
+        if ( event.keyCode === $.ui.keyCode.TAB &&
+            $( this ).autocomplete( "instance" ).menu.active ) {
+          event.preventDefault();
+        }
+      })
+      .autocomplete({
+        minLength: 0,
+        source: function( request, response ) {
+          // delegate back to autocomplete, but extract the last term
+          response( $.ui.autocomplete.filter(
+            taglist, extractLast( request.term ) ) );
+        },
+        focus: function() {
+          // prevent value inserted on focus
+          return false;
+        },
+        select: function( event, ui ) {
+          var terms = split( this.value );
+          // remove the current input
+          terms.pop();
+          // add the selected item
+          terms.push( ui.item.value );
+          // add placeholder to get the comma-and-space at the end
+          terms.push( "" );
+          this.value = terms.join( "; " );
+          return false;
+        }
+      });
+    }
+    setup_autocomplete('modeltype', {{modeltype_tags | safe}});
+    setup_autocomplete('receptors', {{receptors_tags | safe}});
+    setup_autocomplete('genes', {{genes_tags | safe}});
+    setup_autocomplete('simenvironment', {{simenvironment_tags | safe}});
+    setup_autocomplete('transmitters', {{transmitters_tags | safe}});
+    setup_autocomplete('modelconcepts', {{modelconcepts_tags | safe}});
+    setup_autocomplete('celltypes', {{celltypes_tags | safe}});
+    setup_autocomplete('brainregions', {{brainregions_tags | safe}});
+    setup_autocomplete('channels', {{channels_tags | safe}});
+  });
+  </script>
+{% endblock %}
+{% block content %}
+
+<div>
+	<form action="/modeldb/search">
+		<center>
+		<div style="display: inline-block">
+
+		<div class="ui-widget">
+			<label for="modeltype">Model Type: </label>
+			<input type="text" name="modeltype" id="modeltype" />
+		</div>
+		<div class="ui-widget">
+			<label for="brainregions">Brain Region/Organism: </label>
+			<input type="text" name="brainregions" id="brainregions" />
+		</div>
+		<div class="ui-widget">
+			<label for="celltypes">Cell Types: </label>
+			<input type="text" name="celltypes" id="celltypes" />
+		</div>
+    <div class="ui-widget">
+      <label for="celltypes">Currents: </label>
+      <input type="text" name="channels" id="channels" />
+    </div>
+		<div class="ui-widget">
+			<label for="receptors">Receptors: </label>
+			<input type="text" name="receptors" id="receptors" />
+		</div>
+		<div class="ui-widget">
+			<label for="genes">Genes: </label>
+			<input type="text" name="genes" id="genes" />
+		</div>
+		<div class="ui-widget">
+			<label for="transmitters">Transmitters: </label>
+			<input type="text" name="transmitters" id="transmitters" />
+		</div>
+		<div class="ui-widget">
+			<label for="simenvironment">Simulation Environment: </label>
+			<input type="text" name="simenvironment" id="simenvironment" />
+		</div>
+		<div class="ui-widget">
+			<label for="modelconcepts">Model Concepts: </label>
+			<input type="text" name="modelconcepts" id="modelconcepts" />
+		</div>
+		<br/>
+    <br/>
+    <div class="ui-widget">
+      <label for="title">Title: </label>
+      <input type="text" name="title" id="title" />
+    </div>
+<!--    <div class="ui-widget">
+      <label for="author">Author: </label>
+      <input type="text" name="author" id="author" />
+    </div> -->
+    <br/>
+
+		<center>
+		    <input type="submit" value="Search" class="btn-primary" />
+		</center>
+		</div>
+		</center>
+	</form>
+    <br/><br/>
+	Enter semicolon separated search terms on each row. Unix-style completions are supported (e.g. <tt>*</tt>, <tt>?</tt>, <tt>[abc]</tt>). Each entry on a row is combined with an OR; the rows are combined via AND. In the first group (i.e. not for Title<!-- and Author-->): press the down arrow for a list, or start typing for autocomplete. Every title search automatically includes a <tt>*</tt> before and after the search. Other fields do not.
+  </div>
+{% endblock %}
