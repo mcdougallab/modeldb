@@ -14,8 +14,8 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, re_path
-from . import views
+from django.urls import path, re_path, include
+from . import views, urls_api_v1
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -25,6 +25,7 @@ urlpatterns = [
     re_path(r'^(?:modeldb/)?search(?:fulltext)?(?:\.(?:cs)?html)?$(?i)', views.search, name='search'),
     re_path(r'^(?:modeldb/)?neuron_dwnldguide(?:\.(?:cs)?html)?$(?i)', views.static, {'page': 'neuron_download_guide', 'title': 'NEURON download help'}, name='neuron_download_guide'),
     re_path(r'^(?:modeldb/)?howtocite(?:\.(?:cs)?html)?$(?i)', views.static, {'page': 'howtocite', 'title': 'How to cite ModelDB'}, name='howtocite'),
+    re_path(r'^(?:modeldb/)?api(?:\.(?:cs)?html)?$(?i)', views.static, dict(page='apidocs', title='The ModelDB API'), name='apidocs'),
     re_path(r'^(?:modeldb/)?(?:mdb)?resources(?:\.(?:cs)?html)?$(?i)', views.static, dict(page='mdbresources', title='Web resources for ModelDB'), name='mdbresources'),
     re_path(r'^(?:modeldb/)?eco(?:\.(?:cs)?html)?$(?i)', views.static, dict(page='eco', title='An ecosystem of computational neuroscience resources'), name='eco'),
     re_path(r'^(?:modeldb/)?listbymodelname(?:\.(?:cs)?html)?$(?i)', views.listbymodelname, name='listbymodelname'),
@@ -43,5 +44,6 @@ urlpatterns = [
     re_path(r'^(?:modeldb/)?findbysimulator(?:\.(?:cs)?html)?$(?i)', views.findbysimulator, name='findbysimulator'),
     re_path(r'^(?:modeldb/)?(?:mdb)?citations(?:\.(?:cs)?html)?$(?i)', views.mdbcitations, name='mdbcitations'),
     #path('admin/', admin.site.urls),
+    re_path(r'^api/v1/(?i)', include(urls_api_v1)),
     path('<slug:model_id>', views.showmodel_redirect, name='showmodel_redirect')
 ]

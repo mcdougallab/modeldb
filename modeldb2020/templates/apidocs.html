@@ -1,0 +1,30 @@
+{% extends "main.html" %}
+
+{% block content %}
+    <center><h3>ModelDB - API Overview</h3></center>
+
+    <p>
+        The prefix for accessing all API calls is <code>/api/v1</code>.
+    </p>
+
+    <p>
+        To see what types of data are available simply call <a href="/api/v1">/api/v1</a>. 
+        This returns a JSON-encoded list that includes e.g. celltypes, models, ...
+    </p>
+
+    <p>
+        To find out which data objects are available for a given type, query that type.
+        e.g. The list of all model object ids is <a href="/api/v1/models">/api/v1/models</a>.
+    </p>
+
+    <p>
+        To get a specific instance, include the object id. e.g. The data for model 87284 is at
+        <a href="/api/v1/models/87284">/api/v1/models/87284</a>.
+    </p>
+
+    <p>
+        You can also get a list of property values in the same order as the object ids by
+        querying on the name of the property. For example, to get the "name" property for all
+        the celltypes objects, query <a href="/api/v1/celltypes/name">/api/v1/celltypes/name</a>.
+    </p>
+{% endblock %}
