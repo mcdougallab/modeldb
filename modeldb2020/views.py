@@ -34,12 +34,10 @@ def static(request, page='', title=''):
 
 def modellist(request):
     object_id = request.GET.get('id')
-    print('modellist')
     if object_id is None:
         return listbymodelname(request)
     
     obj = ModelDB.object_by_id(object_id)
-    print(obj)
     if obj is None:
         return listbymodelname(request)
     context = {

@@ -74,6 +74,8 @@ def get_metadata(object_id):
         elif isinstance(attr['value'], dict):
             attr['value'] = [attr['value']]
         result[attr['attribute_name']] = {'value': attr['value'], 'attr_id': attr['attribute_id']}
+    if result['class_id'] == 18:
+        result['links'] = {}
     return result
 
 for class_name, class_id in [

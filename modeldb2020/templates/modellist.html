@@ -1,4 +1,4 @@
-{% extends "main.html" %}
+{% extends "bigleftcol.html" %}
 
 {% block head %}
 <style>
@@ -7,14 +7,19 @@
 }
 </style>
 {% endblock %}
-{% block content %}
-<div class="row">
-        <div class="col-lg-12">
-<center><h3>Models that contain the {{ obj.classname }}: {{ obj.name }}</h3>
+
+{% block header %}
+<h3>{{ obj.classname }}: {{ obj.name }}</h3>
 {% if obj.description %}
     ({{ obj.description }})
 {% endif %}
-</center>
+{% endblock %}
+
+{% block leftcol %}
+<div class="row">
+        <div class="col-lg-12">
+<h4>Models:</h4>
+
 <ol class="modellist">
     {% for model in obj.models %}
         <li><a href="/showmodel?model={{model.id}}">{{model.name}}</a></li>
@@ -22,4 +27,32 @@
 </ol>
 </div>
 </div>
+{% endblock %}
+
+{% block sidecolumn %}
+    {% if obj.class_id == 18 %}
+        {% if obj.picture is not None %}
+            <div>
+                <center>
+                    <img src="data:image/png;base64, {{obj.picture}}" style="max-width:100%"/>
+                </center>
+            </div>
+        {% endif %}
+        {% if obj.links %}
+            <div class = "well">
+                <b>External resources:</b><br><br>
+                {% for data in obj.links.items %}
+                    {% if data.0 == 'neuroelectro' %}
+                        <a href="https://neuroelectro.org/neuron/{{data.1}}/">NeuroElectro</a><br>
+                    {% endif %}
+                    {% if data.0 == 'neuromorpho' %}
+                        <a href='http://neuromorpho.org/MetaDataResult.jsp?summary={{data.1|safe}}''>NeuroMorpho.Org</a><br>
+                    {% endif %}
+                    {% if data.0 == 'neurolex' %}
+                        <a href="http://uri.neuinfo.org/nif/nifstd/{{data.1}}">NeuroLex/Interlex</a><br>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endif %}
 {% endblock %}

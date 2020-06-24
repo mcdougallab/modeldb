@@ -54,7 +54,6 @@ def refresh():
                 cites_paper_unsorted.setdefault(cited_paper_obj_id, [])
                 cites_paper_unsorted[cited_paper_obj_id].append(citing_paper_obj_id)
 
-    print('cites_paper_unsorted', cites_paper_unsorted['126976'])
 
 class ModelDB(models.Model):
     class Meta:
@@ -245,14 +244,24 @@ class ModelType(SenseLabClass):
 class CellType(SenseLabClass):
     classname = 'Cell Type'
     attr_name = 'neurons'
+    class_id = 18
     def __init__(self, _id):
         SenseLabClass.__init__(self, _id)
         self._data = celltypes[_id]
+    
+    def picture(self):
+        try:
+            return self._data['Picture']['value'][0]['file_content'].replace('\n', '')
+        except:
+            return None
+    
+    def links(self):
+        print('self._data["links"]', self._data['links'])
+        return self._data.get('links', {})
+        #{item: self._data[item] for item in ['neuromorpho', 'neuroelectro', 'neurolex'] if item in self._data}
 
 class Model:
     def __init__(self, model_id):
-        print('model_id', model_id)
-        print(modeldb.keys())
         self._model = modeldb[str(model_id)]
         self._zip = None
         self._readme_file = None
