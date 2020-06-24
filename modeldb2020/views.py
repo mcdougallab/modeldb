@@ -40,9 +40,19 @@ def modellist(request):
     obj = ModelDB.object_by_id(object_id)
     if obj is None:
         return listbymodelname(request)
+    seealso = {}
+    if object_id == '3537':
+        seealso = {cell['name']: f"?id={cell['id']}" for cell in sorted(celltypes.values(), key=lambda item: item['name'])}
+    elif object_id == '3540':
+        seealso = {channel['name']: f"?id={channel['id']}" for channel in sorted(currents.values(), key=lambda item: item['name'])}
+    elif 'children' in obj._data:
+        children = [ModelDB.object_by_id(_id) for _id in obj._data['children']]
+        seealso = {child.name: f'?id={child._id}' for child in children}
+
     context = {
         'title': f'ModelDB: Models that contain {obj.name}',
-        'obj': obj
+        'obj': obj,
+        'seealso': seealso
     }
     return render(request, 'modellist.html', context)
 
@@ -365,7 +375,6 @@ def _render_tree_element(obj, collection, base_link):
 
 def _render_tree(collection, base_link):
     root_nodes = [item for item in collection.values() if not 'parent' in item or item['parent'] is None]
-    print('root_nodes', root_nodes)
     root_nodes = sorted(root_nodes, key=lambda obj: obj['name'].lower())
     return f'<ul>{_newline.join(_render_tree_element(node, collection, base_link) for node in root_nodes)}</ul>'
 

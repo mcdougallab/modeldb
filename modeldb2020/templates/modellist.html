@@ -5,6 +5,10 @@
 .modellist>li {
     padding-top: 1em;
 }
+.hangingindent {
+    text-indent: -2em;
+    padding-left: 3em;
+}
 </style>
 {% endblock %}
 
@@ -54,5 +58,13 @@
                 {% endfor %}
             </div>
         {% endif %}
+    {% endif %}
+    {% if seealso %}
+        <div class="well hangingindent">
+            <b>See also:</b><br><br>
+            {% for data in seealso.items %}
+                <p><a href="{{data.1}}">{{data.0}}</a></p>
+            {% endfor %}
+        </div>
     {% endif %}
 {% endblock %}
