@@ -23,7 +23,7 @@
 
 {% block leftcol %}
 <div style="overflow-x:hidden; margin-bottom: 1em">
-<!--<img src="{% static "/modeldb/modeldb-banner.svg" %}" alt="ModelDB banner" title="ModelDB banner" style="height: 5em;" border="0" /> -->
+<!--<img src="{% static "/modeldb-banner.svg" %}" alt="ModelDB banner" title="ModelDB banner" style="height: 5em;" border="0" /> -->
 </div>
 <p>
     <b>ModelDB</b> 
@@ -35,49 +35,49 @@
 </p>
 <p style="margin-top: 2em"><a class="big" href="#"><i class="fas fa-upload"></i> Upload</a> your model today.
 </p>
-<p><a class="big" href="/ModelDB/ListByModelName">Browse</a> all {{ModelDB.num_models}} models, or:</p>
+<p><a class="big" href="/ListByModelName">Browse</a> all {{ModelDB.num_models}} models, or:</p>
 <div class="row">
         <div class="col-6 col-sm-6">
                 <b>Find models by:</b><br />
                 <ul class="nav thin" style="display: block !important">
                     <li>
-                        <a class="active" href="/ModelDB/ListByModelName.cshtml?c=19&lin=-1">Model name</a>
+                        <a class="active" href="/ListByModelName.cshtml?c=19&lin=-1">Model name</a>
                     </li>
                     <li>
-                        <a href="/ModelDB/ListByFirstAuthor.cshtml">First author</a>
+                        <a href="/ListByFirstAuthor.cshtml">First author</a>
                     </li>
                     <li>
-                        <a href="/ModelDB/ListByAnyAuthor.cshtml">Each author</a>
+                        <a href="/ListByAnyAuthor.cshtml">Each author</a>
                     </li>
                     <li>
-                        <a href="/ModelDB/FindCircByRegionList.cshtml">Region (circuits)</a>
+                        <a href="/FindCircByRegionList.cshtml">Region (circuits)</a>
                     </li>
                 </ul><br/>
                 <b>Find models of:</b>
                 <ul class="nav thin" style="display: block !important">
                     <li>
-                        <a href="/ModelDB/ModelList?id=3536">Realistic Networks</a>
+                        <a href="/ModelList?id=3536">Realistic Networks</a>
                     </li>
                     <li>
-                        <a href="/ModelDB/ModelList?id=3537">Neurons</a>
+                        <a href="/ModelList?id=3537">Neurons</a>
                     </li>
                     <!-- <li>
-                        <a href="/ModelDB/ModelList?id=114107" title="electrical synapses">Electrical synapses (gap junctions)</a>
+                        <a href="/ModelList?id=114107" title="electrical synapses">Electrical synapses (gap junctions)</a>
                     </li> -->
                     <li>
-                        <a href="/ModelDB/ModelList?id=3539" title="includes ligand-gated ion channels">Chemical synapses</a>
+                        <a href="/ModelList?id=3539" title="includes ligand-gated ion channels">Chemical synapses</a>
                     </li>
                     <li>
-                        <a href="/ModelDB/ModelList?id=3540" title="voltage-gated">Ion channels</a>
+                        <a href="/ModelList?id=3540" title="voltage-gated">Ion channels</a>
                     </li>
                     <li>
-                        <a href="/ModelDB/ModelList?id=22013">Neuromuscular&nbsp;junctions</a>
+                        <a href="/ModelList?id=22013">Neuromuscular&nbsp;junctions</a>
                     </li>
                     <li>
-                        <a href="/ModelDB/ModelList?id=3538">Axons</a>
+                        <a href="/ModelList?id=3538">Axons</a>
                     </li>
                     <li>
-                        <a href="/ModelDB/ModelList?id=52404">Pathophysiology</a>
+                        <a href="/ModelList?id=52404">Pathophysiology</a>
                     </li>
                 </ul>
                             
@@ -86,28 +86,28 @@
                 <b>Find models for:</b>
                 <ul class="nav thin" style="display: block !important">
                     <li>
-                        <a href="/ModelDB/FindByRegionList">Cell type</a>
+                        <a href="/FindByRegionList">Cell type</a>
                     </li>
                     <li>
-                        <a href="/ModelDB/FindByCurrent">Current</a>
+                        <a href="/FindByCurrent">Current</a>
                     </li>
                     <li>
-                        <a href="/ModelDB/FindByReceptor">Receptor</a>
+                        <a href="/FindByReceptor">Receptor</a>
                     </li>
                     <li>
-                        <a href="/ModelDB/FindByGeneList">Gene</a>
+                        <a href="/FindByGeneList">Gene</a>
                     </li>
                     <li>
-                        <a href="/ModelDB/FindByTransmitter">Transmitters</a>
+                        <a href="/FindByTransmitter">Transmitters</a>
                     </li>
                     <li>
-                        <a href="/ModelDB/FindByConcept" title="Big-picture ideas that models address, e.g. synaptic plasticity, pattern recognition, etc.">Concept</a>
+                        <a href="/FindByConcept" title="Big-picture ideas that models address, e.g. synaptic plasticity, pattern recognition, etc.">Concept</a>
                     </li>
                     <li>
-                        <a href="/ModelDB/FindBySimulator">Simulators</a>
+                        <a href="/FindBySimulator">Simulators</a>
                     </li>
                     <li>
-                        <a href="/ModelDB/ModelList?id=49304">Methods</a>
+                        <a href="/ModelList?id=49304">Methods</a>
                     </li>
                 </ul>
                 <br/>
@@ -117,10 +117,10 @@
                         <a href="https://neuron.yale.edu/neuron/static/mailinglistmanager.php?list=senselab">SenseLab mailing list</a>
                     </li>
                     <li>
-                        <a href="/ModelDB/mdbresources.cshtml"> ModelDB related resources</a>
+                        <a href="/mdbresources.cshtml"> ModelDB related resources</a>
                     </li>
                     <li>
-                        <a href="/ModelDB/eco.cshtml"> Computational neuroscience ecosystem</a>
+                        <a href="/eco.cshtml"> Computational neuroscience ecosystem</a>
                     </li>
                     <li>
                         <a href="https://github.com/ModelDBRepository">Models in a git repository</a>
