@@ -436,7 +436,7 @@ class Paper:
             pubmed = ' [<a href="https://www.ncbi.nlm.nih.gov/pubmed?holding=modeldb&term={}">PubMed</a>]'.format(pubmed)
 
         base_info = ', '.join(self.authors) + f'. ({self.year}).'
-        base_info = f'<a href="/mdbcitations?id={self._id}">{base_info}</a>'
+        base_info = f'<a href="/citations?id={self._id}">{base_info}</a>'
         return base_info + f' {self.title} <i>' + link_prefix + self.journal + link_suffix + '</i> ' + self.volume + pubmed
     
     def __getitem__(self, item):
