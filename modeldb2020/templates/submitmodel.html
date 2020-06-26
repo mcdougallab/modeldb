@@ -1,0 +1,215 @@
+{% extends "main.html" %}
+{% load static %}
+
+
+{% block head %}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+
+<script>
+    $(function() {
+        {% for meta_item in metadata %}
+            $("#{{meta_item.1}}").select2({width: "100%",
+                placeholder: "Select {{meta_item.0.lower}}",
+            });
+        {% endfor %}
+    });
+</script>
+<style>
+    .multiselect {
+        width: 100%
+    }
+    .entryrow {
+        padding-bottom: 1em;
+    }
+    .explanation {
+        font-style: italic; 
+        font-size: small;
+    }
+    input:required {
+        box-shadow: none;
+    }
+</style>
+
+{% endblock %}
+
+{% block content %}
+    <h3>Submit New Model</h3><br>
+    <div class="row entryrow">
+        <div class="col-12 explanation">
+            Only the information in this first section is required, however the more
+            information you provide, the easier it will be for others to discover
+            your model.
+        </div>
+    </div>
+
+    <form action="/ProcessModelSubmit">
+        {% csrf_token %}
+        <div class="row entryrow">
+            <div class="col-md-3">
+                Your full name:
+            </div>
+            <div class="col-md-9">
+                <input name="modelername" type="text" style="width:100%" placeholder="Contributor name" required />
+            </div>
+        </div>
+        <div class="row entryrow">
+            <div class="col-md-3">
+                Your email:
+            </div>
+            <div class="col-md-9">
+                <input name="modeleremail" type="email" style="width:100%" placeholder="Contributor email" required />
+            </div>
+        </div>
+        <div class="row entryrow">
+            <div class="col-md-3">
+                Paper citation:
+                <p class="explanation">
+                    Required for public models.
+                </p>                
+            </div>
+            <div class="col-md-9">
+                <textarea name="citation" style="width:100%; height: 5em" placeholder="Enter citation or PMID in any format"></textarea>
+            </div>
+        </div>
+        <div class="row entryrow">
+            <div class="col-md-3">
+                Read/write access code:
+                <p class="explanation">
+                    Allows viewing and editing your model before it is made public.
+                </p>
+            </div>
+            <div class="col-md-9">
+                <input name="rwac" type="password" style="width:100%" value="" placeholder="Access code" required />
+            </div>
+        </div>
+        <div class="row entryrow">
+            <div class="col-md-3">
+                Zip file with model code:
+            </div>
+            <div class="col-md-9">
+                <input id="file1" name="file1" type="file"  value="" placeholder="model zip file" required />
+            </div>
+        </div>
+        <div class="row entryrow">
+            <div class="col-md-3">
+                Model license:
+                <p class="explanation">
+                    A license tells people what they can and cannot do with your model.
+                </p>
+            </div>
+            <div class="col-md-9">
+                <select name="license" id="license" style="width: 100%" required>
+                    <option value=""></option>
+                    <option value="MIT">MIT</option>
+                    <option value="BSD2">BSD 2-clause</option>
+                    <option value="BSD3">BSD 3-clause</option>
+                    <option value="GPL">GPL</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row entryrow">
+            <div class="col-12">
+                <h4>Model overview and sharing</h4>
+            </div>
+        </div>
+        <div class="row entryrow">
+            <div class="col-md-3">
+                Model name:
+                <p class="explanation">
+                    What is investigated and paper. Examples in
+                    <a href="/ListByModelName?c=19&lin=-1" target="_blank">model names</a> list.
+                </p>
+            </div>
+            <div class="col-md-9">
+                <input name="modelname" type="text" style="width:100%" placeholder="Model name, typically: model topic (author et al, year)" />
+            </div>
+        </div>
+        <div class="row entryrow">
+            <div class="col-md-3">
+                Model notes:
+                <p class="explanation">
+                    Paper abstract or a more concise summary of the model, question, and results.
+                </p>
+            </div>
+            <div class="col-md-9">
+                <textarea name="modelnotes" style="width:100%; height: 5em" placeholder="Paper abstract or a more concise summary of the model, question, and results."></textarea>
+            </div>
+        </div>
+        <div class="row entryrow">
+            <div class="col-md-3">
+                Experimental motivation:
+                <p class="explanation">
+                    Brief summary of key experimental findings driving modeling choices.
+                </p>
+            </div>
+            <div class="col-md-9">
+                <textarea name="expmotivation" style="width:100%; height: 5em" placeholder="If applicable, e.g. why the channel distributions, connectivity rules, etc"></textarea>
+            </div>
+        </div>
+
+        <div class="row entryrow">
+            <div class="col-md-3">
+                Read only access code:
+                <p class="explanation">
+                    Allows others (e.g. reviewers) to read but not edit an unpublished model.
+                </p>
+            </div>
+            <div class="col-md-9">
+                <input name="rac" type="password" style="width:100%" value="" placeholder="Read-only access code" />
+            </div>
+        </div>
+
+
+
+        <div class="row entryrow">
+            <div class="col-12">
+                <h4>Model properties</h4>
+                <p class="explanation">
+                    Choose the properties of the model by keeping this guiding question in mind: 
+                    "Do I want my model to appear when someone searches for all models 
+                    with that(those) keyword(s)?" If one or more properties you would like to 
+                    choose for your model does not already exist in the list(s) use the "Other tags"
+                    text box at the end to enter your suggestion. Most of the properties allow multiple
+                    selections. 
+                </p>
+
+            </div>
+        </div>
+        {% for meta_item in metadata %}
+            <div class="row entryrow">
+                <div class="col-md-3">
+                    {{meta_item.0}}:
+                </div>
+                <div class="col-md-9">
+                    <select class="multiselect" name="{{meta_item.1}}" id="{{meta_item.1}}" multiple>
+                        {% for item in meta_item.2 %}
+                            <option value={{item.0}}>{{item.1}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        {% endfor %}
+        <div class="row entryrow">
+            <div class="col-md-3">
+                Implementer(s):
+            </div>
+            <div class="col-md-9">
+                <input name="implementers" type="text" style="width:100%" placeholder="Implementers" />
+            </div>
+        </div>
+        <div class="row entryrow">
+            <div class="col-12">
+                <p>
+                    Are there any other tags we should use to annotate your model?
+                </p>
+                <textarea name="othertags" style="width:100%; height: 5em" placeholder="Suggest other tags"></textarea><br><br>
+                <p>
+                    <input type="submit" value="Submit"/>
+                </p>
+            </div>
+        </div>
+    </form>
+{% endblock %}

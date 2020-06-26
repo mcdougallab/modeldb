@@ -104,14 +104,7 @@
     <!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-    <script>
-        $(function() {
-            $('#searchbox').click(function() {window.location='/modeldb/search';});
-        });
-    </script>
-        
+    <![endif]-->        
 
     {% block head %}
     {% endblock %}
@@ -191,7 +184,7 @@
   
     <div class="row maincontainer" style="margin-left: 0.5em; margin-right: 0.5em;">
     <!-- Page Content -->
-    <div class="container">
+    <div class="container" style="padding-top: 1em">
         {% block header %}
         {% endblock %}
         {% block content %}

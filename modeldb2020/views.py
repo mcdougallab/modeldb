@@ -23,6 +23,36 @@ def index(request):
     }
     return render(request, 'index.html', context)
 
+def _id_and_name(data):
+    return sorted([(item['id'], item['name']) for item in data.values()], key=lambda item: item[1])
+
+#from .models import currents, genes, regions, receptors, transmitters, simenvironments, modelconcepts, modeltypes, celltypes, papers
+
+def process_model_submit(request):
+    context = {
+        'title': 'Model upload successful',
+        'request': request
+    }
+    return render(request, 'processmodelsubmit.html', context)
+
+
+def submit_model(request):
+    metadata = [
+        ['Neurons', 'celltypes', _id_and_name(celltypes)],
+        ['Currents', 'currents', _id_and_name(currents)],
+        ['Neurotransmitters', 'transmitters', _id_and_name(transmitters)],
+        ['Receptors', 'receptors', _id_and_name(receptors)],
+        ['Genes', 'genes', _id_and_name(genes)],
+        ['Concepts', 'concepts', _id_and_name(modelconcepts)],
+        ['Region or organism', 'regions', _id_and_name(regions)],
+        ['Simulation environment', 'simenvironment', _id_and_name(simenvironments)]
+    ]
+    context = {
+        'title': 'Submit Model',
+        'request': request,
+        'metadata': metadata
+    }
+    return render(request, 'submitmodel.html', context)
 
 def static(request, page='', title=''):
     context = {
