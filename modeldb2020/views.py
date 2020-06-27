@@ -1,6 +1,7 @@
 import re
 import html
 import json
+import os
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login, logout
@@ -29,9 +30,18 @@ def _id_and_name(data):
 #from .models import currents, genes, regions, receptors, transmitters, simenvironments, modelconcepts, modeltypes, celltypes, papers
 
 def process_model_submit(request):
+    # TODO: check for zip file extension (and, ideally being an actual zip file)
+    new_id = models.new_object_id()
+    # store the file
+    with open(os.path.join(settings.security['modeldb_private_zip_dir'], f'{new_id}.zip'), 'wb') as f:
+        for chunk in request.FILES['file1'].chunks():
+            f.write(chunk)
+    # TODO: actually create the private model in the database
     context = {
         'title': 'Model upload successful',
-        'request': request
+        'request': request,
+        'accession_number': new_id,
+        'content': str(type(request.FILES['file1']))
     }
     return render(request, 'processmodelsubmit.html', context)
 
@@ -253,7 +263,7 @@ def download_zip(request):
     # very important: protects against pulling other files
     if not ModelDB.has_model(model_id):
         return HttpResponse('Forbidden', status=403)
-    filename = str(model_id) + '.zip'    
+    filename = f'{model_id}.zip'
     response = HttpResponse(content_type="application/zip")
     response['Content-Disposition'] = f'attachment; filename={filename}'
     response.write(ModelDB.model(model_id).zip_file())
@@ -270,7 +280,7 @@ def _remap_src(model_id, match, base_filename):
     else:
         while base_filename.startswith('/'):
             base_filename = base_filename[1:]
-        src = '/getmodelfile?model=' + str(model_id) + '&file=' + base_filename + src
+        src = f'/getmodelfile?model={model_id}&file={base_filename}{src}'
         src = src.replace('/./', '/').replace('//', '/')
     return 'src="' + src + '"'
 

@@ -2,13 +2,21 @@ import json
 import zipfile
 import os
 import fnmatch
-from pymongo import MongoClient
+from pymongo import MongoClient, ReturnDocument
 from django.db import models
 from . import settings
 
 mongodb = MongoClient()
 sdb = mongodb[settings.security['db_name']]
 sdb.authenticate(settings.security['mongodb_user'], settings.security['mongodb_pw'])
+
+def new_object_id():
+    """returns a new object id"""
+    return sdb.meta.find_one_and_update(
+        {},
+        {'$inc': {'id_count': 1}},
+        return_document=ReturnDocument.AFTER
+    )['id_count']
 
 # TODO: force object_id to be string here so we don't have to do it later
 def load_collection(name):
@@ -62,6 +70,7 @@ class ModelDB(models.Model):
             ('can_admin', 'Can do admin'),
             ('can_pipeline', 'Can use pipeline'),
             ('can_edit_model', 'Can edit model'),
+            ('can_view_private_models', 'Can view private models'),
             ('can_change_privacy', 'Can make models private or public')
         ]
 

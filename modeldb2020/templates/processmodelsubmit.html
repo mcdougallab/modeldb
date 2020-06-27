@@ -2,13 +2,29 @@
 
 {% block content %}
 <p>
-    I haven't actually finished implementing the model submit process, but this is the landing page
-    for when that happens.
+    Congratulations on creating <a href="/{{accession_number}}">Model {{accession_number}}</a>.
+    Please note that models are <i>private</i> by default. To make this model public, go to the
+    model page using your read-write access code and select the "make public" option. It will then
+    be reviewed by a curator who may or may not contact you before making the model public.
 </p>
 <p>
-    Here we should do at least two things: (1) give them a working link to the model, and
-    (2) remind them that they must request for the model to be made public before that happens.
+    In the meantime, you may access this model using either the read-write access code (to make
+    changes) or the read access code. Feel free to share the read access code with your paper
+    reviewers if you are uploading prior to publication.
 </p>
+<p>
+    {{request.POST.keys}}
+</p>
+<p>
+    {{request.POST.celltypes}}
+</p>
+<p>
+    <b>Current development status:</b>
+    The file has been created in the folder for private model zips, but no database entry
+    has been created, nor is there the ability to view private models. There is also no
+    validation.
+</p>
+
 
 
 {% endblock %}

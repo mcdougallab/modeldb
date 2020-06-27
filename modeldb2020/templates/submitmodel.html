@@ -43,7 +43,7 @@
         </div>
     </div>
 
-    <form action="/ProcessModelSubmit">
+    <form action="/ProcessModelSubmit" enctype="multipart/form-data" method="post">
         {% csrf_token %}
         <div class="row entryrow">
             <div class="col-md-3">
