@@ -1,0 +1,54 @@
+{% extends "main.html" %}
+
+{% block head %}
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script>
+        $(function() {
+            $.getJSON(
+                '/api/v1/models/created',
+                function(data) {
+                    let t = [];
+                    let count = [];
+                    for (let when of data) {
+                        t.push(new Date(when));
+                        count.push(t.length);
+                    }
+                    Plotly.newPlot(
+                        'modelsbycreatedate',
+                        [{
+                            x: t,
+                            y: count,
+                            type: 'scatter'
+                        }],
+                        {
+                            xaxis: {
+                                title: {
+                                    text: 'Date'
+                                }
+                            },
+                            yaxis: {
+                                title: {
+                                    text: 'Total number of now-public models created'
+                                }
+                            }
+                        }
+                    );
+                }
+            );
+        });
+    </script>
+    <style>
+        .graph {
+            height: 500px;
+            width: 100%;
+        }
+    </style>
+    
+{% endblock %}
+
+{% block content %}
+<h3>Models by create date</h3>
+<div class="graph js-plotly-plot" id="modelsbycreatedate">
+</div>
+
+{% endblock %}
