@@ -60,7 +60,9 @@ class ModelDB(models.Model):
         app_label = 'modeldb2020',
         permissions = [
             ('can_admin', 'Can do admin'),
-            ('can_pipeline', 'Can use pipeline')
+            ('can_pipeline', 'Can use pipeline'),
+            ('can_edit_model', 'Can edit model'),
+            ('can_change_privacy', 'Can make models private or public')
         ]
 
     def find_models(self, channels=[], transmitters=[], receptors=[], genes=[], simenvironment=[], modelconcepts=[], celltypes=[], modeltype=[],
