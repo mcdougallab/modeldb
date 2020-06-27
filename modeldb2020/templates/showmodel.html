@@ -1,5 +1,12 @@
 {% extends "showmodel-base.html" %}
 
+{% block head %}
+<style>
+    .indented {
+        margin-left: 2em;
+    }
+</style>
+{% endblock %}
 {% block leftcol %}
 
 <div>
@@ -94,7 +101,13 @@
                 <a href="/ModelList?id={{item.object_id}}">{{item.object_name}}</a>
             {% endfor %}
         </p>
-    {% endif %}        
+    {% endif %}
+    <p>
+        <b>References:</b>
+        {% for paper in Model.papers %}
+            <p class="indented">{{paper.html|safe}}</p>
+        {% endfor %}
+    </p>      
 </div>
 <hr width="75%">
 
