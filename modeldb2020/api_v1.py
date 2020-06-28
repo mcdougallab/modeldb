@@ -15,7 +15,7 @@ def _output(request, data):
         data2 = {key: value for key, value in data.items() if key != '_id'}
     else:
         data2 = data
-    return HttpResponse(json.dumps(data2))
+    return HttpResponse(json.dumps(data2), content_type='application/json')
 
 def index(request):
     return _output(request, sorted([
