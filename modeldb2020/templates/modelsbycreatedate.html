@@ -1,41 +1,88 @@
 {% extends "main.html" %}
 
 {% block head %}
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script>
+        let plot_layout = {
+            xaxis: {
+                title: {
+                    text: 'Date'
+                }
+            },
+            yaxis: {
+                title: {
+                    text: 'Total number of now-public models created'
+                }
+            },
+            showlegend: true
+        };
+
+        function get_plot_data(data, name) {
+            let t = [];
+            let count = [];
+            for (let when of data) {
+                t.push(new Date(when));
+                count.push(t.length);
+            }
+            return {
+                x: t,
+                y: count,
+                type: 'scatter',
+                name: name
+            };
+        }
         $(function() {
             $.getJSON(
                 '/api/v1/models/created',
                 function(data) {
-                    let t = [];
-                    let count = [];
-                    for (let when of data) {
-                        t.push(new Date(when));
-                        count.push(t.length);
-                    }
-                    Plotly.newPlot(
+                    plot_data = [get_plot_data(data, 'All models')];
+                    my_plot = Plotly.newPlot(
                         'modelsbycreatedate',
-                        [{
-                            x: t,
-                            y: count,
-                            type: 'scatter'
-                        }],
-                        {
-                            xaxis: {
-                                title: {
-                                    text: 'Date'
-                                }
-                            },
-                            yaxis: {
-                                title: {
-                                    text: 'Total number of now-public models created'
-                                }
-                            }
-                        }
+                        plot_data,
+                        plot_layout
                     );
+                    $(window).resize(() => {
+                        Plotly.relayout('modelsbycreatedate', {width:$('#modelsbycreatedate').width()});
+                    });
                 }
             );
         });
+
+        {% for filter in filters %}
+            function reset_{{filter.0}}() {
+                return $('#{{filter.0}}').select2({
+                    placeholder: "Choose {{filter.2}} to add to the graph"
+                });
+            }
+        {% endfor %}
+
+        function get_select_handler(reset_select, id, filter) {
+            return () => {
+                reset_select().change(() => {
+                    let lookup_id = $(`#${id}`).val();
+                    let lookup_name = $(`#${id} option:selected`).text();
+                    $.getJSON(
+                        `/api/v1/models/created?${filter}=${lookup_id}`,
+                        function(data) {
+                            plot_data.push(get_plot_data(data, lookup_name));
+                            my_plot = Plotly.react(
+                                'modelsbycreatedate',
+                                plot_data,
+                                plot_layout
+                            );
+                            $(`#${id}`)[0].selectedIndex = 0;
+                            reset_select();
+                        }
+                    );
+                });
+            }
+        }
+        $(get_select_handler(reset_modelconcepts, 'modelconcepts', 'model_concept'));
+        $(get_select_handler(reset_simenvironments, 'simenvironments', 'modeling_application'));
+        $(get_select_handler(reset_celltypes, 'celltypes', 'neurons'));
+        $(get_select_handler(reset_currents, 'currents', 'currents'));
     </script>
     <style>
         .graph {
@@ -50,5 +97,15 @@
 <h3>Models by create date</h3>
 <div class="graph js-plotly-plot" id="modelsbycreatedate">
 </div>
-
+<div>
+    Add:<br>
+    {% for filter in filters %}
+        <select name="{{filter.0}}" id="{{filter.0}}">
+            <option></option>
+            {% for item in filter.1 %}
+                <option value={{item.0}}>{{item.1}}</option>
+            {% endfor %}
+        </select><br>
+    {% endfor %}
+</div>
 {% endblock %}

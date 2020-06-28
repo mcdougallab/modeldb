@@ -27,7 +27,7 @@ urlpatterns = [
     re_path(r'^(?:modeldb/)?search(?:fulltext)?(?:\.(?:cs)?html)?$(?i)', views.search, name='search'),
     re_path(r'^(?:modeldb/)?neuron_dwnldguide(?:\.(?:cs)?html)?$(?i)', views.static, {'page': 'neuron_download_guide', 'title': 'NEURON download help'}, name='neuron_download_guide'),
     re_path(r'^(?:modeldb/)?howtocite(?:\.(?:cs)?html)?$(?i)', views.static, {'page': 'howtocite', 'title': 'How to cite ModelDB'}, name='howtocite'),
-    re_path(r'^(?:modeldb/)?modelsbycreatedate?$(?i)', views.static, {'page': 'modelsbycreatedate', 'title': 'Models by create date'}, name='modelsbycreatedate'),
+    re_path(r'^(?:modeldb/)?trends?$(?i)', views.trends, name='trends'),
     re_path(r'^(?:modeldb/)?api(?:\.(?:cs)?html)?$(?i)', views.static, dict(page='apidocs', title='The ModelDB API'), name='apidocs'),
     re_path(r'^(?:modeldb/)?(?:mdb)?resources(?:\.(?:cs)?html)?$(?i)', views.static, dict(page='mdbresources', title='Web resources for ModelDB'), name='mdbresources'),
     re_path(r'^(?:modeldb/)?eco(?:\.(?:cs)?html)?$(?i)', views.static, dict(page='eco', title='An ecosystem of computational neuroscience resources'), name='eco'),

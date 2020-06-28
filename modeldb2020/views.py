@@ -353,6 +353,21 @@ def findbyregionlist(request):
     }
     return render(request, 'treepage.html', context)
 
+
+def trends(request):
+    filters = [
+        ('modelconcepts', sorted([(item['id'], item['name']) for item in modelconcepts.values()], key=lambda item: item[1]), 'model concept'),
+        ('simenvironments', sorted([(item['id'], item['name']) for item in simenvironments.values()], key=lambda item: item[1]), 'simulation environment'),
+        ('celltypes', sorted([(item['id'], item['name']) for item in celltypes.values()], key=lambda item: item[1]), 'cell type'),
+        ('currents', sorted([(item['id'], item['name']) for item in currents.values()], key=lambda item: item[1]), 'current')
+    ]
+    context =  {
+        'title': 'Models by create date',
+        'request': request, 
+        'filters': filters
+    }
+    return render(request, "modelsbycreatedate.html", context)
+
 def findbycurrent(request):
     context = {
         'title': 'ModelDB: Browse by current',
