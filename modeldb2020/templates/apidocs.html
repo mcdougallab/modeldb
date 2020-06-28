@@ -33,6 +33,19 @@
         e.g. <a href="/api/v1/models/87284?indent=4">/api/v1/models/87284?indent=4</a>.
     </p>
     <p>
+        For the special cases of <code>/api/v1/models</code> and queries of specific properties,
+        the set of models/property values returned may be filtered by other properties of the model
+        using either the object_id or the object_name, e.g.
+        <a href="/api/v1/models?model_concept=112047">/api/v1/models?model_concept=112047</a> shows the
+        set of models with model concept 112047 (Alzheimer's), 
+        <a href="/api/v1/models/created?model_concept=112047">/api/v1/models/created?model_concept=112047</a>
+        shows the creation date of these models, and
+        <a href="/api/v1/models?modeling_application=NEURON">/api/v1/models?modeling_application=NEURON</a>
+        shows the set of models using NEURON as a modeling application. Multiple fields may be filtered
+        at the same time, but currently only one filter value for a given field is allowed, and only
+        potentially multi-valued fields are supported.
+    </p>
+    <p>
         All results are returned with mime type <code>application/json</code>.
     </p>
 {% endblock %}

@@ -28,6 +28,23 @@ def index(request):
         'simenvironments', 'modelconcepts', 'modeltypes', 'papers'
         ]))
 
+
+def get_filter(request):
+    items = {item:value for item, value in request.GET.items() if item != 'indent'}
+    if not items:
+        return lambda item: True
+    def result(item):
+        for param, condition in items.items():
+            val = item.get(param, {'value': []})
+            for check in val['value']:
+                if str(check['object_id']) == condition or check['object_name'] == condition:
+                    break
+            else:
+                return False
+        return True
+    return result
+
+
 def models_view(request, model_id=None, field=None):
     if model_id is not None:
         model_id = str(model_id)
@@ -36,9 +53,11 @@ def models_view(request, model_id=None, field=None):
         else:
             return HttpResponse("404 Not Found", status=404)
     elif field is not None:
-        return _output(request, [item.get(field) for item in models.modeldb.values()])
+        my_filter = get_filter(request)
+        return _output(request, [item.get(field) for item in models.modeldb.values() if my_filter(item)])
     else:
-        return _output(request, list(models.modeldb.keys()))
+        my_filter = get_filter(request)
+        return _output(request, [int(item['id']) for item in models.modeldb.values() if my_filter(item)])
 
 def papers_view(request, _id=None, field=None):
     return _generic_view(request, papers, _id, field)
