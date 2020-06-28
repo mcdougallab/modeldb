@@ -11,11 +11,16 @@ ModelDB = models.ModelDB()
 
 def _output(request, data):
     # TODO: allow request for indentation
+    indent = request.GET.get('indent')
     if isinstance(data, dict):
         data2 = {key: value for key, value in data.items() if key != '_id'}
     else:
         data2 = data
-    return HttpResponse(json.dumps(data2), content_type='application/json')
+    if indent is None:
+        result = json.dumps(data2)
+    else:
+        result = json.dumps(data2, indent=int(indent))
+    return HttpResponse(result, content_type='application/json')
 
 def index(request):
     return _output(request, sorted([

@@ -27,4 +27,12 @@
         querying on the name of the property. For example, to get the "name" property for all
         the celltypes objects, query <a href="/api/v1/celltypes/name">/api/v1/celltypes/name</a>.
     </p>
+    <p>
+        By default, the results are returned without pretty-printing, however you may get a
+        pretty-printed version instead by specifying a number for the GET argument <code>indent</code>;
+        e.g. <a href="/api/v1/models/87284?indent=4">/api/v1/models/87284?indent=4</a>.
+    </p>
+    <p>
+        All results are returned with mime type <code>application/json</code>.
+    </p>
 {% endblock %}
