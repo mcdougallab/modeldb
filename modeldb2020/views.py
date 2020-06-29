@@ -43,7 +43,6 @@ def process_model_submit(request):
     with open(os.path.join(settings.security['modeldb_private_zip_dir'], f'{new_id}.zip'), 'wb') as f:
         for chunk in the_file.chunks():
             f.write(chunk)
-    # TODO: actually create the private model in the database
 
     # salt is used for hashing passwords and stored with the hash; it does not need to be stored separately
     salt = bcrypt.gensalt()
@@ -71,7 +70,7 @@ def process_model_submit(request):
     }
 
     if request.POST.get('rac'):
-        entry['data_to_curate']['rac'] = bcrypt.hashpw(request.POST['rac'].encode('utf8'), salt).decode('utf8'),
+        entry['data_to_curate']['rac'] = bcrypt.hashpw(request.POST['rac'].encode('utf8'), salt).decode('utf8')
 
     _process_submit_list(request, 'celltypes', 'neurons', 25, entry)
     _process_submit_list(request, 'receptors', 'receptors', 26, entry)
@@ -174,49 +173,97 @@ def my_login(request):
     if password is not None:
         user = authenticate(username=username, password=password)
         next_url = request.POST.get('next')
-        print('next_url', next_url)
         if user is not None:
             login(request, user)
-            print('authenticated', user)
             return redirect(request.POST.get('next'))
     else:
         next_url = request.GET.get('next')
-        print('next_url', next_url)
     context = {
         'next': next_url
     }
     return render(request, 'login.html', context)
 
-def showmodel_redirect(request, model_id=None):
+def showmodel_redirect(request, model_id=None, tab_id=None, filename=None):
+    # TODO: handle filename
     if model_id is None:
         return HttpResponse('404 not found', status=404)
-    # TODO: handle a missing model more gracefully
-    if not ModelDB.has_model(model_id):
+    try:
+        m = int(model_id)
+    except ValueError:
         return HttpResponse('404 not found', status=404)
-    tab_id = int(request.GET.get('tab', 1))
+    # TODO: handle a missing model more gracefully
+    if (not ModelDB.has_model(model_id)) and (not ModelDB.has_private_model(model_id)):
+        return HttpResponse('404 not found', status=404)
+    if tab_id is None:
+        tab_id = int(request.GET.get('tab', 1))
     if tab_id == 1:
         tab_string = ''
     else:
         tab_string = f'&tab={tab_id}'
     return redirect(f'/showmodel?model={model_id}{tab_string}')
 
+def forget_access(request):
+    model_id = request.GET.get('model', -1)
+    request.session[model_id] = None
+    del request.session[model_id]
+    return showmodel_redirect(request, model_id=model_id)
+
+
 def showmodel(request):
-    # TODO: probably can't always assume ints? maybe should recast existing to str?
     model_id = request.GET.get('model', -1)
     tab_id = int(request.GET.get('tab', 1))
+    filename = request.GET.get('file')
+    access = None
+
     # TODO: handle not having a model argument more gracefully
     if model_id == -1:
-        print('model_id == -1')
-        return HttpResponse('404 not found', status=404)
-    # TODO: handle a missing model more gracefully
-    if not ModelDB.has_model(model_id):
-        print('did not pass has_model')
-        return HttpResponse('404 not found', status=404)
+        model_id = request.POST.get('model')
+        if model_id is None:
+            return HttpResponse('404 not found', status=404)
+        else:
+            tab_id = int(request.POST.get('tab', 1))
+            filename = request.POST.get('file')
 
-    model = ModelDB.model(model_id)
+
+    if not ModelDB.has_model(model_id):
+        if ModelDB.has_private_model(model_id):
+            access = request.session.get(model_id)
+            if access is None:
+                code = request.POST.get('access_code')
+                # TODO: refactor this block of code; it is repetitive
+                if code is None:
+                    context = {
+                        'request': request,
+                        'title': 'Private model access',
+                        'msg': '',
+                        'tab_id': tab_id,
+                        'model': int(model_id),
+                        'file': filename
+                    }
+                    return render(request, 'showmodel_login.html', context)
+                else:
+                    access = ModelDB.auth_private_model(model_id, code)
+                    if access is not None:
+                        request.session[model_id] = access
+                        return showmodel_redirect(request, model_id=model_id, tab_id=tab_id, filename=filename)
+                    else:
+                        context = {
+                            'request': request,
+                            'title': 'Private model access',
+                            'msg': 'Login failed; try again.',
+                            'tab_id': tab_id,
+                            'model': int(model_id),
+                            'file': filename
+                        }
+                    return render(request, 'showmodel_login.html', context)
+            model = ModelDB.private_model(model_id)
+        else:
+            # TODO: handle a missing model more gracefully
+            return HttpResponse('404 not found', status=404)
+    else:
+        model = ModelDB.model(model_id)
 
     if tab_id != 7:
-        filename = request.GET.get('file')
         if tab_id != 2:
             filename = model.readme_file
             filename = filename.replace('\\', '/').strip('/')
@@ -244,10 +291,6 @@ def showmodel(request):
         else:
             content = 'foo' # TODO: this probably shouldn't be this way
 
-        # TODO: handle a file specification
-        if not ModelDB.has_model(model_id):
-            return HttpResponse('404 not found', status=404)
-
         context = {
             'title': 'ModelDB: Show Model',
             'Model': model,
@@ -256,6 +299,7 @@ def showmodel(request):
             'content': content,
             'filename': original_filename,
             'tab': tab_id,
+            'access': access,
             'extension': original_filename.split('.')[-1].lower()
         }
         if tab_id == 2:
@@ -313,22 +357,19 @@ def _prep_citations(papers):
 
 def download_zip(request):
     model_id = request.GET.get('o', -1)
-    if model_id == -1:
-        return HttpResponse('Forbidden', status=403)
-    # very important: protects against pulling other files
-    if not ModelDB.has_model(model_id):
+    model = _get_model(request, model_id)
+    if model is None:
         return HttpResponse('Forbidden', status=403)
     filename = f'{model_id}.zip'
     response = HttpResponse(content_type="application/zip")
     response['Content-Disposition'] = f'attachment; filename={filename}'
-    response.write(ModelDB.model(model_id).zip_file())
+    response.write(model.zip_file())
     return response
 
 def _remap_src(model_id, match, base_filename):
     match_text = match.group()
     src = match_text[5:-1]
     src_lower = src.lower()
-    print('_remap_src', src_lower)
     if src_lower.startswith('http://') or src_lower.startswith('//') or src_lower.startswith('https://'):
         # TODO: we probably don't want this at all, but not clear what it's trying to do
         src = re.sub(r'(?i)(https?:)?//senselab\.med\.yale\.edu/', '/', src)
@@ -343,18 +384,31 @@ def _remap_href(model_id, match, base_filename):
     match_text = match.group()
     src = match_text[6:-1]
     src_lower = src.lower()
-    print('_remap_src', src_lower)
     if src_lower.startswith('http://') or src_lower.startswith('//') or src_lower.startswith('https://'):
         # TODO: we probably don't want this at all, but not clear what it's trying to do
         src = re.sub(r'(?i)(https?:)?//senselab\.med\.yale\.edu/', '/', src)
     return f'href="{src}"'
 
+def _get_model(request, model_id, permissions=None):
+    if permissions is None:
+        permissions = ['r', 'rw']
+    elif isinstance(permissions, str):
+        permissions = [permissions]
+    if ModelDB.has_model(model_id):
+        model = ModelDB.model(model_id)
+    elif ModelDB.has_private_model(model_id) and request.session[model_id] in permissions:
+        model = ModelDB.private_model(model_id)
+    else:
+        model = None
+    return model
+
+
 @xframe_options_exempt
 def download(request):
     model_id = request.GET.get('model', -1)
-    if model_id == -1:
+    model = _get_model(request, model_id)
+    if model is None:
         return HttpResponse('Forbidden', status=403)
-    model = ModelDB.model(model_id)
     filename = request.GET.get('file')
     if not model.has_path(filename):
         return HttpResponse('Forbidden', status=403)

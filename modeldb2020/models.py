@@ -2,6 +2,7 @@ import json
 import zipfile
 import os
 import fnmatch
+import bcrypt
 from pymongo import MongoClient, ReturnDocument
 from django.db import models
 from . import settings
@@ -78,6 +79,27 @@ class ModelDB(models.Model):
             ('can_change_privacy', 'Can make models private or public')
         ]
 
+
+    def has_private_model(self, id_):
+        print('calling has_private_model', id_)
+        return bool(sdb.private_models.find_one({'id': int(id_)}))
+
+    def auth_private_model(self, id_, pwd):
+        '''returns None, rw, or r depending on access rights'''
+        raw_model = sdb.private_models.find_one({'id': int(id_)})
+        if not raw_model:
+            return None
+        pwd = pwd.encode('utf8')
+        rwac = raw_model['data_to_curate']['rwac']
+        rac = raw_model['data_to_curate'].get('rac')
+        print('rac', rac)
+        if bcrypt.checkpw(pwd, rwac.encode('utf8')):
+            return 'rw'
+        elif rac and bcrypt.checkpw(pwd, rac.encode('utf8')):
+            return 'r'
+        else:
+            return None
+
     def find_models(self, channels=[], transmitters=[], receptors=[], genes=[], simenvironment=[], modelconcepts=[], celltypes=[], modeltype=[],
                     brainregions=[], title=[], authors=[]):
         result = []
@@ -109,6 +131,9 @@ class ModelDB(models.Model):
     
     def model(self, id_):
         return Model(id_)
+
+    def private_model(self, id_):
+        return PrivateModel(id_)
 
     @property
     def num_models(self):
@@ -484,5 +509,23 @@ class Paper:
     def name(self):
         return self._raw['name']
 
+
+class PrivateModel(Model):
+    def __init__(self, model_id):
+        self._model = sdb.private_models.find_one({'id': int(model_id)})
+        self._zip = None
+        self._readme_file = None
+        self._setup_filetree()
+        self._model.setdefault('model_paper', {'value': []})
+
+    def zip_file(self):
+        filename = f"{self._model['id']}.zip"
+        with open(os.path.join(settings.security["modeldb_private_zip_dir"], filename), 'rb') as f:
+            return f.read()
+
+    def zip(self):
+        if self._zip is None:
+            self._zip = zipfile.ZipFile(os.path.join(settings.security["modeldb_private_zip_dir"], f"{self._model['id']}.zip"))
+        return self._zip
 
 refresh()

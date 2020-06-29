@@ -1,5 +1,26 @@
 {% extends "bigleftcol.html" %}
 
+{% block head %}
+    <style>
+        .indented {
+            margin-left: 2em;
+        }
+        .btn {
+            color: black;
+            background-color: lightblue;
+        }
+        .btn:hover {
+            color: white;
+            background-color: blue;
+        }
+        .thin>li>a {
+            padding: 5px 10px !important
+        }
+    </style>
+    {% if access == "rw" %}
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    {% endif %}
+{% endblock %}
 
 {% block header %}
   {% include "showmodel-tabs.html" %}
@@ -7,18 +28,12 @@
 
 {% block sidecolumn %}
 <div class="well">
-    ShapePlot goes here
+    {% if not Model.data_to_curate %}
+        ShapePlot goes here
+    {% else %}
+        <a href="/forget_access?model={{Model.id}}" class="btn">Forget access</a>
+    {% endif %}
     {% block belowshapeplot %}
     {% endblock %}
 </div>
-{% endblock %}
-
-
-
-{% block head %}
-<style>
-    .thin>li>a {
-        padding: 5px 10px !important
-    }
-</style>
 {% endblock %}

@@ -60,6 +60,7 @@ The ModelDB website is powered in part by a number of other technologies, includ
 - [jQuery](https://jquery.com)
 - [jQuery UI](https://jqueryui.com/)
 - [Bootstrap](https://getbootstrap.com/)
+- [Font Awesome](https://fontawesome.com)
 - [plotly](https://plotly.com)
 - [select2](https://select2.org/)
 
