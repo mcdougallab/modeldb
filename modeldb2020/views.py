@@ -30,18 +30,22 @@ def _id_and_name(data):
 #from .models import currents, genes, regions, receptors, transmitters, simenvironments, modelconcepts, modeltypes, celltypes, papers
 
 def process_model_submit(request):
-    # TODO: check for zip file extension (and, ideally being an actual zip file)
+    the_file = request.FILES['zipfile']
+    filename = the_file.name
+    if not filename.lower().endswith('.zip'):
+        return HttpResponse('403 Forbidden: non-zip upload; hit back and try again', status=403)
+
     new_id = models.new_object_id()
     # store the file
     with open(os.path.join(settings.security['modeldb_private_zip_dir'], f'{new_id}.zip'), 'wb') as f:
-        for chunk in request.FILES['file1'].chunks():
+        for chunk in the_file.chunks():
             f.write(chunk)
     # TODO: actually create the private model in the database
     context = {
         'title': 'Model upload successful',
         'request': request,
         'accession_number': new_id,
-        'content': str(type(request.FILES['file1']))
+        'content': str(type(the_file))
     }
     return render(request, 'processmodelsubmit.html', context)
 
