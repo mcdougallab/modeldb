@@ -18,6 +18,10 @@ def new_object_id():
         return_document=ReturnDocument.AFTER
     )['id_count']
 
+def add_private_model(entry):
+    sdb.private_models.insert_one(entry)
+
+
 # TODO: force object_id to be string here so we don't have to do it later
 def load_collection(name):
     new_collection = {str(item['id']): item for item in getattr(sdb, name).find()}

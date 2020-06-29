@@ -12,15 +12,16 @@ Primary goals of this redesign include:
 
 **Pull requests are welcome. Please make an issue first so we understand the problem solved or feature being added by the pull request.**
 
-## Bootstrapping data
+## Bootstrapping system and data
 This repository is currently intended to be bootstrapped from the classic EAV/CR version of ModelDB. One approach to do so follows:
 
 - Download the [bitnami django stack OVA][1]
 - Import it into a virtual machine such as [VirtualBox][2]
 - Install the community edition of MongoDB following [these directions][3]
 - Create a MongoDB account with readwrite access to a specific database (for simplicity, you may want to call it `modeldb`)
-- Install pymongo (`sudo pip install pymongo`)
+- Install pymongo (`sudo pip3 install pymongo`)
 - Install git so you can clone this repository, if it's not already installed `sudo apt install git`
+- Install bcrypt: `sudo pip3 install bcrypt`
 - Clone this repository
 - Create two directories for storing (1) the model zip files and (2) private model zip files
 - Create a settings file in the exact path `/home/bitnami/modeldb-settings.json`. It should have values for:

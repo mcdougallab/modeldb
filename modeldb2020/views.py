@@ -2,6 +2,8 @@ import re
 import html
 import json
 import os
+import datetime
+import bcrypt
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login, logout
@@ -30,6 +32,7 @@ def _id_and_name(data):
 #from .models import currents, genes, regions, receptors, transmitters, simenvironments, modelconcepts, modeltypes, celltypes, papers
 
 def process_model_submit(request):
+    # TODO: probably some of this should move into models?
     the_file = request.FILES['zipfile']
     filename = the_file.name
     if not filename.lower().endswith('.zip'):
@@ -41,14 +44,62 @@ def process_model_submit(request):
         for chunk in the_file.chunks():
             f.write(chunk)
     # TODO: actually create the private model in the database
+
+    # salt is used for hashing passwords and stored with the hash; it does not need to be stored separately
+    salt = bcrypt.gensalt()
+
+    now = datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc).isoformat()
+
+    entry = {
+        'id': int(new_id),
+        'name': request.POST.get('name'),
+        'created': now,
+        'ver_number': 1,
+        'ver_date': now,
+        'class_id': 19,
+        'notes': {"value": request.POST.get('notes'), "attr_id": 24},
+        'license': request.POST.get('license'),
+        'expmotivation': request.POST.get('expmotivation'),
+        "public_submitter_email": {"value": request.POST['modeleremail'], "attr_id": 309},
+        'data_to_curate': {
+            'rwac': bcrypt.hashpw(request.POST['rwac'].encode('utf8'), salt).decode('utf8'),
+            'othertags': request.POST.get('othertags'),
+            'citation': request.POST.get('citation'),
+            'implementers': request.POST.get('implementers'),
+            'modelername': request.POST.get('modelername')
+        }
+    }
+
+    if request.POST.get('rac'):
+        entry['data_to_curate']['rac'] = bcrypt.hashpw(request.POST['rac'].encode('utf8'), salt).decode('utf8'),
+
+    _process_submit_list(request, 'celltypes', 'neurons', 25, entry)
+    _process_submit_list(request, 'receptors', 'receptors', 26, entry)
+    _process_submit_list(request, 'currents', 'currents', 27, entry)
+    _process_submit_list(request, 'transmitters', 'neurotransmitters', 28, entry)
+    _process_submit_list(request, 'model_type', 'model_type', 112, entry)
+    _process_submit_list(request, 'concepts', 'model_concept', 113, entry)
+    _process_submit_list(request, 'simenvironment', 'modeling_application', 114, entry)
+    _process_submit_list(request, 'genes', 'gene', 476, entry)
+    _process_submit_list(request, 'regions', 'region', 471, entry)
+
+    models.add_private_model(entry)
+
     context = {
         'title': 'Model upload successful',
         'request': request,
-        'accession_number': new_id,
-        'content': str(type(the_file))
+        'accession_number': new_id
     }
     return render(request, 'processmodelsubmit.html', context)
 
+
+def _process_submit_list(request, listname, fieldname, attr_id, entry):
+    objs = [{'object_id': int(id_), 'object_name': ModelDB.object_by_id(id_).name} for id_ in request.POST.getlist(listname)]
+    if objs:
+        entry[fieldname] = {
+            'value': objs,
+            'attr_id': attr_id
+        }
 
 def submit_model(request):
     metadata = [

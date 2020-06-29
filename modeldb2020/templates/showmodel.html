@@ -20,7 +20,17 @@
                 <a href="/ModelList?id={{item.object_id}}">{{item.object_name}}</a>
             {% endfor %}
         </p>
-    {% endif %}         
+    {% endif %}
+    {% if Model.regions %}
+        <p><b>Region(s) or Organism(s):</b>
+            {% for item in Model.region.value %}
+                {% if not forloop.first %}
+                    ;
+                {% endif %}
+                <a href="/ModelList?id={{item.object_id}}">{{item.object_name}}</a>
+            {% endfor %}
+        </p>
+    {% endif %}
     {% if Model.neurons %}
         <p><b>Cell Type(s):</b>
             {% for item in Model.neurons.value %}
