@@ -46,6 +46,7 @@ urlpatterns = [
     re_path(r'^(?:modeldb/)?findbyconcept(?:\.(?:cs)?html)?$(?i)', views.findbyconcept, name='findbyconcept'),
     re_path(r'^(?:modeldb/)?findbysimulator(?:\.(?:cs)?html)?$(?i)', views.findbysimulator, name='findbysimulator'),
     re_path(r'^(?:modeldb/)?(?:mdb)?citations(?:\.(?:cs)?html)?$(?i)', views.mdbcitations, name='mdbcitations'),
+    re_path(r'^models-with-uncurated-references$(?i)', views.models_with_uncurated_references, name='uncurated'),
     re_path(r'^forget_access$(?i)', views.forget_access, name='forget_access'),
     #path('admin/', admin.site.urls),
     re_path(r'^api/v1/', include(urls_api_v1)),

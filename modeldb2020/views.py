@@ -11,6 +11,7 @@ from django.views.decorators.clickjacking import xframe_options_exempt
 from . import settings
 from . import models
 from .models import currents, genes, regions, receptors, transmitters, simenvironments, modelconcepts, modeltypes, celltypes, papers
+from .models import Paper
 
 
 ModelDB = models.ModelDB()
@@ -26,10 +27,23 @@ def index(request):
     }
     return render(request, 'index.html', context)
 
+
 def _id_and_name(data):
     return sorted([(item['id'], item['name']) for item in data.values()], key=lambda item: item[1])
 
-#from .models import currents, genes, regions, receptors, transmitters, simenvironments, modelconcepts, modeltypes, celltypes, papers
+
+def models_with_uncurated_references(request):
+    # TODO: this should really be about the users authentication level not the simple act of being authenticated
+    if request.user.is_authenticated:
+        uncurated_models = models.models_with_uncurated_papers()
+        context = {
+            'request': request,
+            'models': uncurated_models
+        }
+        return render(request, 'models-with-uncurated-references.html', context)
+    else:
+        return redirect(f'/login?next={request.path}')
+
 
 def process_model_submit(request):
     # TODO: probably some of this should move into models?

@@ -1,0 +1,17 @@
+{% extends "main.html" %}
+
+{% block header %}
+    <h3>
+        Models with uncurated references
+    </h3>
+{% endblock %}
+
+{% block content %}
+    <ul>
+        {% for model in models %}
+            <li>
+                <a href="/{{model.id}}">{{model.name}}</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

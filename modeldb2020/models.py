@@ -300,12 +300,25 @@ class CellType(SenseLabClass):
         return self._data.get('links', {})
         #{item: self._data[item] for item in ['neuromorpho', 'neuroelectro', 'neurolex'] if item in self._data}
 
+def models_with_uncurated_papers():
+    print('models_with_uncurated_papers')
+    result = []
+    for id_ in modeldb:
+        m = Model(id_, files_needed=False)
+        papers = m.papers
+        for paper in papers:
+            if not paper.references:
+                result.append(m)
+                break
+    return result
+
 class Model:
-    def __init__(self, model_id):
+    def __init__(self, model_id, files_needed=True):
         self._model = modeldb[str(model_id)]
         self._zip = None
-        self._readme_file = None
-        self._setup_filetree()
+        if files_needed:
+            self._readme_file = None
+            self._setup_filetree()
     
     @property
     def papers(self):
