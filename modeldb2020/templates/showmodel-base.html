@@ -5,13 +5,13 @@
         .indented {
             margin-left: 2em;
         }
-        .btn {
-            color: black;
-            background-color: lightblue;
+        .btn2 {
+            color: black !important;
+            background-color: lightblue !important;
         }
-        .btn:hover {
-            color: white;
-            background-color: blue;
+        .btn2:hover {
+            color: white !important;
+            background-color: blue !important;
         }
         .thin>li>a {
             padding: 5px 10px !important
@@ -31,7 +31,7 @@
     {% if not Model.data_to_curate %}
         ShapePlot goes here
     {% else %}
-        <a href="/forget_access?model={{Model.id}}" class="btn">Forget access</a>
+        <a href="/forget_access?model={{Model.id}}" class="btn btn2">Forget access</a>
     {% endif %}
     {% block belowshapeplot %}
     {% endblock %}
