@@ -432,7 +432,7 @@ def download(request):
             try:
                 # TODO: be smarter about handling extensions
                 # workaround for HOC using C
-                if extension == 'hoc':
+                if extension in ('hoc', 'ses'):
                     extension = 'c'
                 if extension in ('py', 'cpp', 'c', 'bas', 'js', 'cxx', 'h', 'f90', 'f95', 'json', 'java', 'md', 'r', 'sql', 'vba', 'vbs', 'yaml', 'yml', 'pl', 'lisp', 'lua', 'hs', 'go', 'css', 'c++', 'hpp', 'cs'):
                     contents = f'<link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/styles/vs.min.css" rel="stylesheet" /><script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/highlight.min.js"></script><script>hljs.initHighlightingOnLoad();</script><pre><code class="{extension}">{html.escape(contents.decode("utf-8"))}</code></pre>'
