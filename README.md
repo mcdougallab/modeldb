@@ -31,6 +31,7 @@ This repository is currently intended to be bootstrapped from the classic EAV/CR
   - `db_name` -- set this to `modeldb` or whatever you called the database you wish to use.
   - `modeldb_zip_dir` 
   - `modeldb_private_zip_dir`
+  - `unprocessed_refs_dir`
 - Run the scripts in the `extract_data` directory in this order:
   - `init_db.py`
   - `extract_data.py`

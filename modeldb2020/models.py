@@ -23,6 +23,43 @@ def add_private_model(entry):
     sdb.private_models.insert_one(entry)
 
 
+def set_unprocessed_refs(paper_id, data):
+    # TODO: make this more forgiving of lines with whitespace but no content
+    id_ = new_object_id()
+    lines = data.split('\n')
+    items = []
+    if '\n\n' in data:
+        item = []
+        for line in lines:
+            if line:
+                item.append(line)
+            else:
+                if item:
+                    items.append('\n'.join(item))
+                item = []
+        if item:
+            items.append('\n'.join(item))
+    else:
+        items = [line for line in lines if line]
+
+    folder = os.path.join(settings.security['unprocessed_refs_dir'], str(id_))
+    os.makedirs(folder)
+
+    for i, item in enumerate(items):
+        with open(os.path.join(folder, f'{i}.json'), 'w') as f:
+            content = {'text': item, 'process_stage': 0}
+            f.write(json.dumps(content))
+    
+    content = {
+        'paper': paper_id,
+        'ref_process_stage': [0 for item in items],
+        'id': id_
+    }
+
+    sdb.unprocessed_refs.insert_one(content)
+
+    return id_
+
 # TODO: force object_id to be string here so we don't have to do it later
 def load_collection(name):
     new_collection = {str(item['id']): item for item in getattr(sdb, name).find()}
@@ -521,6 +558,10 @@ class Paper:
     @property
     def name(self):
         return self._raw['name']
+    
+    @property
+    def id(self):
+        return self._id
 
 
 class PrivateModel(Model):

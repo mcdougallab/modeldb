@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.clickjacking import xframe_options_exempt
 from . import models
 from .models import currents, genes, regions, receptors, transmitters, simenvironments, modelconcepts, modeltypes, celltypes, papers
-
+from .views import unprocessed_refs_access
 
 ModelDB = models.ModelDB()
 
@@ -44,6 +44,14 @@ def get_filter(request):
         return True
     return result
 
+
+def unprocessed_refs_view(request, _id=None):
+    data = request.POST.get('data')
+    if (not unprocessed_refs_access(request)) or (data is None):
+        return HttpResponse('403 Forbidden', status=403)
+    paper_id = request.POST.get('paper_id')
+    new_id = models.set_unprocessed_refs(paper_id, data)
+    return HttpResponse(str(new_id))
 
 def models_view(request, model_id=None, field=None):
     if model_id is not None:

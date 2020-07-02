@@ -5,6 +5,7 @@ from . import api_v1
 
 urlpatterns = [
     path('', api_v1.index),
+    path('unprocessed_refs', api_v1.unprocessed_refs_view),
     path('models/<int:model_id>', api_v1.models_view),
     path('models/<slug:field>', api_v1.models_view),
     path('models', api_v1.models_view),

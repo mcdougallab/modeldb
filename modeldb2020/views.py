@@ -8,6 +8,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.clickjacking import xframe_options_sameorigin
+from django.views.decorators.csrf import ensure_csrf_cookie
 from . import settings
 from . import models
 from .models import currents, genes, regions, receptors, transmitters, simenvironments, modelconcepts, modeltypes, celltypes, papers
@@ -32,9 +33,13 @@ def _id_and_name(data):
     return sorted([(item['id'], item['name']) for item in data.values()], key=lambda item: item[1])
 
 
-def models_with_uncurated_references(request):
+def unprocessed_refs_access(request):
     # TODO: this should really be about the users authentication level not the simple act of being authenticated
-    if request.user.is_authenticated:
+    return request.user.is_authenticated
+
+
+def models_with_uncurated_references(request):
+    if unprocessed_refs_access(request):
         uncurated_models = models.models_with_uncurated_papers()
         context = {
             'request': request,
@@ -223,6 +228,7 @@ def forget_access(request):
     return showmodel_redirect(request, model_id=model_id)
 
 
+@ensure_csrf_cookie
 def showmodel(request):
     model_id = request.GET.get('model', -1)
     tab_id = int(request.GET.get('tab', 1))
