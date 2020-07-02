@@ -7,7 +7,7 @@ import bcrypt
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login, logout
-from django.views.decorators.clickjacking import xframe_options_exempt
+from django.views.decorators.clickjacking import xframe_options_sameorigin
 from . import settings
 from . import models
 from .models import currents, genes, regions, receptors, transmitters, simenvironments, modelconcepts, modeltypes, celltypes, papers
@@ -417,7 +417,7 @@ def _get_model(request, model_id, permissions=None):
     return model
 
 
-@xframe_options_exempt
+@xframe_options_sameorigin
 def download(request):
     model_id = request.GET.get('model', -1)
     model = _get_model(request, model_id)
