@@ -22,6 +22,7 @@ This repository is currently intended to be bootstrapped from the classic EAV/CR
 - Install pymongo (`sudo pip3 install pymongo`)
 - Install git so you can clone this repository, if it's not already installed `sudo apt install git`
 - Install bcrypt: `sudo pip3 install bcrypt`
+- Install crossrefapi: `sudo pip3 install crossrefapi`
 - Clone this repository
 - Create two directories for storing (1) the model zip files and (2) private model zip files
 - Create a settings file in the exact path `/home/bitnami/modeldb-settings.json`. It should have values for:
