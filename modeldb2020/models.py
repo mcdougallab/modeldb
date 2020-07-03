@@ -104,6 +104,61 @@ def refresh():
                 cites_paper_unsorted.setdefault(cited_paper_obj_id, [])
                 cites_paper_unsorted[cited_paper_obj_id].append(citing_paper_obj_id)
 
+    # lowercase hack (TODO: should be in DB?)
+    for paper in papers.values():
+        if 'doi' in paper:
+            paper['doi']['value_lower'] = paper['doi']['value'].lower().strip()
+
+def find_celltypes_by_name(name):
+    name = name.strip().lower()
+    result = []
+    if name:
+        for id_, celltype in celltypes.items():
+            if name in celltype['name'].lower():
+                result.append(CellType(id_))
+    return result
+
+
+def find_papers_by_doi(doi):
+    # TODO: this should probably just query the DB, but need a lowercase solution
+    doi = doi.strip().lower()
+    result = []
+    if doi:
+        for paper in papers.values():
+            if 'doi' in paper:
+                if paper['doi']['value_lower'] == doi:
+                    result.append(Paper(paper['id']))
+    return result
+
+def find_papers_by_author(author):
+    # TODO: this should probably just query the DB, but need a lowercase solution
+    author = author.strip().lower()
+    result = []
+    if ' ' in author:
+        for paper in papers.values():
+            if 'authors' in paper:
+                if author in (item['object_name'].lower() for item in paper['authors']['value']):
+                    result.append(Paper(paper['id']))
+    elif author:
+        for paper in papers.values():
+            if 'authors' in paper:
+                for item in paper['authors']['value']:
+                    name = item['object_name'].split()
+                    if name and author == name[0].lower():
+                        result.append(Paper(paper['id']))
+                        break
+    return result
+
+def find_papers_by_title(text):
+    # TODO: this should probably just query the DB, but need a lowercase solution
+    text = text.strip().lower()
+    result = []
+    for paper in papers.values():
+        if 'title' in paper:
+            if text in paper['title']['value'].lower():
+                result.append(Paper(paper['id']))
+    return result
+
 
 class ModelDB(models.Model):
     class Meta:
@@ -458,7 +513,7 @@ class Paper:
         try:
             return [item['object_name'] for item in self._raw['authors']['value']]
         except:
-            return ''
+            return []
     
     @property
     def year(self):

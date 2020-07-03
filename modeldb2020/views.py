@@ -360,14 +360,14 @@ def _prep_citations(papers):
     references = [[paper for paper in model_paper.references] for model_paper in papers]
     sorted_references=[]
     for reference_group in references:
-        tmp_sorted_list=sorted(reference_group, key=magic)
+        tmp_sorted_list=sorted(reference_group, key=paper_sort_rule)
         sorted_references.append(tmp_sorted_list)
     #citations = [[paper.html for paper in model_paper.citations] for model_paper in papers]
     citations = [[paper for paper in model_paper.citations] for model_paper in papers]
     sorted_citations=[]
     for citation_group in citations:
         #tmp_sorted_list=sorted(citation_group, key=lambda item: item.authors+[item.year])
-        tmp_sorted_list=sorted(citation_group, key=magic)# lambda item: item.authors+[item.year])
+        tmp_sorted_list=sorted(citation_group, key=paper_sort_rule)
         #except:
         #    tmp_sorted_list = citation_group
         sorted_citations.append(tmp_sorted_list)
@@ -467,11 +467,14 @@ def download(request):
     response.write(contents)
     return response    
 
-def magic(item):
+def paper_sort_rule(item):
     if item.authors:
         return item.authors + [item.year]
     else:
         return [item.name, item.year]
+
+def model_sort_rule(item):
+    return item.name.lower()
 
 def findbyregionlist(request):
     context = {
@@ -587,8 +590,9 @@ def search(request):
     my_channels = request.GET.get('channels')
     my_authors = None
     my_title = request.GET.get('title')
+    my_q = request.GET.get('q')
 
-    if my_transmitters or my_receptors or my_genes or my_simenvironment or my_modelconcepts or my_celltypes or my_modeltype or my_brainregions or my_channels or my_authors or my_title:
+    if (my_transmitters or my_receptors or my_genes or my_simenvironment or my_modelconcepts or my_celltypes or my_modeltype or my_brainregions or my_channels or my_authors or my_title) and (my_q is None):
         query = []
         _update_search_query(query, my_channels, 'Currents')
         _update_search_query(query, my_transmitters, 'Transmitters')
@@ -623,6 +627,26 @@ def search(request):
             'results': results
         }
         return render(request, 'searchresults.html', context)
+    elif my_q is not None:
+        # remove excess whitespace
+        my_q = my_q.strip()
+
+        context = {
+            'title': f'ModelDB: search: {my_q}',
+            'query': my_q,
+            'celltype_results': models.find_celltypes_by_name(my_q),
+            'model_results': sorted(
+                ModelDB.find_models(title=[my_q]),
+                key=model_sort_rule
+            ),
+            'paper_results': sorted(
+                models.find_papers_by_doi(my_q) +
+                models.find_papers_by_author(my_q) +
+                models.find_papers_by_title(my_q),
+                key=paper_sort_rule
+            )
+        }
+        return render(request, 'searchq.html', context)
     else:
 
         context = {
