@@ -475,7 +475,7 @@ class Model:
             for subfilename in self.zip().namelist():
                 if not first_file and os.path.split(subfilename)[1]:
                     first_file = subfilename
-                if ('readme' in subfilename.lower() or subfilename.lower() in ('index.html', 'index.htm')) and readme_file is None:
+                if ('readme' in subfilename.lower() or subfilename.lower().split('/')[-1] in ('index.html', 'index.htm')) and readme_file is None:
                     readme_file = subfilename
                 path = subfilename.split('/')
                 my_file_hierarchy = file_hierarchy
