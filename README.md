@@ -18,7 +18,17 @@ This repository is currently intended to be bootstrapped from the classic EAV/CR
 - Download the [bitnami django stack OVA][1]
 - Import it into a virtual machine such as [VirtualBox][2]
 - Install the community edition of MongoDB following [these directions][3]
+  - note: if you're using Amazon lightsail instead, you'll need to switch to the instructions for Ubuntu. At this writing it's using Ubuntu 16.04.
 - Create a MongoDB account with readwrite access to a specific database (for simplicity, you may want to call it `modeldb`)
+  - launch MongoDB by typing `mongo`
+  - switch to the database you want to use e.g. `use modeldb`
+  - create the user:
+  
+        db.createUser({
+            user: "username",
+            pwd: "password",
+            roles: [{role: "userAdmin", db:"modeldb"}]})
+            
 - Install pymongo (`sudo pip3 install pymongo`)
 - Install git so you can clone this repository, if it's not already installed `sudo apt install git`
 - Install bcrypt: `sudo pip3 install bcrypt`
