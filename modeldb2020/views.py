@@ -546,13 +546,42 @@ def findbyconcept(request):
     return render(request, 'treepage.html', context)
 
 def findbysimulator(request):
+    counts = ModelDB.simenvironment_counts
+    counts_processed = {}
+    for key, value in counts.items():
+        key = str(key)
+        name = simenvironments[str(key)]['name'].strip()
+        i = name.find('(web link')
+        if i >= 0:
+            short_name = name[:i].strip()
+        else:
+            short_name = name
+        
+        if short_name not in counts_processed:
+            counts_processed[short_name] = {
+                'name': short_name,
+                'link': 0,
+                'hosted': 0,
+                'id': 0,
+                'linkid': 0,
+                'total': 0
+            }
+        item = counts_processed[short_name]
+        if '(web link' in name:
+            item['link'] += value
+            item['linkid'] = key
+        else:
+            item['hosted'] += value
+            item['id'] = key
+        item['total'] += value
+    
     context = {
         'title': 'ModelDB: Browse by simulation environment',
-        'content': _render_tree(simenvironments, '/ModelDB/ModelList'),
+        'counts': sorted(counts_processed.values(), key=lambda item: item['name'].lower()),
         'header': 'Find models by simulation environment',
         'subhead': 'Click on a link to show a list of models implemented in that simulation environment or programming language.<br/>'
     }
-    return render(request, 'treepage.html', context)
+    return render(request, 'findbysimulator.html', context)
 
 def _render_tree_element(obj, collection, base_link):
     subtree = ''

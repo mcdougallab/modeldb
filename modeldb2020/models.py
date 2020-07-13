@@ -233,6 +233,17 @@ class ModelDB(models.Model):
     
     def models_by_name(self):
         return sorted([{'id': key, 'name': model['name']} for key, model in modeldb.items()], key=lambda item: item['name'])
+    
+    @property
+    def simenvironment_counts(self):
+        counts = {}
+        for model in modeldb.values():
+            for simulator in model.get('modeling_application', {'value': []})['value']:
+                sim_id = simulator['object_id']
+                counts.setdefault(sim_id, 0)
+                counts[sim_id] += 1
+        return counts
+
 
 def _object_by_id(object_id):
     object_id = str(object_id)
