@@ -58,6 +58,10 @@ This repository is currently intended to be bootstrapped from the classic EAV/CR
   - This will make the website available on port 8888 (you can then access it from your host system via port-forwarding.
   - This is separate from apache, which is also running and can later be connected to your django system.
 
+## Deployment hints
+- be sure to turn off debugging in the settings file
+- the database needs to be writeable and it needs to be in a folder that's writeable (so not in a path that hosts the website code)
+
 ## Technologies
 
 The ModelDB website is powered in part by a number of other technologies, including:
