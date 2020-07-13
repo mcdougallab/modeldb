@@ -154,6 +154,10 @@ def modellist(request):
     if obj is None:
         return listbymodelname(request)
     seealso = {}
+    more_info = ''
+    logo = None
+    homepage = None
+    object_id = str(object_id)
     if object_id == '3537':
         seealso = {cell['name']: f"?id={cell['id']}" for cell in sorted(celltypes.values(), key=lambda item: item['name'])}
     elif object_id == '3540':
@@ -161,11 +165,31 @@ def modellist(request):
     elif 'children' in obj._data:
         children = [ModelDB.object_by_id(_id) for _id in obj._data['children']]
         seealso = {child.name: f'?id={child._id}' for child in children}
+    if object_id in simenvironments:
+        simenv = simenvironments[object_id]
+        try:
+            more_info = simenv['description']['value']
+        except:
+            pass
+        try:
+            logo = simenv['logo']['value'][0]
+        except:
+            logo = None
+        try:
+            homepage = simenv['homepage']['value']
+        except:
+            homepage = None
+
+    # logos do not work well on the page; remove
+    logo = None
 
     context = {
         'title': f'ModelDB: Models that contain {obj.name}',
         'obj': obj,
-        'seealso': seealso
+        'seealso': seealso,
+        'moreinfo': more_info,
+        'logo': logo,
+        'homepage': homepage
     }
     return render(request, 'modellist.html', context)
 
