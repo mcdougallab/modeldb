@@ -33,7 +33,9 @@
 {% block sidecolumn %}
 <div class="well">
     {% if not Model.data_to_curate and not tab == 2 %}
-        ShapePlot goes here
+        {% if tab != 4 or data.by_location %}
+            ShapePlot goes here
+        {% endif %}
     {% else %}
         <a href="/forget_access?model={{Model.id}}" class="btn btn2">Forget access</a>
     {% endif %}

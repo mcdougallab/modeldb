@@ -307,7 +307,30 @@ def showmodel(request):
     else:
         model = ModelDB.model(model_id)
 
-    if tab_id != 7:
+    if tab_id == 7:
+        papers = model.papers
+        citation_data = _prep_citations(papers)
+        context = {
+            'title': 'ModelDB: Model Citations',
+            'Model': model,
+            'tab': tab_id,
+            'citation_data': citation_data,
+            'showtabs': True
+        }
+        return render(request, 'showmodel7.html', context)
+    elif tab_id == 4:
+        params = model.modelview('parameters')
+        if params is not None and 'by_file' in params:
+            params['by_file'].sort(key=lambda item: item['filename'])
+        context = {
+            'title': 'ModelDB: Parameters',
+            'Model': model,
+            'tab': tab_id,
+            'showtabs': True,
+            'data': params
+        }
+        return render(request, 'showmodel4.html', context)
+    else:
         if tab_id != 2:
             filename = model.readme_file
             filename = filename.replace('\\', '/').strip('/')
@@ -350,17 +373,6 @@ def showmodel(request):
             return render(request, 'showmodel2.html', context)
         else:
             return render(request, 'showmodel.html', context)
-    else:
-        papers = model.papers
-        citation_data = _prep_citations(papers)
-        context = {
-            'title': 'ModelDB: Model Citations',
-            'Model': model,
-            'tab': tab_id,
-            'citation_data': citation_data,
-            'showtabs': True
-        }
-        return render(request, 'showmodel7.html', context)
 
 def mdbcitations(request):
     # TODO: probably can't always assume ints? maybe should recast existing to str?

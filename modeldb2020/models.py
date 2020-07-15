@@ -415,6 +415,49 @@ def models_with_uncurated_papers():
                 break
     return result
 
+def find_ode_files(file_hierarchy):
+    result = []
+    for item in file_hierarchy:
+        name = item['name']
+        item_type = item['type']
+        if item_type == 'folder':
+            result.extend([f'{name}/{old_name}' for old_name in find_ode_files(item['contents'])])
+        elif item_type == 'ode':
+            result.append(name)
+    return result
+
+def get_ode_params(ode_contents):
+    'extract parameter, value pairs from an ode file'
+    result = []
+    ode_contents = ode_contents.decode('utf8')
+    lines = ode_contents.split('\n')
+    for line in lines:
+        cleaned_line = line.strip()
+        if cleaned_line.startswith('p ') or cleaned_line.startswith('par '):
+            for param in (''.join(line.split()[1:])).split(','):
+                try:
+                    name, value = param.split('=')
+                    if value[0] == '.':
+                        value = f'0{value}'
+                    result.append({'name': name, 'value': value})
+                except:
+                    pass
+    return sorted(result, key=lambda item: item['name'].lower())
+
+def get_parameters(model):
+    result = []
+    for filename in find_ode_files(model.file_hierarchy):
+        params = get_ode_params(model.file(filename))
+        if params:
+            result.append({
+                'filename': filename,
+                'params': params
+            })
+    return {'by_file': result}
+
+
+
+
 class Model:
     def __init__(self, model_id, files_needed=True):
         self._model = modeldb[str(model_id)]
@@ -422,6 +465,12 @@ class Model:
         if files_needed:
             self._readme_file = None
             self._setup_filetree()
+    
+    def modelview(self, data_type):
+        if data_type == 'parameters':
+            ode_files = get_parameters(self)
+            return ode_files
+        return None
     
     @property
     def papers(self):
