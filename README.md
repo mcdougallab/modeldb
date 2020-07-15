@@ -33,7 +33,7 @@ This repository is currently intended to be bootstrapped from the classic EAV/CR
 - Install git so you can clone this repository, if it's not already installed `sudo apt install git`
 - Install bcrypt: `sudo pip3 install bcrypt`
 - Install crossrefapi: `sudo pip3 install crossrefapi`
-- Install tqdm: `sudo pip3 install tqdm`
+- Optional (gives a nice progress bar): install tqdm: `sudo pip3 install tqdm`
 - Clone this repository
 - Create two directories for storing (1) the model zip files and (2) private model zip files
 - Create a settings file in the exact path `/home/bitnami/modeldb-settings.json`. It should have values for:

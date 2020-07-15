@@ -1,7 +1,7 @@
 """
 Get model zip files and metadata from ModelDB.
 
-Robert A. McDougal 2020-05-11 - 2020-06-21
+Robert A. McDougal 2020-05-11 - 2020-07-15
 
 Note: while most models have associated zip files, probably a couple hundred do not.
 Those are the "web link to models" (additional information for these models is stored
@@ -15,7 +15,11 @@ import requests
 import json
 import base64
 import os
-import tqdm
+try:
+    from tqdm import tqdm as progress_bar
+except:
+    # do nothing "progress bar" if no tqdm
+    progress_bar = lambda collection: collection
 
 # filenames
 zip_dir = '/home/bitnami/modeldb-zips'
@@ -34,7 +38,7 @@ model_ids = [
         ).json()['objects']
 ]
 
-for model_id in tqdm.tqdm(model_ids):
+for model_id in progress_bar(model_ids):
     # don't reload anything that you already have
     if model_id in prev_model_ids:
         continue
