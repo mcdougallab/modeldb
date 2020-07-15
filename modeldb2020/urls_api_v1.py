@@ -37,5 +37,6 @@ urlpatterns = [
     path('modeltypes', api_v1.modeltypes_view),
     path('papers/<int:_id>', api_v1.papers_view),
     path('papers/<slug:field>', api_v1.papers_view),
-    path('papers', api_v1.papers_view)
+    path('papers', api_v1.papers_view),
+    path('morphology/<int:_id>', api_v1.morphology_view)
 ]

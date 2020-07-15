@@ -1,4 +1,5 @@
 import json
+import os
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login, logout
@@ -88,6 +89,14 @@ def transmitters_view(request, _id=None, field=None):
 
 def simenvironments_view(request, _id=None, field=None):
     return _generic_view(request, simenvironments, _id, field)
+
+def morphology_view(request, _id=None):
+    try:
+        with open(os.path.join(models.settings.security['modelview'], f'{_id}.json')) as f:
+            result = f.read()
+        return HttpResponse(result, content_type='application/json')
+    except:
+        return HttpResponse('404 Not Found', status=404)
 
 
 def _generic_view(request, collection, _id, field):
