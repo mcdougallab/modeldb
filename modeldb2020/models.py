@@ -23,6 +23,43 @@ def add_private_model(entry):
     sdb.private_models.insert_one(entry)
 
 
+def set_unprocessed_refs(paper_id, data):
+    # TODO: make this more forgiving of lines with whitespace but no content
+    id_ = new_object_id()
+    lines = data.split('\n')
+    items = []
+    if '\n\n' in data:
+        item = []
+        for line in lines:
+            if line:
+                item.append(line)
+            else:
+                if item:
+                    items.append('\n'.join(item))
+                item = []
+        if item:
+            items.append('\n'.join(item))
+    else:
+        items = [line for line in lines if line]
+
+    folder = os.path.join(settings.security['unprocessed_refs_dir'], str(id_))
+    os.makedirs(folder)
+
+    for i, item in enumerate(items):
+        with open(os.path.join(folder, f'{i}.json'), 'w') as f:
+            content = {'text': item, 'process_stage': 0}
+            f.write(json.dumps(content))
+    
+    content = {
+        'paper': paper_id,
+        'ref_process_stage': [0 for item in items],
+        'id': id_
+    }
+
+    sdb.unprocessed_refs.insert_one(content)
+
+    return id_
+
 # TODO: force object_id to be string here so we don't have to do it later
 def load_collection(name):
     new_collection = {str(item['id']): item for item in getattr(sdb, name).find()}
@@ -66,6 +103,61 @@ def refresh():
                 cited_paper_obj_id = str(ref['object_id'])
                 cites_paper_unsorted.setdefault(cited_paper_obj_id, [])
                 cites_paper_unsorted[cited_paper_obj_id].append(citing_paper_obj_id)
+
+    # lowercase hack (TODO: should be in DB?)
+    for paper in papers.values():
+        if 'doi' in paper:
+            paper['doi']['value_lower'] = paper['doi']['value'].lower().strip()
+
+def find_celltypes_by_name(name):
+    name = name.strip().lower()
+    result = []
+    if name:
+        for id_, celltype in celltypes.items():
+            if name in celltype['name'].lower():
+                result.append(CellType(id_))
+    return result
+
+
+def find_papers_by_doi(doi):
+    # TODO: this should probably just query the DB, but need a lowercase solution
+    doi = doi.strip().lower()
+    result = []
+    if doi:
+        for paper in papers.values():
+            if 'doi' in paper:
+                if paper['doi']['value_lower'] == doi:
+                    result.append(Paper(paper['id']))
+    return result
+
+def find_papers_by_author(author):
+    # TODO: this should probably just query the DB, but need a lowercase solution
+    author = author.strip().lower()
+    result = []
+    if ' ' in author:
+        for paper in papers.values():
+            if 'authors' in paper:
+                if author in (item['object_name'].lower() for item in paper['authors']['value']):
+                    result.append(Paper(paper['id']))
+    elif author:
+        for paper in papers.values():
+            if 'authors' in paper:
+                for item in paper['authors']['value']:
+                    name = item['object_name'].split()
+                    if name and author == name[0].lower():
+                        result.append(Paper(paper['id']))
+                        break
+    return result
+
+def find_papers_by_title(text):
+    # TODO: this should probably just query the DB, but need a lowercase solution
+    text = text.strip().lower()
+    result = []
+    for paper in papers.values():
+        if 'title' in paper:
+            if text in paper['title']['value'].lower():
+                result.append(Paper(paper['id']))
+    return result
 
 
 class ModelDB(models.Model):
@@ -141,6 +233,17 @@ class ModelDB(models.Model):
     
     def models_by_name(self):
         return sorted([{'id': key, 'name': model['name']} for key, model in modeldb.items()], key=lambda item: item['name'])
+    
+    @property
+    def simenvironment_counts(self):
+        counts = {}
+        for model in modeldb.values():
+            for simulator in model.get('modeling_application', {'value': []})['value']:
+                sim_id = simulator['object_id']
+                counts.setdefault(sim_id, 0)
+                counts[sim_id] += 1
+        return counts
+
 
 def _object_by_id(object_id):
     object_id = str(object_id)
@@ -312,6 +415,49 @@ def models_with_uncurated_papers():
                 break
     return result
 
+def find_ode_files(file_hierarchy):
+    result = []
+    for item in file_hierarchy:
+        name = item['name']
+        item_type = item['type']
+        if item_type == 'folder':
+            result.extend([f'{name}/{old_name}' for old_name in find_ode_files(item['contents'])])
+        elif item_type == 'ode':
+            result.append(name)
+    return result
+
+def get_ode_params(ode_contents):
+    'extract parameter, value pairs from an ode file'
+    result = []
+    ode_contents = ode_contents.decode('utf8')
+    lines = ode_contents.split('\n')
+    for line in lines:
+        cleaned_line = line.strip()
+        if cleaned_line.startswith('p ') or cleaned_line.startswith('par '):
+            for param in (''.join(line.split()[1:])).split(','):
+                try:
+                    name, value = param.split('=')
+                    if value[0] == '.':
+                        value = f'0{value}'
+                    result.append({'name': name, 'value': value})
+                except:
+                    pass
+    return sorted(result, key=lambda item: item['name'].lower())
+
+def get_parameters(model):
+    result = []
+    for filename in find_ode_files(model.file_hierarchy):
+        params = get_ode_params(model.file(filename))
+        if params:
+            result.append({
+                'filename': filename,
+                'params': params
+            })
+    return {'by_file': result}
+
+
+
+
 class Model:
     def __init__(self, model_id, files_needed=True):
         self._model = modeldb[str(model_id)]
@@ -319,6 +465,12 @@ class Model:
         if files_needed:
             self._readme_file = None
             self._setup_filetree()
+    
+    def modelview(self, data_type):
+        if data_type == 'parameters':
+            ode_files = get_parameters(self)
+            return ode_files
+        return None
     
     @property
     def papers(self):
@@ -383,7 +535,7 @@ class Model:
             for subfilename in self.zip().namelist():
                 if not first_file and os.path.split(subfilename)[1]:
                     first_file = subfilename
-                if ('readme' in subfilename.lower() or subfilename.lower() in ('index.html', 'index.htm')) and readme_file is None:
+                if ('readme' in subfilename.lower() or subfilename.lower().split('/')[-1] in ('index.html', 'index.htm')) and readme_file is None:
                     readme_file = subfilename
                 path = subfilename.split('/')
                 my_file_hierarchy = file_hierarchy
@@ -421,7 +573,7 @@ class Paper:
         try:
             return [item['object_name'] for item in self._raw['authors']['value']]
         except:
-            return ''
+            return []
     
     @property
     def year(self):
@@ -521,6 +673,10 @@ class Paper:
     @property
     def name(self):
         return self._raw['name']
+    
+    @property
+    def id(self):
+        return self._id
 
 
 class PrivateModel(Model):

@@ -53,10 +53,11 @@
 {% endblock %}
 
 {% block belowshapeplot %}
-<hr width="75%"/>
-Reused in ??? other models. (expand)<br>
-{% if not Model.data_to_curate %}
-    <br>
-    Ion Channel Genealogy entry.
+{% if not is_folder %}
+    Reused in ??? other models. (expand)<br>
+    {% if not Model.data_to_curate %}
+        <br>
+        Ion Channel Genealogy entry.
+    {% endif %}
 {% endif %}
 {% endblock %}

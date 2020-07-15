@@ -7,7 +7,8 @@ import bcrypt
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login, logout
-from django.views.decorators.clickjacking import xframe_options_exempt
+from django.views.decorators.clickjacking import xframe_options_sameorigin
+from django.views.decorators.csrf import ensure_csrf_cookie
 from . import settings
 from . import models
 from .models import currents, genes, regions, receptors, transmitters, simenvironments, modelconcepts, modeltypes, celltypes, papers
@@ -32,9 +33,13 @@ def _id_and_name(data):
     return sorted([(item['id'], item['name']) for item in data.values()], key=lambda item: item[1])
 
 
-def models_with_uncurated_references(request):
+def unprocessed_refs_access(request):
     # TODO: this should really be about the users authentication level not the simple act of being authenticated
-    if request.user.is_authenticated:
+    return request.user.is_authenticated
+
+
+def models_with_uncurated_references(request):
+    if unprocessed_refs_access(request):
         uncurated_models = models.models_with_uncurated_papers()
         context = {
             'request': request,
@@ -149,6 +154,10 @@ def modellist(request):
     if obj is None:
         return listbymodelname(request)
     seealso = {}
+    more_info = ''
+    logo = None
+    homepage = None
+    object_id = str(object_id)
     if object_id == '3537':
         seealso = {cell['name']: f"?id={cell['id']}" for cell in sorted(celltypes.values(), key=lambda item: item['name'])}
     elif object_id == '3540':
@@ -156,11 +165,31 @@ def modellist(request):
     elif 'children' in obj._data:
         children = [ModelDB.object_by_id(_id) for _id in obj._data['children']]
         seealso = {child.name: f'?id={child._id}' for child in children}
+    if object_id in simenvironments:
+        simenv = simenvironments[object_id]
+        try:
+            more_info = simenv['description']['value']
+        except:
+            pass
+        try:
+            logo = simenv['logo']['value'][0]
+        except:
+            logo = None
+        try:
+            homepage = simenv['homepage']['value']
+        except:
+            homepage = None
+
+    # logos do not work well on the page; remove
+    logo = None
 
     context = {
         'title': f'ModelDB: Models that contain {obj.name}',
         'obj': obj,
-        'seealso': seealso
+        'seealso': seealso,
+        'moreinfo': more_info,
+        'logo': logo,
+        'homepage': homepage
     }
     return render(request, 'modellist.html', context)
 
@@ -223,6 +252,7 @@ def forget_access(request):
     return showmodel_redirect(request, model_id=model_id)
 
 
+@ensure_csrf_cookie
 def showmodel(request):
     model_id = request.GET.get('model', -1)
     tab_id = int(request.GET.get('tab', 1))
@@ -277,7 +307,30 @@ def showmodel(request):
     else:
         model = ModelDB.model(model_id)
 
-    if tab_id != 7:
+    if tab_id == 7:
+        papers = model.papers
+        citation_data = _prep_citations(papers)
+        context = {
+            'title': 'ModelDB: Model Citations',
+            'Model': model,
+            'tab': tab_id,
+            'citation_data': citation_data,
+            'showtabs': True
+        }
+        return render(request, 'showmodel7.html', context)
+    elif tab_id == 4:
+        params = model.modelview('parameters')
+        if params is not None and 'by_file' in params:
+            params['by_file'].sort(key=lambda item: item['filename'])
+        context = {
+            'title': 'ModelDB: Parameters',
+            'Model': model,
+            'tab': tab_id,
+            'showtabs': True,
+            'data': params
+        }
+        return render(request, 'showmodel4.html', context)
+    else:
         if tab_id != 2:
             filename = model.readme_file
             filename = filename.replace('\\', '/').strip('/')
@@ -320,17 +373,6 @@ def showmodel(request):
             return render(request, 'showmodel2.html', context)
         else:
             return render(request, 'showmodel.html', context)
-    else:
-        papers = model.papers
-        citation_data = _prep_citations(papers)
-        context = {
-            'title': 'ModelDB: Model Citations',
-            'Model': model,
-            'tab': tab_id,
-            'citation_data': citation_data,
-            'showtabs': True
-        }
-        return render(request, 'showmodel7.html', context)
 
 def mdbcitations(request):
     # TODO: probably can't always assume ints? maybe should recast existing to str?
@@ -354,14 +396,14 @@ def _prep_citations(papers):
     references = [[paper for paper in model_paper.references] for model_paper in papers]
     sorted_references=[]
     for reference_group in references:
-        tmp_sorted_list=sorted(reference_group, key=magic)
+        tmp_sorted_list=sorted(reference_group, key=paper_sort_rule)
         sorted_references.append(tmp_sorted_list)
     #citations = [[paper.html for paper in model_paper.citations] for model_paper in papers]
     citations = [[paper for paper in model_paper.citations] for model_paper in papers]
     sorted_citations=[]
     for citation_group in citations:
         #tmp_sorted_list=sorted(citation_group, key=lambda item: item.authors+[item.year])
-        tmp_sorted_list=sorted(citation_group, key=magic)# lambda item: item.authors+[item.year])
+        tmp_sorted_list=sorted(citation_group, key=paper_sort_rule)
         #except:
         #    tmp_sorted_list = citation_group
         sorted_citations.append(tmp_sorted_list)
@@ -417,7 +459,7 @@ def _get_model(request, model_id, permissions=None):
     return model
 
 
-@xframe_options_exempt
+@xframe_options_sameorigin
 def download(request):
     model_id = request.GET.get('model', -1)
     model = _get_model(request, model_id)
@@ -461,11 +503,14 @@ def download(request):
     response.write(contents)
     return response    
 
-def magic(item):
+def paper_sort_rule(item):
     if item.authors:
         return item.authors + [item.year]
     else:
         return [item.name, item.year]
+
+def model_sort_rule(item):
+    return item.name.lower()
 
 def findbyregionlist(request):
     context = {
@@ -537,13 +582,42 @@ def findbyconcept(request):
     return render(request, 'treepage.html', context)
 
 def findbysimulator(request):
+    counts = ModelDB.simenvironment_counts
+    counts_processed = {}
+    for key, value in counts.items():
+        key = str(key)
+        name = simenvironments[str(key)]['name'].strip()
+        i = name.find('(web link')
+        if i >= 0:
+            short_name = name[:i].strip()
+        else:
+            short_name = name
+        
+        if short_name not in counts_processed:
+            counts_processed[short_name] = {
+                'name': short_name,
+                'link': 0,
+                'hosted': 0,
+                'id': 0,
+                'linkid': 0,
+                'total': 0
+            }
+        item = counts_processed[short_name]
+        if '(web link' in name:
+            item['link'] += value
+            item['linkid'] = key
+        else:
+            item['hosted'] += value
+            item['id'] = key
+        item['total'] += value
+    
     context = {
         'title': 'ModelDB: Browse by simulation environment',
-        'content': _render_tree(simenvironments, '/ModelDB/ModelList'),
+        'counts': sorted(counts_processed.values(), key=lambda item: item['name'].lower()),
         'header': 'Find models by simulation environment',
         'subhead': 'Click on a link to show a list of models implemented in that simulation environment or programming language.<br/>'
     }
-    return render(request, 'treepage.html', context)
+    return render(request, 'findbysimulator.html', context)
 
 def _render_tree_element(obj, collection, base_link):
     subtree = ''
@@ -581,8 +655,9 @@ def search(request):
     my_channels = request.GET.get('channels')
     my_authors = None
     my_title = request.GET.get('title')
+    my_q = request.GET.get('q')
 
-    if my_transmitters or my_receptors or my_genes or my_simenvironment or my_modelconcepts or my_celltypes or my_modeltype or my_brainregions or my_channels or my_authors or my_title:
+    if (my_transmitters or my_receptors or my_genes or my_simenvironment or my_modelconcepts or my_celltypes or my_modeltype or my_brainregions or my_channels or my_authors or my_title) and (my_q is None):
         query = []
         _update_search_query(query, my_channels, 'Currents')
         _update_search_query(query, my_transmitters, 'Transmitters')
@@ -617,6 +692,26 @@ def search(request):
             'results': results
         }
         return render(request, 'searchresults.html', context)
+    elif my_q is not None:
+        # remove excess whitespace
+        my_q = my_q.strip()
+
+        context = {
+            'title': f'ModelDB: search: {my_q}',
+            'query': my_q,
+            'celltype_results': models.find_celltypes_by_name(my_q),
+            'model_results': sorted(
+                ModelDB.find_models(title=[my_q]),
+                key=model_sort_rule
+            ),
+            'paper_results': sorted(
+                models.find_papers_by_doi(my_q) +
+                models.find_papers_by_author(my_q) +
+                models.find_papers_by_title(my_q),
+                key=paper_sort_rule
+            )
+        }
+        return render(request, 'searchq.html', context)
     else:
 
         context = {

@@ -1,5 +1,73 @@
 {% extends "main.html" %}
 
+
+{% block head %}
+    <script>
+        // CSRF handling from the django docs: 
+        // https://docs.djangoproject.com/en/3.0/ref/csrf/#ajax
+        // accessed 2020-07-02
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        const csrftoken = getCookie('csrftoken');
+        function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+        $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
+        
+        
+        
+        
+        
+        function save_refs(id_) {
+            $(`#modal${id_}`).modal('hide');
+            $.post(
+                `/api/v1/unprocessed_refs`,
+                {
+                    'paper_id': id_,
+                    'data': $(`#modal${id_} textarea`).val()
+                },
+                function(data, status) {
+                    var msg;
+                    console.log(data, status);
+                    if (status == 'success') {
+                        msg ='<span style="color: green">Success</span>';
+                    } else {
+                        msg ='<span style="color: red">Something went wrong</span>';
+                    }
+                    $(`#msg${id_}`).html(msg).show();
+                    setTimeout(() => {
+                        $(`#msg${id_}`).hide();
+                    }, 1000);
+                }
+            )
+            const ref_text = $(`#modal${id_} textarea`).val();
+            console.log(ref_text);
+        }
+
+    </script>
+{% endblock %}
+
+
 {% block header %}
     {% if showtabs %}
         {% include "showmodel-tabs.html" %}
@@ -14,6 +82,41 @@
         <div class="row">
             <div class="col-md-6">
                 <div><b>References and models cited by this paper</b></div>
+                {% if request.user.is_authenticated %}
+                    <div>
+                        <center>
+                            <button type="button" class="btn btn2" data-toggle="modal" data-target="#modal{{ref.0.id}}">
+                                Enter references
+                              </button>
+                              <span id="msg{{ref.0.id}}"></span>
+                        </center>
+                        <div class="modal fade" id="modal{{ref.0.id}}" tabindex="-1" role="dialog" aria-labelledby="modal{{ref.0.id}}" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="exampleModalLabel">Enter references to process</h5>
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                                </div>
+                                <div class="modal-body">
+                                  <i>Either put a blank line between each reference <b>or</b>
+                                  put each reference on its own line.</i>  
+                                  <textarea style="width:100%; height:50vh"></textarea>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn2" data-dismiss="modal">Cancel</button>
+                                  <button type="button" class="btn btn2" id="save{{ref.0.id}}">Save</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                    </div>
+                    <script>
+                        $('#save{{ref.0.id}}').click(() => save_refs({{ref.0.id}}));
+                    </script>
+
+                {% endif %}
                 {% for my_ref in ref.1 %}
                 <p>{{my_ref.html | safe}}
                     {% if my_ref.model_link %}

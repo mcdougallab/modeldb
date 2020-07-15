@@ -18,10 +18,22 @@ This repository is currently intended to be bootstrapped from the classic EAV/CR
 - Download the [bitnami django stack OVA][1]
 - Import it into a virtual machine such as [VirtualBox][2]
 - Install the community edition of MongoDB following [these directions][3]
+  - note: if you're using Amazon lightsail instead, you'll need to switch to the instructions for Ubuntu. At this writing it's using Ubuntu 16.04.
 - Create a MongoDB account with readwrite access to a specific database (for simplicity, you may want to call it `modeldb`)
+  - launch MongoDB by typing `mongo`
+  - switch to the database you want to use e.g. `use modeldb`
+  - create the user:
+  
+        db.createUser({
+            user: "username",
+            pwd: "password",
+            roles: [{role: "userAdmin", db:"modeldb"}]})
+            
 - Install pymongo (`sudo pip3 install pymongo`)
 - Install git so you can clone this repository, if it's not already installed `sudo apt install git`
 - Install bcrypt: `sudo pip3 install bcrypt`
+- Install crossrefapi: `sudo pip3 install crossrefapi`
+- Optional (gives a nice progress bar): install tqdm: `sudo pip3 install tqdm`
 - Clone this repository
 - Create two directories for storing (1) the model zip files and (2) private model zip files
 - Create a settings file in the exact path `/home/bitnami/modeldb-settings.json`. It should have values for:
@@ -31,6 +43,7 @@ This repository is currently intended to be bootstrapped from the classic EAV/CR
   - `db_name` -- set this to `modeldb` or whatever you called the database you wish to use.
   - `modeldb_zip_dir` 
   - `modeldb_private_zip_dir`
+  - `unprocessed_refs_dir`
 - Run the scripts in the `extract_data` directory in this order:
   - `init_db.py`
   - `extract_data.py`
@@ -41,9 +54,18 @@ This repository is currently intended to be bootstrapped from the classic EAV/CR
 - Apply the django migrations
   `python3 manage.py migrate`
 - You will also want to use django admin to create a user with admin permissions.
+  example from: https://docs.djangoproject.com/en/3.0/topics/auth/default/#creating-users
+  ```
+  from django.contrib.auth.models import User
+  user = User.objects.create_user('john', 'lennon@thebeatles.com', 'johnpassword')```
 - You can run a development server via, e.g. `python3 manage.py runserver 8888`
   - This will make the website available on port 8888 (you can then access it from your host system via port-forwarding.
   - This is separate from apache, which is also running and can later be connected to your django system.
+
+## Deployment hints
+- be sure to turn off debugging in the settings file
+- the database needs to be writeable and it needs to be in a folder that's writeable (so not in a path that hosts the website code)
+- make sure the folders with private-zips and unprocessed refs can be written to by the server
 
 ## Technologies
 

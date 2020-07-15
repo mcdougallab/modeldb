@@ -59,6 +59,22 @@
             </div>
         {% endif %}
     {% endif %}
+    {% if moreinfo or homepage or logo %}
+        <div class="well">
+            {% if logo %}
+                <center>
+                    <img src="data:{{logo.file_mime}};base64, {{logo.file_content}}" style="max-width:100%"/>
+                </center>
+            {% endif %}
+            {% if homepage %}
+                <center>
+                    <a href="{{homepage}}">Website</a>
+                </center>
+                <br>
+            {% endif %}
+            {{moreinfo}}
+        </div>
+    {% endif %}
     {% if seealso %}
         <div class="well hangingindent">
             <b>See also:</b><br><br>

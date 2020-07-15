@@ -1,0 +1,71 @@
+{% extends "biggerrightcol.html" %}
+
+{% block head %}
+<style>
+.search_result {
+    padding-top: 1em;
+}
+</style>
+{% endblock %}
+
+{% block header %}
+<center>
+    <h1>Search results</h1>
+</center>
+{% endblock %}
+
+{% block sidecolumn %}
+    <div class="well">
+        <p>
+            <b>Searched for:</b><br>
+            {{query}}
+        </p>
+
+        {% if model_results or paper_results or celltype_results %}
+            {% if celltype_results %}
+                <a href="#celltypes">Cell Types</a><br><br>
+            {% endif %}
+            {% if model_results %}
+                <a href="#models">Models</a><br><br>
+            {% endif %}
+            {% if paper_results %}
+                <a href="#papers">Papers</a><br><br>
+            {% endif %}
+        {% else %}
+            No results.
+        {% endif %}
+    </div>
+{% endblock %}
+
+
+{% block maincol %}
+<div class="row">
+        <div class="col-lg-12">
+{% if celltype_results %}
+    <h2 id="celltypes">Cell Types</h2>
+    {% for celltype in celltype_results %}
+        <div class="search_result">
+            <a href="/ModelList?id={{celltype.id}}">{{celltype.name}}</a>
+        </div>
+    {% endfor %}
+    <br>
+{% endif %}
+{% if model_results %}
+    <h2 id="models">Models</h2>
+    {% for model in model_results %}
+        <div class="search_result">
+            <a href="/showmodel?model={{model.id}}">{{model.name}}</a>
+        </div>
+    {% endfor %}
+    <br>
+{% endif %}
+{% if paper_results %}
+    <h2 id="papers">Papers</h2>
+    {% for paper in paper_results %}
+        <div class="search_result">
+            {{paper.html | safe}}
+        </div>
+    {% endfor %}
+    <br>
+{% endif %}
+{% endblock %}

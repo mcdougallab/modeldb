@@ -1,0 +1,40 @@
+{% extends "showmodel-base.html" %}
+
+{% block head %}
+    <style>
+        .param_table td {
+            padding-right: 2em;
+        }
+        .param_table {
+            margin-left: 2em;
+        }
+    </style>
+{% endblock %}
+
+{% block leftcol %}
+
+<div>
+    {% for file_info in data.by_file %}
+        <div style="margin-bottom: 1em;">
+            <h2 id="file{{forloop.counter}}"><a href="/showmodel?model={{Model.id}}&tab=2&file={{file_info.filename}}">{{file_info.filename}}</a></h2>
+            <table class="param_table">
+            {% for param in file_info.params %}    
+                <tr class="{% cycle "lightgray" "" %}">
+                    <td>{{param.name}}</td>
+                    <td>{{param.value}}</td>
+                </tr>
+            {% endfor %}
+            </table>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block belowshapeplot %}
+    {% if data.by_file %}
+        Jump to:<br><br>
+        {% for file_info in data.by_file %}
+            <a href="#file{{forloop.counter}}">{{file_info.filename}}</a><br>
+        {% endfor %}
+    {% endif %}
+{% endblock %}

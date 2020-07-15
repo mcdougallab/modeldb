@@ -93,7 +93,15 @@
       .bg-modeldb {
           background-color: #ffffef !important;
       }
-  
+      h1 {
+          font-size: 1.8rem;
+      }
+      h2 {
+          font-size: 1.5rem;
+      }
+      .lightgray {
+        background-color: lightgray;
+      }
   </style>
       <title>{{title}}</title>
 
@@ -172,8 +180,8 @@
                 </div>
             </li>
           </ul>
-          <form class="form-inline navbar-form">
-            <input class="form-control" type="text" placeholder="Search">
+          <form class="form-inline navbar-form" action="/search">
+            <input class="form-control" name="q" type="text" placeholder="Search">
             <!--
                 <button class="btn btn-success-outline" type="submit"><i class="fa fa-search"></i></button>
             -->

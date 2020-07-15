@@ -1,0 +1,55 @@
+{% extends "main.html" %}
+
+{% block head %}
+<style>
+.modellist>li {
+    padding-top: 1em;
+}
+.resultstable td {
+    padding-right: 1em;
+}
+.resultstable th {
+    padding-right: 1em;
+}
+</style>
+{% endblock %}
+{% block content %}
+<div class="row">
+        <div class="col-lg-12">
+<center><h3>{{header}}</h3>{{subhead|safe}}</center>
+<br><br>
+<table class="resultstable">
+    <tr>
+        <th>Simulation Environment</th>
+        <th>Hosted</th>
+        <th>Links</th>
+        <th>Total</th>
+    </tr>
+    {% for item in counts %}
+        <tr class="{% cycle "lightgray" "" %}">
+            <td>
+                {{item.name}}
+            </td>
+            <td>
+                {% if item.hosted %}
+                    <a href="/ModelList?id={{item.id}}">{{item.hosted}}</a>
+                {% else %}
+                    0
+                {% endif %}
+            </td>
+            <td>
+                {% if item.link %}
+                    <a href="/ModelList?id={{item.linkid}}">{{item.link}}</a>
+                {% else %}
+                    0
+                {% endif %}
+            </td>
+            <td>
+                {{item.total}}
+            </td>
+        </tr>
+    {% endfor %}
+</table>
+</div>
+</div>
+{% endblock %}
