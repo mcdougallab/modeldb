@@ -32,12 +32,14 @@
 
 {% block sidecolumn %}
 <div class="well">
-    {% if not Model.data_to_curate %}
+    {% if not Model.data_to_curate and not tab == 2 %}
         ShapePlot goes here
     {% else %}
         <a href="/forget_access?model={{Model.id}}" class="btn btn2">Forget access</a>
     {% endif %}
-    {% block belowshapeplot %}
-    {% endblock %}
+    <div>
+        {% block belowshapeplot %}
+        {% endblock %}
+    </div>
 </div>
 {% endblock %}
