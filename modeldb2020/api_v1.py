@@ -100,7 +100,7 @@ def simenvironments_view(request, _id=None, field=None):
 
 def morphology_view(request, _id=None):
     try:
-        with open(os.path.join(models.settings.security['modelview'], f'{_id}.json')) as f:
+        with open(os.path.join(models.settings.security['modelview_dir'], f'{_id}.json')) as f:
             result = f.read()
         return HttpResponse(result, content_type='application/json')
     except:

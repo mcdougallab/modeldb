@@ -44,6 +44,7 @@ This repository is currently intended to be bootstrapped from the classic EAV/CR
   - `modeldb_zip_dir` 
   - `modeldb_private_zip_dir`
   - `unprocessed_refs_dir`
+  - `modelview_dir`
 - Run the scripts in the `extract_data` directory in this order:
   - `init_db.py`
   - `extract_data.py`
@@ -66,6 +67,23 @@ This repository is currently intended to be bootstrapped from the classic EAV/CR
 - be sure to turn off debugging in the settings file
 - the database needs to be writeable and it needs to be in a folder that's writeable (so not in a path that hosts the website code)
 - make sure the folders with private-zips and unprocessed refs can be written to by the server
+
+## On ModelViews
+
+You can gather a morphology suitable for frontpage display via
+
+    result = []
+
+    for sec in h.allsec():
+        xs = [sec.x3d(i) for i in range(sec.n3d())]
+        ys = [sec.y3d(i) for i in range(sec.n3d())]
+        zs = [sec.z3d(i) for i in range(sec.n3d())]
+        ds = [sec.diam3d(i) for i in range(sec.n3d())]
+        arcs = [sec.arc3d(i) for i in range(sec.n3d())]
+        result.append([xs, ys, zs, ds, arcs])
+
+but note that in order to color by segment, you need each piece of result to correspond
+to a segment instead of to a section.
 
 ## Technologies
 
