@@ -484,6 +484,9 @@ def showmodel(request):
             'extension': original_filename.split('.')[-1].lower()
         }
         if tab_id == 2:
+            context['is_mod_file'] = original_filename.lower().endswith('.mod')
+            if context['is_mod_file']:
+                context['has_celsius'] = b'celsius' in model.file(original_filename)
             return render(request, 'showmodel2.html', context)
         else:
             return render(request, 'showmodel.html', context)

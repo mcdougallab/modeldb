@@ -54,10 +54,17 @@
 
 {% block belowshapeplot %}
 {% if not is_folder %}
-    Reused in ??? other models. (expand)<br>
-    {% if not Model.data_to_curate %}
-        <br>
-        Ion Channel Genealogy entry.
+    Reused in ??? other models. (expand)<br><br>
+    {% if is_mod_file %}
+        {% if has_celsius %}
+            This mechanism is potentially temperature dependent.
+        {% else %}
+            This mechanism is not temperature dependent.
+        {% endif %}
+        <br><br>
+        {% if not Model.data_to_curate %}
+            Ion Channel Genealogy entry.
+        {% endif %}
     {% endif %}
 {% endif %}
 {% endblock %}
