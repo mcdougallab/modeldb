@@ -17,7 +17,8 @@ $(() => {
     $('#authortable').bootstrapTable({
         pagination: true,
         search: true,
-        data: {{ datajson | safe}}
+        data: {{ datajson | safe}},
+        formatSearch: () => 'filter'
     })
 });
 function name_link(name) {
