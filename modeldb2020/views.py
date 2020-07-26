@@ -232,7 +232,6 @@ def modellist(request):
         if paper_id not in paper_ids:
             papers.append(paper)
             paper_ids.add(paper_id)
-    print('paper_ids', sorted(paper_ids))
 
     authors = [name for name in itertools.chain.from_iterable([paper.authors for paper in papers])]
     authors = collections.Counter(authors).most_common(10)
