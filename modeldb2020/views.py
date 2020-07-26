@@ -487,6 +487,13 @@ def showmodel(request):
             context['is_mod_file'] = original_filename.lower().endswith('.mod')
             if context['is_mod_file']:
                 context['has_celsius'] = b'celsius' in model.file(original_filename)
+                mod_name = name[:-4]  # throw away the .mod
+                model_id_int = int(model_id)
+                try:
+                    icg_data = models.icg[int(model_id)][mod_name]
+                except KeyError:
+                    icg_data = None
+                context['icg_data'] = icg_data
             return render(request, 'showmodel2.html', context)
         else:
             return render(request, 'showmodel.html', context)

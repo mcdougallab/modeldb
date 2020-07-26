@@ -76,7 +76,7 @@ def refresh():
     global modeldb, currents, genes, regions, receptors
     global transmitters, simenvironments, modelconcepts
     global modeltypes, celltypes, papers, cites_paper_unsorted
-    global all_authors, first_authors
+    global all_authors, first_authors, icg
 
     modeldb = load_collection('models')
     currents = load_collection('currents')
@@ -89,6 +89,7 @@ def refresh():
     modeltypes = load_collection('modeltypes')
     celltypes = load_collection('celltypes')
     papers = load_collection('papers')
+    icg = {item['id']: item['data'] for item in sdb.icg.find()}
 
     all_authors = {}
     first_authors = {}
