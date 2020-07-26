@@ -6,6 +6,7 @@ import datetime
 import collections
 import itertools
 import bcrypt
+from urllib.parse import urlencode
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login, logout
@@ -328,6 +329,26 @@ def showmodel_redirect(request, model_id=None, tab_id=None, filename=None):
     else:
         tab_string = f'&tab={tab_id}'
     return redirect(f'/showmodel?model={model_id}{tab_string}')
+
+def search_redirect(request):
+    args = urlencode(request.GET)
+    return redirect(f'/search?{args}')
+
+
+def uri_cleanup_redirect(request, uri=None):
+    print('uri_cleanup_redirect', uri)
+    uri_lower = uri.lower()
+    if uri_lower[-5:] == '.html':
+        uri = uri[:-5]
+    elif uri_lower[-7:] == '.cshtml':
+        uri = uri[:-7]
+
+    args = urlencode(request.GET)
+    if not args:
+        return redirect(f'/{uri}')
+    else:
+        return redirect(f'/{uri}?{args}')
+
 
 def forget_access(request):
     model_id = request.GET.get('model', -1)
