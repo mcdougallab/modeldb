@@ -599,7 +599,7 @@ def model_sort_rule(item):
 def findbyregionlist(request):
     context = {
         'title': 'ModelDB: Browse by current',
-        'content': _render_tree(celltypes, '/ModelDB/ModelList'),
+        'content': _render_tree(celltypes, '/ModelList'),
         'header': 'Find models of a particular neuron',
         'subhead': 'Click on a neuron/cell to show a list of models of that type.'
     }
@@ -623,7 +623,7 @@ def trends(request):
 def findbycurrent(request):
     context = {
         'title': 'ModelDB: Browse by current',
-        'content': _render_tree(currents, '/ModelDB/ModelList'),
+        'content': _render_tree(currents, '/ModelList'),
         'header': 'Find models that contain a particular ionic current',
         'subhead': 'Click on an ionic current to show a list of models that contain or implement that current.<br/><br/>Click <a href="https://senselab.med.yale.edu/neurondb/ndbregions">here</a> to view brief definitions of currents in NeuronDB.'
     }
@@ -632,7 +632,7 @@ def findbycurrent(request):
 def findbyreceptor(request):
     context = {
         'title': 'ModelDB: Browse by receptor',
-        'content': _render_tree(receptors, '/ModelDB/ModelList'),
+        'content': _render_tree(receptors, '/ModelList'),
         'header': 'Find models that contain a particular ionic current',
         'subhead': 'Click on a receptor to show a list of models that contain or implement that receptor.<br/>'
     }
@@ -641,7 +641,7 @@ def findbyreceptor(request):
 def findbytransmitter(request):
     context = {
         'title': 'ModelDB: Browse by neurotransmitter',
-        'content': _render_tree(transmitters, '/ModelDB/ModelList'),
+        'content': _render_tree(transmitters, '/ModelList'),
         'header': 'Find models that contain a particular neurotransmitter',
         'subhead': 'Click on a neurotransmitter to show a list of models that implement a mechanism for release of that transmitter.<br/>'
     }
@@ -650,7 +650,7 @@ def findbytransmitter(request):
 def findbygene(request):
     context = {
         'title': 'ModelDB: Browse by gene',
-        'content': _render_tree(genes, '/ModelDB/ModelList'),
+        'content': _render_tree(genes, '/ModelList'),
         'header': 'Find models containing a particular gene',
         'subhead': 'Click on a gene name to show a list of electrical or chemical models of the associated channel or receptor.<br/>'
     }
@@ -659,7 +659,7 @@ def findbygene(request):
 def findbyconcept(request):
     context = {
         'title': 'ModelDB: Browse by concept',
-        'content': _render_tree(modelconcepts, '/ModelDB/ModelList'),
+        'content': _render_tree(modelconcepts, '/ModelList'),
         'header': 'Find models by concept',
         'subhead': 'Click on a concept to show a list of models that incorporate or demonstrate that concept.<br/>'
     }

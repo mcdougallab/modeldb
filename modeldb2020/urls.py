@@ -32,6 +32,7 @@ urlpatterns = [
     re_path(r'^(?:modeldb/)?trends?$(?i)', views.trends, name='trends'),
     re_path(r'^(?:modeldb/)?api(?:\.(?:cs)?html)?$(?i)', views.static, dict(page='apidocs', title='The ModelDB API'), name='apidocs'),
     re_path(r'^(?:modeldb/)?(?:mdb)?resources(?:\.(?:cs)?html)?$(?i)', views.static, dict(page='mdbresources', title='Web resources for ModelDB'), name='mdbresources'),
+    re_path(r'^(?:modeldb/)?guide_neuron_upload(?:\.(?:cs)?html)?$(?i)', views.static, dict(page='guide_neuron_upload', title='Help for preparing a NEURON simulator archive'), name='guide_neuron_upload'),
     re_path(r'^(?:modeldb/)?eco(?:\.(?:cs)?html)?$(?i)', views.static, dict(page='eco', title='An ecosystem of computational neuroscience resources'), name='eco'),
     re_path(r'^(?:modeldb/)?listbymodelname(?:\.(?:cs)?html)?$(?i)', views.listbymodelname, name='listbymodelname'),
     re_path(r'^(?:modeldb/)?modellist(?:\.(?:cs)?html)?$(?i)', views.modellist, name='modellist'),

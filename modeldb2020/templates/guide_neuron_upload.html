@@ -1,0 +1,45 @@
+{% extends "main.html" %}
+
+{% block content %}
+<h1>ModelDB Help for preparing a NEURON simulator archive</h1>
+
+<h3>How to prepare a zip file for automatic download and run</h3>
+
+Web browsers can use NEURON as a "viewer" that automatically runs NEURON models downloaded
+from ModelDB.
+<p>
+    For this to work, the model source code must be properly "packaged."
+    The following procedure is special to NEURON models..
+<p>
+    <ol>
+        <li>Create a directory that contains all the necessary neuron model files and subdirectories.
+        <li>
+            In the same directory, put a file (called readme.txt, README, readme.html, or index.html)
+            that contains specific information and instructions
+            on how to use the model.
+            This is the file that ModelDB will display by default in the Model Files window of the model description page
+            (ShowModel).
+        <li>
+            In order to run the program from the web, this directory must also contain a mosinit.hoc file.
+            mosinit.hoc should contain a command such as
+            load_file("init.hoc") where init.hoc starts the neuron modeling session.  Invariably the command
+            load_file("nrngui.hoc") is included near the top of the mosinit.hoc file to display the NEURON main
+            menu and also to load frequently used libraries.  If additional mod files are included in a subfolder, named for example
+            mod_files, then a command to compile these mod files<br>
+            <code>//moddir mod_files</code><br>
+            must be the first command in the mosinit.hoc file.
+        <li>
+            Zip up the directory. On macOS (do not use the method of right-clicking to select Compress "Folder" because
+            it makes an archive which contains extra folders __MACOSX and files only used by the mac operating system) and
+            unix/linux systems an appropriate terminal window command
+            for creating a zip file called ca1neuron.zip from a directory ca1nrn would be
+            <br>
+            <code>zip -r ca1neuron.zip ca1nrn</code>
+            <br>
+            On MSWin systems create your zip file by right clicking in the Windows Explorer dialog box on the background of the right part of
+            the screen where your model files top level folder is displayed.  Select "Send to" and then mouse off to the side to select "compressed (zipped) folder" from the pop-up menu.
+            If desired, change the name
+            of the newly created zip file making sure you retain the ".zip" file extension.
+        <li>The zip file is now ready to be uploaded to ModelDB.
+    </ol>
+{% endblock %}
