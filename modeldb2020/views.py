@@ -222,6 +222,21 @@ def modellist(request):
     obj = ModelDB.object_by_id(object_id)
     if obj is None:
         return listbymodelname(request)
+
+    # find the set of all papers, drop duplicates
+    papers_all = list(itertools.chain.from_iterable([models.Model(model['id'], files_needed=False).papers for model in obj.models()]))
+    papers = []
+    paper_ids = set()
+    for paper in papers_all:
+        paper_id = paper.id
+        if paper_id not in paper_ids:
+            papers.append(paper)
+            paper_ids.add(paper_id)
+    print('paper_ids', sorted(paper_ids))
+
+    authors = [name for name in itertools.chain.from_iterable([paper.authors for paper in papers])]
+    authors = collections.Counter(authors).most_common(10)
+
     seealso = {}
     more_info = ''
     logo = None
@@ -258,7 +273,8 @@ def modellist(request):
         'seealso': seealso,
         'moreinfo': more_info,
         'logo': logo,
-        'homepage': homepage
+        'homepage': homepage,
+        'authors': authors
     }
     return render(request, 'modellist.html', context)
 

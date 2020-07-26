@@ -75,6 +75,17 @@
             {{moreinfo}}
         </div>
     {% endif %}
+    {% if authors %}
+        <div>
+            Top authors for {{ obj.name.lower }}:
+            <ul>
+                {% for author in authors %}
+                    <li><a href="/modelauthor/{{author.0}}">{{author.0}}</a> ({{author.1}})</li>
+                {% endfor %}
+            </ul>
+            <br>
+        </div>
+    {% endif %}
     {% if seealso %}
         <div class="well hangingindent">
             <b>See also:</b><br><br>
