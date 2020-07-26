@@ -22,6 +22,8 @@ urlpatterns = [
     re_path(r'^(?:modeldb/)?index.html$(?i)', views.index, name='index'),
     re_path('^(?:modeldb/)?login$(?i)', views.my_login, name='login'),
     re_path('^(?:modeldb/)?logout$(?i)', views.my_logout, name='logout'),
+    re_path(r'^(?:modeldb/)?listbyanyauthor(?:\.(?:cs)?html)?$(?i)', views.list_by_any_author, name='listbyanyauthor'),
+    #re_path(r'^(?:modeldb/)?listbyfirstauthor(?:\.(?:cs)?html)?$(?i)', views.list_by_first_author, name='listbyfirstauthor'),
     re_path(r'^(?:modeldb/)?submitmodel(?:\.(?:cs)?html)?$(?i)', views.submit_model, name='submitmodel'),
     re_path(r'^(?:modeldb/)?processmodelsubmit?(?:\.(?:cs)?html)?$(?i)', views.process_model_submit, name='processmodelsubmit'),
     re_path(r'^(?:modeldb/)?search(?:fulltext)?(?:\.(?:cs)?html)?$(?i)', views.search, name='search'),
@@ -48,6 +50,7 @@ urlpatterns = [
     re_path(r'^(?:modeldb/)?(?:mdb)?citations(?:\.(?:cs)?html)?$(?i)', views.mdbcitations, name='mdbcitations'),
     re_path(r'^models-with-uncurated-references$(?i)', views.models_with_uncurated_references, name='uncurated'),
     re_path(r'^forget_access$(?i)', views.forget_access, name='forget_access'),
+    re_path(r'^(?P<kind>model)author/(?P<author>.+)$(?i)', views.modelauthor, name='modelauthor'),
     #path('admin/', admin.site.urls),
     re_path(r'^api/v1/', include(urls_api_v1)),
     path('<slug:model_id>', views.showmodel_redirect, name='showmodel_redirect')

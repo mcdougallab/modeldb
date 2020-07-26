@@ -3,6 +3,8 @@ import html
 import json
 import os
 import datetime
+import collections
+import itertools
 import bcrypt
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
@@ -37,6 +39,73 @@ def unprocessed_refs_access(request):
     # TODO: this should really be about the users authentication level not the simple act of being authenticated
     return request.user.is_authenticated
 
+
+def list_by_any_author(request):
+    return _display_author_list(request, models.all_authors, 'Model Authors')
+
+def list_by_first_author(request):
+    return _display_author_list(request, models.first_authors, 'Model First Authors')
+
+def _display_author_list(request, authors, kind):
+    order = sorted(authors)
+    data = [{'n':name, 'c': len(authors[name])} for name in order]
+    context = {
+        'kind': kind,
+        'datajson': json.dumps(data),
+        'title': f'ModelDB: {kind}'
+    }
+    return render(request, 'listbyauthor.html', context)
+
+def _filter_models_for_top_category(the_models, category, container):
+    items = []
+    for model in the_models:
+        my_items = model._model.get(category)
+        if my_items is not None:
+            items.extend([item['object_id'] for item in my_items['value']])
+    items = collections.Counter(items).most_common(10)
+    items = [(item[0], container[str(item[0])]['name'], item[1]) for item in items if str(item[0]) in container]
+    return items
+
+def modelauthor(request, author=None, kind=None):
+    # kind should be either "first" or "model"
+    if kind == "first":
+        authors = models.first_authors
+    elif kind == "model":
+        authors = models.all_authors
+    else:
+        # should never get here
+        return HttpResponse('404 not found', status=404)
+    if author not in authors:
+        return HttpResponse('404 not found', status=404)
+    the_models = sorted([models.Model(entry, files_needed=False) for entry in authors[author]], key=lambda model: model.name)
+    concepts = _filter_models_for_top_category(the_models, 'model_concept', modelconcepts)
+    neurons = _filter_models_for_top_category(the_models, 'neurons', celltypes)
+
+    # find the set of all papers, drop duplicates
+    papers_all = list(itertools.chain.from_iterable([model.papers for model in the_models]))
+    papers = []
+    paper_ids = set()
+    for paper in papers_all:
+        paper_id = paper.id
+        if paper_id not in paper_ids:
+            papers.append(paper)
+            paper_ids.add(paper_id)
+
+    coauthors = [name for name in itertools.chain.from_iterable([paper.authors for paper in papers]) if name != author]
+    coauthors = collections.Counter(coauthors).most_common(10)
+    context = {
+        'title': f'ModelDB: {author}',
+        'content': author + kind,
+        'kind': kind,
+        'author': author,
+        'num_first_author': len(models.first_authors.get(author, [])),
+        'num_author': len(models.all_authors.get(author, [])),
+        'models': the_models,
+        'coauthors': coauthors,
+        'concepts': concepts,
+        'neurons': neurons
+    }
+    return render(request, 'modelauthor.html', context)
 
 def models_with_uncurated_references(request):
     if unprocessed_refs_access(request):

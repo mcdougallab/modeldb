@@ -39,8 +39,7 @@
     {% if Model.neurons or access == 'rw' %}
         <p><b>Cell Type(s):</b>
             {% for item in Model.neurons.value %}
-                {% if not forloop.first %}
-                    ;
+                {% if not forloop.first %};
                 {% endif %}
                 <a href="/ModelList?id={{item.object_id}}">{{item.object_name}}</a>
             {% endfor %}

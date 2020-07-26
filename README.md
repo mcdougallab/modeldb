@@ -103,6 +103,8 @@ The ModelDB website is powered in part by a number of other technologies, includ
 - [Font Awesome](https://fontawesome.com)
 - [plotly](https://plotly.com)
 - [select2](https://select2.org/)
+- [popper](https://popper.js.org)
+- [Bootstrap Table](https://bootstrap-table.com/)
 
 Did we miss something from this list? Submit a pull request!
 

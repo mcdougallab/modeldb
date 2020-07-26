@@ -76,6 +76,7 @@ def refresh():
     global modeldb, currents, genes, regions, receptors
     global transmitters, simenvironments, modelconcepts
     global modeltypes, celltypes, papers, cites_paper_unsorted
+    global all_authors, first_authors
 
     modeldb = load_collection('models')
     currents = load_collection('currents')
@@ -88,6 +89,35 @@ def refresh():
     modeltypes = load_collection('modeltypes')
     celltypes = load_collection('celltypes')
     papers = load_collection('papers')
+
+    all_authors = {}
+    first_authors = {}
+
+    no_authors_listed = 'No authors listed'
+
+    for model in modeldb.values():
+        for paper in model['model_paper']['value']:
+            paper_id = str(paper['object_id'])
+            if 'authors' not in papers[paper_id]:
+                all_authors.setdefault(no_authors_listed, [])
+                first_authors.setdefault(no_authors_listed, [])
+                all_authors[no_authors_listed].append(model['id'])
+                first_authors[no_authors_listed].append(model['id'])
+            else:
+                try:
+                    for i, author in enumerate(papers[paper_id]['authors']['value']):
+                        author_name = author['object_name']
+                        all_authors.setdefault(author_name, [])
+                        all_authors[author_name].append(model['id'])
+                        if i == 0:
+                            first_authors.setdefault(author_name, [])
+                            first_authors[author_name].append(model['id'])
+                except KeyError:
+                    pass
+    
+    all_authors = {name: list(set(models)) for name, models in all_authors.items()}
+    first_authors = {name: list(set(models)) for name, models in first_authors.items()}
+
 
     # Prepare dictionary used to provide the "references that cite a paper" on citation display pages
 

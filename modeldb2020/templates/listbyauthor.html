@@ -1,0 +1,56 @@
+{% extends "main.html" %}
+
+{% block head %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.17.1/bootstrap-table.min.css" integrity="sha512-zfridm8+ad8KSyxzl1REhqDP5975y8Q0AYaF22bcVGOnaVxlekxODmCGu0TP+Kbk3JbiNK5ENTHs7pT+yf+rBA==" crossorigin="anonymous" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.17.1/bootstrap-table.min.js" integrity="sha512-KtafFo5oE7fpMVyO/gXFnwsAXeGwl8Kxyikp1SCtMc+mXrvzO7WP1Zs70gSNmkcrBd9PS3byB/HFKvAVKtTWdg==" crossorigin="anonymous"></script>
+<style>
+.modellist>li {
+    padding-top: 1em;
+}
+.hangingindent {
+    text-indent: -2em;
+    padding-left: 3em;
+}
+</style>
+<script>
+$(() => {
+    $('#authortable').bootstrapTable({
+        pagination: true,
+        search: true,
+        data: {{ datajson | safe}}
+    })
+});
+function name_link(name) {
+    if (name == 'No authors listed') {
+        return name;
+    }
+    let uri = encodeURI(name);
+    console.log(uri);
+    return `<a href="/modelauthor/${uri}">${name}</a>`
+}
+</script>
+
+{% endblock %}
+
+{% block header %}
+<h3>{{ kind }}</h3>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-12">
+        <table id="authortable" data-toggle="authortable">
+            <thead>
+                <tr>
+                    <th data-sortable="true" data-field="n" data-formatter="name_link">
+                        Name
+                    </th>
+                    <th data-sortable="true" data-field="c">
+                        Number of models
+                    </th>
+                </tr>
+            </thead>
+        </table>
+</table>
+
+{% endblock %}
