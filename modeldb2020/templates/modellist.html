@@ -14,8 +14,8 @@
 
 {% block header %}
 <h3>{{ obj.classname }}: {{ obj.name }}</h3>
-{% if obj.description %}
-    ({{ obj.description }})
+{% if obj.description and obj.classname != 'Simulation Environment' %}
+    {{ obj.description }}
     <br>
     <br>
 {% endif %}
@@ -71,11 +71,12 @@
             {% endif %}
             {% if homepage %}
                 <center>
-                    <a href="{{homepage}}">Website</a>
+                    <a href="{{homepage}}">{{homepage}}</a>
                 </center>
                 <br>
             {% endif %}
             {{moreinfo}}
+            <br><br>
         </div>
     {% endif %}
     {% if authors %}

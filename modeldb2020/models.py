@@ -366,7 +366,10 @@ class SenseLabClass:
         try:
             return self._data['Description']['value']
         except KeyError:
-            return ''
+            try:
+                return self._data['description']['value']
+            except KeyError:
+                return ''
 
     def __repr__(self):
         return repr(self._data)
