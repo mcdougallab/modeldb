@@ -78,6 +78,14 @@
     {% for ref in citation_data %}
         <!--div class="row"-->
         <h4>{{ref.0.html | safe}}</h4>
+        See more from authors:
+        {% for author in ref.0.authors %}
+            {% if forloop.counter0 > 0 %}
+                &middot;
+            {% endif %}
+            <a href="/modelauthor/{{author}}">{{author}}</a>
+        {% endfor %}
+        <br><br>
         <!--/div -->
         <div class="row">
             <div class="col-md-6">
