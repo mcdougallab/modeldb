@@ -336,7 +336,11 @@ class SenseLabClass:
     
     def __getitem__(self, name):
         return getattr(self, name)
-    
+
+    @property
+    def id(self):
+        return self._data['id']
+
     def models(self):
         # TODO: include children
         # TODO: respect access rights (include private if logged in)
@@ -421,7 +425,7 @@ class CellType(SenseLabClass):
     def __init__(self, _id):
         SenseLabClass.__init__(self, _id)
         self._data = celltypes[_id]
-    
+        
     def picture(self):
         try:
             return self._data['Picture']['value'][0]['file_content'].replace('\n', '')
