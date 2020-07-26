@@ -21,9 +21,33 @@
             {{query}}
         </p>
 
-        {% if model_results or paper_results or celltype_results %}
+        {% if model_results or paper_results or celltype_results or author_results or simenvironment_results or current_results or region_results or receptor_results or gene_results or transmitter_results %}
+            {% if author_results %}
+                <a href="#authors">Model authors</a><br><br>
+            {% endif %}
+            {% if region_results %}
+                <a href="#region">Brain region/organism</a><br><br>
+            {% endif %}
             {% if celltype_results %}
                 <a href="#celltypes">Cell Types</a><br><br>
+            {% endif %}
+            {% if current_results %}
+                <a href="#currents">Currents</a><br><br>
+            {% endif %}
+            {% if transmitter_results %}
+                <a href="#transmitters">Transmitters</a><br><br>
+            {% endif %}
+            {% if receptor_results %}
+                <a href="#receptors">Receptors</a><br><br>
+            {% endif %}
+            {% if gene_results %}
+                <a href="#genes">Genes</a><br><br>
+            {% endif %}
+            {% if concept_results %}
+                <a href="#concepts">Concepts</a><br><br>
+            {% endif %}
+            {% if simenvironment_results %}
+                <a href="#simenvironments">Simulation Environments</a><br><br>
             {% endif %}
             {% if model_results %}
                 <a href="#models">Models</a><br><br>
@@ -41,6 +65,25 @@
 {% block maincol %}
 <div class="row">
         <div class="col-lg-12">
+{% if author_results %}
+    <h2 id="authors">Model Authors</h2>
+    {% for author in author_results %}
+        <div class="search_result">
+            <a href="/modelauthor/{{author}}">{{author}}</a>
+        </div>
+    {% endfor %}
+    <br>
+{% endif %}
+{% if region_results %}
+    <h2 id="regions">Brain Region/Organisms</h2>
+    {% for item in region_results %}
+        <div class="search_result">
+            <a href="/ModelList?id={{item.id}}">{{item.name}}</a>
+        </div>
+    {% endfor %}
+    <br>
+{% endif %}
+
 {% if celltype_results %}
     <h2 id="celltypes">Cell Types</h2>
     {% for celltype in celltype_results %}
@@ -50,8 +93,62 @@
     {% endfor %}
     <br>
 {% endif %}
+{% if current_results %}
+    <h2 id="currents">Currents</h2>
+    {% for item in current_results %}
+        <div class="search_result">
+            <a href="/ModelList?id={{item.id}}">{{item.name}}</a>
+        </div>
+    {% endfor %}
+    <br>
+{% endif %}
+{% if transmitter_results %}
+    <h2 id="transmitters">Transmitters</h2>
+    {% for item in transmitter_results %}
+        <div class="search_result">
+            <a href="/ModelList?id={{item.id}}">{{item.name}}</a>
+        </div>
+    {% endfor %}
+    <br>
+{% endif %}
+{% if receptor_results %}
+    <h2 id="receptors">Receptors</h2>
+    {% for item in receptor_results %}
+        <div class="search_result">
+            <a href="/ModelList?id={{item.id}}">{{item.name}}</a>
+        </div>
+    {% endfor %}
+    <br>
+{% endif %}
+{% if gene_results %}
+    <h2 id="genes">Genes</h2>
+    {% for item in gene_results %}
+        <div class="search_result">
+            <a href="/ModelList?id={{item.id}}">{{item.name}}</a>
+        </div>
+    {% endfor %}
+    <br>
+{% endif %}
+{% if concept_results %}
+    <h2 id="concepts">Concepts</h2>
+    {% for item in concept_results %}
+        <div class="search_result">
+            <a href="/ModelList?id={{item.id}}">{{item.name}}</a>
+        </div>
+    {% endfor %}
+    <br>
+{% endif %}
+{% if simenvironment_results %}
+    <h2 id="simenvironments">Simulation Environments</h2>
+    {% for item in simenvironment_results %}
+        <div class="search_result">
+            <a href="/ModelList?id={{item.id}}">{{item.name}}</a>
+        </div>
+    {% endfor %}
+    <br>
+{% endif %}
 {% if model_results %}
-    <h2 id="models">Models</h2>
+    <h2 id="models">Model titles</h2>
     {% for model in model_results %}
         <div class="search_result">
             <a href="/showmodel?model={{model.id}}">{{model.name}}</a>

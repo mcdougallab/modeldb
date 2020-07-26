@@ -149,6 +149,37 @@ def find_celltypes_by_name(name):
     return result
 
 
+def _find_thing_by_name(name, collection, constructor):
+    name = name.strip().lower()
+    result = []
+    if name:
+        for id_, item in collection.items():
+            if name in item['name'].lower():
+                result.append(constructor(id_))
+    return result
+
+
+def find_currents_by_name(name):
+    return _find_thing_by_name(name, currents, Current)
+
+def find_simenvironments_by_name(name):
+    return _find_thing_by_name(name, simenvironments, SimEnvironment)
+
+def find_transmitters_by_name(name):
+    return _find_thing_by_name(name, transmitters, Transmitter)
+
+def find_receptors_by_name(name):
+    return _find_thing_by_name(name, receptors, Receptor)
+
+def find_concepts_by_name(name):
+    return _find_thing_by_name(name, modelconcepts, ModelConcept)
+
+def find_genes_by_name(name):
+    return _find_thing_by_name(name, genes, Gene)
+
+def find_regions_by_name(name):
+    return _find_thing_by_name(name, regions, Region)
+
 def find_papers_by_doi(doi):
     # TODO: this should probably just query the DB, but need a lowercase solution
     doi = doi.strip().lower()
@@ -159,6 +190,12 @@ def find_papers_by_doi(doi):
                 if paper['doi']['value_lower'] == doi:
                     result.append(Paper(paper['id']))
     return result
+
+def find_authors(author):
+    """finds model authors but not paper authors"""
+    author_q = author.strip().lower()
+    return [author for author in all_authors if author_q in author.lower()]
+
 
 def find_papers_by_author(author):
     # TODO: this should probably just query the DB, but need a lowercase solution
@@ -371,17 +408,18 @@ class Current(SenseLabClass):
 
 class Gene(SenseLabClass):
     classname = 'Gene'
-    attr_name = 'genes'
+    attr_name = 'gene'
     def __init__(self, _id):
         SenseLabClass.__init__(self, _id)
         self._data = genes[_id]
 
 class Region(SenseLabClass):
     classname = 'Brain Region/Organism'
-    attr_name = 'regions'
+    attr_name = 'region'
     def __init__(self, _id):
         SenseLabClass.__init__(self, _id)
         self._data = regions[_id]
+        print('constructed region', _id)
 
 class Receptor(SenseLabClass):
     classname = 'Receptor'
@@ -392,7 +430,7 @@ class Receptor(SenseLabClass):
 
 class Transmitter(SenseLabClass):
     classname = 'Transmitter'
-    attr_name = 'transmitters'
+    attr_name = 'neurotransmitters'
     def __init__(self, _id):
         SenseLabClass.__init__(self, _id)
         self._data = transmitters[_id]

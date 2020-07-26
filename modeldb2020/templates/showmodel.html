@@ -23,7 +23,7 @@
             {% endif %}
         </p>
     {% endif %}
-    {% if Model.regions or access == 'rw' %}
+    {% if Model.region or access == 'rw' %}
         <p><b>Region(s) or Organism(s):</b>
             {% for item in Model.region.value %}
                 {% if not forloop.first %}
@@ -74,9 +74,9 @@
             {% endif %}
         </p>
     {% endif %}
-    {% if Model.genes or access == 'rw' %}
+    {% if Model.gene or access == 'rw' %}
         <p><b>Genes:</b>
-            {% for item in Model.genes.value %}
+            {% for item in Model.gene.value %}
                 {% if not forloop.first %}
                     ;
                 {% endif %}
@@ -87,9 +87,9 @@
             {% endif %}
         </p>
     {% endif %}
-    {% if Model.transmitters or access == 'rw' %}
+    {% if Model.neurotransmitters or access == 'rw' %}
         <p><b>Transmitters:</b>
-            {% for item in Model.transmitters.value %}
+            {% for item in Model.neurotransmitters.value %}
                 {% if not forloop.first %}
                     ;
                 {% endif %}

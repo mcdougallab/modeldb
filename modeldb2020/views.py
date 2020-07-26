@@ -193,11 +193,11 @@ def submit_model(request):
     metadata = [
         ['Neurons', 'celltypes', _id_and_name(celltypes)],
         ['Currents', 'currents', _id_and_name(currents)],
-        ['Neurotransmitters', 'transmitters', _id_and_name(transmitters)],
+        ['Neurotransmitters', 'neurotransmitters', _id_and_name(transmitters)],
         ['Receptors', 'receptors', _id_and_name(receptors)],
-        ['Genes', 'genes', _id_and_name(genes)],
+        ['Genes', 'gene', _id_and_name(genes)],
         ['Concepts', 'concepts', _id_and_name(modelconcepts)],
-        ['Region or organism', 'regions', _id_and_name(regions)],
+        ['Region or organism', 'region', _id_and_name(regions)],
         ['Simulation environment', 'simenvironment', _id_and_name(simenvironments)]
     ]
     context = {
@@ -823,7 +823,15 @@ def search(request):
                 models.find_papers_by_author(my_q) +
                 models.find_papers_by_title(my_q),
                 key=paper_sort_rule
-            )
+            ),
+            'author_results': sorted(models.find_authors(my_q)),
+            'simenvironment_results': models.find_simenvironments_by_name(my_q),
+            'current_results': models.find_currents_by_name(my_q),
+            'concept_results': models.find_concepts_by_name(my_q),
+            'region_results': models.find_regions_by_name(my_q),
+            'receptor_results': models.find_receptors_by_name(my_q),
+            'transmitter_results': models.find_transmitters_by_name(my_q),
+            'gene_results': models.find_genes_by_name(my_q)            
         }
         return render(request, 'searchq.html', context)
     else:
