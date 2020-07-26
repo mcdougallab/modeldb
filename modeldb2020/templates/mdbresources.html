@@ -9,475 +9,331 @@
 {% endblock %}
 {% block content %}
 <div class="row">
-        <div class="col-lg-12">
-                <div style="width:98%; margin: auto">
-                        <center><h3>ModelDB - Resources</h3></center>
-                        <ul>
-                            <li>
-                                <h5>NIMH's HBP description:</h5>
-                                <ul>
-                                    <li>
-                                        A 2004 <a href="http://www.nimh.nih.gov/science-news/2004/making-sense-of-the-brains-mind-boggling-complexity.shtml">HBP conference description</a> provides an overview of the goals of the Human Brain Project.
-                                        The HBP mission is to support research in Neuroinformatics.  Also contains a list of funding agencies supporting the HBP and links to conferences and other resources.
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <h5>Simulators and Simulator Tools</h5>
-                                <ul>
-                                    <li>
-                                        <a target="_blank" href="http://www.neuron.yale.edu">NEURON</a> for empirically-based simulations of neurons and networks of neurons.
-                                    </li>
-                                    <li>
-                                        <a target="_blank" href="http://www.genesis-sim.org/">GENESIS</a> GEneral NEural SImulation System developed at Caltech to provide a standard and flexible means of
-                                        constructing realistic simulations of biological neural systems.
-                                        <a href="http://moose.ncbs.res.in/">MOOSE</a> is the Multiscale Object-Oriented Simulation Environment.
-                                        It is the base and numerical core for large, detailed simulations including Computational Neuroscience and Systems Biology.
-                                        ... MOOSE spans the range from single molecules to subcellular networks, from single cells to neuronal networks, and to still
-                                        larger systems. it is backwards-compatible with GENESIS, and forward compatible with Python and XML-based model definition
-                                        standards like SBML and MorphML.
-                                    </li>
-                                    <li>
-                                        <a target="_blank" href="http://snnap.uth.tmc.edu/">SNNAP</a> Simulator for Neural Networks and Action Potentials is
-                                        a tool for the rapid development and simulation of realistic models of single neurons and small neural networks.<br>
-                                    </li>
-                                    <li>
-                                        <a href="http://www.compneuro.org/catacomb/"> Catacomb </a>consists of a set of frameworks for
-                                        various types of models in neuroscience, user interfaces to facilitate building models within these frameworks, and numerical algorithms to
-                                        compute their behavior. The available frameworks include reaction kinetics, reaction diffusion systems, kinetic scheme models of ion
-                                        channels, small neuron models and integrate and fire networks.
-                                    </li>
-                                    <li>
-                                        <a target="_blank" href="http://www.mcell.cnl.salk.edu/">MCell</a> makes it possible to incorporate high resolution ultrastructure into models of ligand diffusion and signaling, and
-                                        has evolved from experimental and theoretical work of the MCell group: Joel Stiles (Biomedical Applications, Pittsburgh Supercomputing Center),
-                                        Miriam Salpeter (Neurobiology &amp; Behavior, Cornell University), Edwin Salpeter (Department of Physics and Astronomy, Cornell University), and
-                                        Thomas Bartol and Terrence Sejnowski (Computational Neurobiology Laboratory, Salk Institute).<br>
-                                    </li>
-                                    <li>
-                                        <a target="_blank" href="http://www.vcell.org/">Virtual Cell Environment</a>
-                                        ... "The user can build complex models with a web-based Java interface to specify compartmental topology and
-                                        geometry, molecular characteristics, and relevant interaction parameters. The Virtual Cell automatically
-                                        converts the biological description into a corresponding mathematical system of ordinary and/or partial
-                                        differential equations. Distinct biological and mathematical frameworks are encompassed within a single
-                                        graphical interface. The mathematic-savy user may directly specify the complete mathematical description
-                                        of the model, bypassing the schematic interface. The Virtual Cell will then solve the equations by
-                                        applying numerical solvers and generate appropriate software code to perform and analyze simulations.
-                                        Results can be displayed and analyzed on-line or downloaded to the users computer in a variety of formats."
-                                        There are about <a href="http://www.nrcam.uchc.edu/applications/published%20_models.html">20 published models</a> of chemical pathways.
-                                    </li>
-                                    <li>
-                                        The <a href="http://www.neurophys.biomedicale.univ-paris5.fr/~graham/surf-hippo.html">Surf-Hippo</a> neuron simulator is a
-                                        public domain package written in Lisp for Unix workstations and PCs that is used to investigate
-                                        morphometrically and biophysically detailed compartmental models of single neurons and networks of neurons.
-                                        Surf-Hippo allows ready construction of cells and networks using built-in functions and various
-                                        anatomical file formats (NTS, Rodney Douglas, and Rocky Nevin formats, using a modified version of the
-                                        anatomy file conversion program ntscable by JC Wathey; Neurolucida).<br>
-                                    </li>
-                                    <li>
-                                        <a href="http://www.nest-initiative.org/"> NEST - The Neural Simulation Technology Initiative </a> is
-                                        a collaborative effort to advance simulation technology for large, biologically realistic networks of spiking neurons.
-                                        ... <br> The main goals of the collaboration are: 1) development of new simulation methods and algorithms, 2) development of
-                                        new analysis and visualization tools, as well as the 3) collection of information and resources related to neural simulations.
-                                        These goals are expressed in the joint development of a simulation system for biologically realistic neuronal networks.  This
-                                        groups software was previously called BLISS and SYNOD. <br>
-                                    </li>
-                                    <li>
-                                        <a href="http://www.math.pitt.edu/~bard/xpp/xpp.html"> XPP-Aut </a> X-windows phase
-                                        plane analysis program by Bard Ermentrout. Designed to solve dynamical systems problems that take
-                                        several different forms: (i) ordinary differential equations (ODEs); (ii)
-                                        delay differential equations (DDEs); (iii) differential-algebraic equations
-                                        (DAEs); (iv) Volterra integro-differential equations (IDEs); (v) discrete
-                                        dynamical systems (MAPs); (vi) boundary value problems (BVP).  Includes "locbif" (locate
-                                        bifurcations), a phase plane analysis tool.  Runs under Windows or Unix.<br>
-                                    </li>
-                                    <li>
-                                        <a href="http://www.cam.cornell.edu/~gucken/dstool"> DsTool </a>is a computer program for the interactive
-                                        investigation of dynamical systems on computers using unix and the X window system. The aims of the program
-                                        are described in an article entitled dstool: Computer Assisted Exploration of Dynamical Systems (Notices of
-                                        the American Mathemtical Society, 39, 303--309, 1992). Archived at the Center for Applied Mathematics at Cornell
-                                        under <a href="http://www.cam.cornell.edu/~gucken/"> John Guckenheim's </a> home page.
-                                        Originally written at Cornell by Mark Myers, Rick Wicklin
-                                        and Patrick Worfolk, it has been improved and modified by contributions from Allen Back and the staff of the
-                                        former Geometry Center at the University of Minneapolis. <br>
-                                    </li>
-                                    <li>
-                                        <a href="http://amath.colorado.edu/faculty/jdm/faq-[5].html#Heading43"> A list of dynamical system tools </a>
-                                        This comprehensive list is part of an interesting and informative <a href="http://amath.colorado.edu/faculty/jdm/faq.html"> nonlinear science FAQ (math) site </a> maintained by
-                                        <a href="http://amath.colorado.edu/faculty/jdm/"> James Meiss</a>. <br>
-                                    </li>
-                                    <li>
-                                        <a href="http://nerve.bsd.uchicago.edu/">Electrophysiology - Simulation programs </a>by
-                                        Fransisco (Pancho) Bezanilla. This page contain several simulation program&nbsp;
-                                        written as applets and can be run across the web.
-                                    </li>
-                                    <li>
-                                        <a href="http://www.llnl.gov/CASC/nsde/">Nonlinear Solvers and Differential Equations (NSDE)</a> at
-                                        <a href="http://www.llnl.gov">Lawrence Livermore National Laboratory (LLNL)</a>.  This page (NSDE)
-                                        contains a
-                                        link to an excellent list of publications in numerical analysis that includes manuscript pdfs.
-                                    </li>
-                                    <li>
-                                        <a href="http://www.neuralsimulationlanguage.org/about.html"> NSL, Neural Simulation Language </a>, is a simulation system for
-                                        large-scale general neural networks.	NSL provides a simulation environment simplifying the
-                                        task of modeling neural networks. In particular, NSL supports neural models having as basic
-                                        data structure neural layers with similar properties and similar connection patterns, where
-                                        neurons are modeled as leaky integrators with connections subject to diverse learning rules.
-                                    </li>
-                                    <li>
-                                        <a href="http://sourceforge.net/projects/matcont/"> MATCONT </a> is a graphical MATLAB package for the
-                                        interactive numerical study of dynamical systems.  It is developed in parallel with the command line continuation toolbox
-                                        CL_MATCONT. Both MATCONT and CL_MATCONT allow to compute curves of equilibria, limit points, Hopf points, limit cycles and
-                                        bifurcation points of limit cycles. See <a href="http://portal.acm.org/citation.cfm?doid=779359.779362">
-                                            A. DHOOGE, W. GOVAERTS, YU. A. KUZNETSOV. MATCONT: A MATLAB package for numerical bifurcation analysis of ODEs A.
-                                            ACM Transactions on Mathematical Software, Vol. 29, No. 2, June 2003, Pages 141-164.
-                                        </a> for an introduction and
-                                        brief software survey.
-                                    </li>
-                                    <li>
-                                        <a href="http://psych.colorado.edu/~oreilly/PDP++/PDP++.html">PDP++</a> The PDP++ software is a
-                                        neural-network simulation system written in C++. It represents the next generation of the PDP software
-                                        originally released with the McClelland and Rumelhart "Explorations in Parallel Distributed Processing Handbook",
-                                        MIT Press, 1987.
-                                        It is easy enough for novice users, but very powerful and flexible for research use.
-                                    </li>
-                    
-                                    <li>
-                                        <a href="/simtooldb/">SimToolDB</a>
-                                        provides an accessible location for storing and efficiently retrieving tools which aid
-                                        simulations of neuronal and network compartmental models
-                                    </li>
-                    
-                                    <li>
-                                        <a href="http://www.st-andrews.ac.uk/~wjh/spikeshaper">SpikeShaper</a>
-                                        is a new simple tool for exploring Hodgkin-Huxley models recently published in
-                                        <a href="http://dx.doi.org/10.1007/s12021-007-9002-x">Neuroinformatics</a>
-                                    </li>
-                                    <li>
-                                        "<a href="http://brian.di.ens.fr/">Brian</a> is a new simulator for spiking neural networks available on almost all platforms. The motivation for this project is that a simulator should not only save the time of processors, but also the time of scientists.
-                                        Brian is easy to learn and use, highly flexible and easily extensible. The Brian package itself and simulations using it are all written in the Python programming language, which is an easy, concise and highly developed language with many advanced features and development tools, excellent documentation and a large community of users providing support and extension packages. ..."
-                                    </li>
-                                    <li>
-                                        "<a href="http://www.qub.buffalo.edu/wiki/index.php/Main_Page">QUB</a> is a software package for Markov analysis of single-molecule kinetics, especially ion channel records.
-                                        With QuB's user-friendly graphical interfaces, you can
-                                        * simulate single-channel currents for any model
-                                        * calculate rate constants and voltage-dependence without fitting histograms
-                                        * detect current transitions in the presence of noise
-                                        * filter data, correct baseline, and select subintervals
-                                        * test all possible model topologies
-                                        * fit data to any function or system of ODEs
-                                        * (more...)"
-                    
-                                    </li>
-                                    <li>
-                                        <a href="http://www.neurogems.org/neosim2/"> NEOSIM </a>Neural Open Simulation. The NEOSIM project
-                                        aims to develop efficient, portable software tools for large scale systems
-                                        modeling of the nervous system, integrating computational models ranging
-                                        from the sub-cellular to the whole brain level.
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <h5>Morphology Modeling</h5>
-                                <ul>
-                                    <li>
-                                        <a href="http://neuromorpho.org/">NeuroMorpho.org</a> is a centrally curated inventory of  digitally reconstructed neurons.
-                                        NeuroMorpho.Org contains contributions from over two-dozen labs and is continuously updated as new morphological reconstructions are
-                                        collected, published, and shared, with the goal of densely covering all available data.
-                                    </li>
-                                    <li>
-                                        <a href="http://neuron.duke.edu/cells/cellArchive.html">
-                                            Duke/Southampton Archive of Neuronal
-                                            Morphology
-                                        </a> A rich collection of detailed morphometric data.
-                                    </li>
-                                    <li>
-                                        <a href="http://neuron.duke.edu/cells/download.html">cvapp</a> A morphology viewer/editor (with built in ftp for web access)
-                                        that can read and write
-                                        morphometric data files (including Neurolucida files and the
-                                        format used in the Duke/Southampton Archive) and generate
-                                        output suitable for NEURON and GENESIS.  Used to be but no longer available from http://www.compneuro.org (see instead <a href="http://neuron.duke.edu/cells/download.html">http://neuron.duke.edu/cells/download.html</a>)
-                                    </li>
-                                    <li>
-                                        <a target="_blank" href="http://www.krasnow.gmu.edu/L-Neuron/list.htm">L-NEURON</a> A modeling tool for the efficient
-                                        generation and parsimonious description of dendritic morphology.
-                                    </li>
-                                    <li><a target="_blank" href="http://www.anc.ed.ac.uk/~arjen/branching.html">Some of A. van Ooyen's links</a></li>
-                                    <li>
-                                        <a target="_blank" href="http://www.neuro.mpg.de/research/scn/motionvision/compmodel/download/">Fly motion detection cells</a>. See also
-                                        <a target="_blank" href="http://www.neuro.mpg.de/research/scn/motionvision/compmodel/">
-                                            Alexander Borst's Compartmental Modeling at a Max Plank Institute Department of Systems and Computational Neurobiology
-                                        </a>.
-                                    </li>
-                                    <li>
-                                        <a href="http://www.neugen.org/" target="_blank">NeuGen</a> is  made  for  the generation  of  dendritic  and  axonal morphology of  realistic  neurons  and  neuronal networks  in  3D.
-                                        The idea for the development of NeuGen has been to be able to simulate networks of synaptically connected neurons in a cortical column. The NeuGen project is mainly a result of the fact that experimental data is available nowadays to extract the anatomical fingerprints of the cells and to generate synthetic neuron geometries.
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <h5>HBP Links</h5>
-                                <ul>
-                                    <li>
-                                        The <a href="http://ccdb.ucsd.edu/">Cell Centered Database</a> or CCDB was created to house the types of high
-                                        resolution 3D light and electron microscopic reconstructions produced at the <a href="http://ncmir.ucsd.edu">
-                                            National Center for Microscopy and Imaging
-                                            Research
-                                        </a>. It contains structural and protein distribution information
-                                        derived from confocal, multiphoton and electron microscopy, including correlated
-                                        microscopy. Many of the data sets are derived from <a href="http://www.sci.sdsu.edu/TFrey/MitoMovie.htm">electron tomography</a>.
-                                        Electron tomography is similar in concept to medical imaging techniques like CAT
-                                        scans and MRI in that it derives a 3D volume from a series of 2D projections
-                                        through a structure. In this case, the structures are contained in sections
-                                        prepared for electron microscopy which are tilted through a limited angular
-                                        range. Many of the data sets in the CCDB come from studies of the nervous
-                                        system, although the CCDB is not restricted to neuronal information.
-                                    </li>
-                                    <li>
-                                        <a href="http://www.nbirn.net/">Biomedical Informatics Research Network</a><br>The BIRN is an <a href="http://www.ncrr.nih.gov">NCRR</a> initiative aimed at
-                                        creating a testbed to address biomedical researchers' need to access and analyze
-                                        data at a variety of levels of aggregation located at diverse sites throughout
-                                        the country. The BIRN testbed will bring together hardware and develop software
-                                        necessary for a scalable network of databases and computational resources.
-                                        Issues of user authentication, data integrity, security, and data ownership will
-                                        also be addressed.
-                                    </li>
-                                    <li>
-                                        <a href="http://neurodatabase.org"> Cortical Neuron Net Database </a> at the Weill
-                                        Medical College of Cornell University.
-                                        In collaboration with cortical neurophysiologists at several institutions,
-                                        we have developed an Internet-accessible database of electrophysiological
-                                        and other information describing cortical neurons and their characteristic
-                                        responses to somatosensory and other stimuli.  In collaboration with
-                                        <a href="http://www.bruxton.com">Bruxton Corporation</a> we are developing modules and plugins to allow access,
-                                        query, and download of datasets to Bruxton and popular data acquistion and analysis programs.
-                                        We are actively implementing as well a parallel computational resource to
-                                        aid development and testing of algorithms to analyze database-archived neuronal
-                                        signals.
-                                        To keep the neuroscience and informatics communities apprised of our development
-                                        efforts towards databases, user tools, languages and standards, we offer
-                                        a selection of project documents, posters, and PowerPoint slide sets.
-                    
-                                    </li><li><a href="http://soma.npa.uiuc.edu/isnpa/">The Neuronal Time Series Analysis (NTSA) Workbench </a></li>
-                    
-                                    <li>
-                                        <a href="http://www.visiome.org"> The Visiome Platform </a>
-                                        Understanding the brain function requires integration of diverse information from the level of molecule to the level of neuronal networks.
-                                        However, the huge amount of information is making it almost impossible for any individual researcher
-                                        to construct an integrated view of the brain. To solve this problem requires to make useful neuroinformatics
-                                        tools for information storing, maintenance and sharing. In the present study, we constructed an integrated
-                                        system for vision neuroscience named Visiome Environment as a test bed for useful neuroinformatics tools.
-                                        Visiome Platform is the central component of the Visiome Environment that provides access to reusable resources in the research field of
-                                        vision science. The basic concept of the Visiome Platform is to make a research archive on the internet integrating mathematical models,
-                                        experimental data, analysis libraries and related information.
-                                    </li>
-                    
-                                    <li>
-                                        <a href="http://www.neuroml.org">NeuroML</a> is intended as the home
-                                        for markup language efforts for neuroscience.
-                                        <a href="http://www.sourceforge.net/projects/neuroml">
-                                            Source Forge has started
-                                            hosting NeuroML development efforts in April 2005
-                                        </a>
-                                        This will include syntax and
-                                        semantics for data, sites, other entities such as chemical species, methods,
-                                        models, and references.
-                                        NeuroML paper: <i>
-                                            Towards NeuroML: Model
-                                            Description Methods for Collaborative Modelling in Neuroscience
-                                        </i>,
-                                        Philosophical Transactions of the Royal Society, in press 2001.
-                                        Tools for NeuroML/model: A number of simulation tool developers are
-                                        collaborating to define and use a common data model for describing neuroscience
-                                        simulation models. Currently the levels of description cover models of ion
-                                        channels, multicompartment cells and networks of neurons. At
-                                        present this is likely to be of most interest to developers of neuroscience
-                                        simulation software and databases - implementations of simulators which can
-                                        speak NeuroML are still at the prototype stage.
-                                    </li>
-                    
-                                    <li>
-                                        <a href="http://www.genesis-sim.org/hbp">
-                                            The GENESIS Neural Database and Modeler's Workspace
-                                        </a>
-                                        Project Vision: Develop an easy-to-use tool for computational
-                                        neuroscientists that facilitates the following tasks: creating, editing and
-                                        visualizing models and other objects; interacting with neuronal databases;
-                                        interacting with simulation systems such as GENESIS; and collaborating with
-                                        other modelers using simultaneous shared editing and visualization.
-                                    </li>
-                                    <li>
-                                        <a href="http://www-hbp.usc.edu/"> The University of Southern California (USC) Brain Project (USCBP)</a>
-                                        , funded in part by the Human
-                                        Brain Project consortium, integrates research in the neuroscience of synaptic plasticity
-                                        and visuomotor coordination with research in Neuroinformatics, adapting such computational
-                                        techniques as databases, the World Wide Web, data mining, and visualization to the
-                                        analysis of neuroscience data, and employing Computational Neuroscience to study the
-                                        relations between structure and function.
-                                    </li>
-                                    <li>
-                                        <a href="http://earlab.bu.edu/">Earlab</a> is designed to support hearing research and has as its core a data
-                                        warehouse of experimental and theoretical information related to the hearing
-                                        sciences. They have C, C++, Fortran, and Matlab models of cochlear physiology and auditory nerve.
-                                        ModelDB maintains model entries for these models.
-                    
-                                    </li>
-                                    <li>
-                                        <a target="_blank" href="http://www.cellml.org/examples/repository/index.html">CellML</a>
-                                        supports both
-                                        quantitative and qualitative pathway models. The CellML 1.0
-                                        Specification defines any model which defines the change in the concentration of
-                                        a chemical species involved in a reaction, as a quantitative pathway model. Here
-                                        we adapt that definition to include both pathway and electrophysiological
-                                        models.  CellML has plans to build a simulator to execute CellML models which are now just
-                                        a specification.
-                    
-                    
-                                </li></ul>
-                            </li>
-                            <li>
-                                <h5>Databases of Neuroscience Databases and Lists of Databases</h5>
-                    
-                                <ul>
-                                    <li>
-                                        <a href="http://www.neuroelectro.org/">Neuroelectro</a>
-                                        "The goal of the NeuroElectro Project is to extract information about the
-                                        electrophysiological properties (e.g. resting membrane potentials and membrane time
-                                        constants) of diverse neuron types from the existing literature and place it into a
-                                        centralized database."
-                                    </li>
-                                    <li>
-                                        <a href="http://neuinfo.org">Neuroscience Information Framework</a>
-                                        "The Neuroscience Information Framework is a dynamic inventory of Web-based neuroscience
-                                        resources: data, materials, and tools accessible via any computer connected to the
-                                        Internet. An initiative of the NIH Blueprint for Neuroscience Research, NIF advances
-                                        neuroscience research by enabling discovery and access to public research data and
-                                        tools worldwide through an open source, networked environment."
-                                    </li>
-                                    <li>
-                                        The <a href="http://projectreporter.nih.gov/" title="http://projectreporter.nih.gov/">
-                                            RePORT Expenditures and
-                                            Results (RePORTER)
-                                        </a> query tool. This tool provides search fields, hit lists
-                                        that can be sorted and downloaded to Excel, NIH funding for each
-                                        project (expenditures), and publications and patents that have
-                                        acknowledged support from each project (results).&nbsp; RePORTER also
-                                        provides links to <a href="http://www.pubmedcentral.nih.gov/" title="http://www.pubmedcentral.nih.gov/ PubMed Central">PubMed Central</a>,
-                                        <a href="http://www.ncbi.nlm.nih.gov/pubmed" title="http://www.ncbi.nlm.nih.gov/pubmed PubMed">PubMed</a>, and the <a href="http://patft.uspto.gov/" title="http://patft.uspto.gov/ US Patent &amp; Trademark Office Patent Full  Text and Image Database">
-                                            US
-                                            Patent &amp; Trademark Office Patent Full Text and Image Database
-                                        </a>
-                                        for more information on research results.&nbsp; <br>
-                                        <a href="http://projectreporter.nih.gov/" title="http://projectreporter.nih.gov/ Begin  using RePORTER"><strong></strong></a>
-                                    </li>
-                                    <li>
-                                        NSF's grant search tool:<a href="http://www.nsf.gov/awardsearch/" title="Award Search">NSF Award Search: Simple Search</a>
-                                    </li>
-                                    <li>
-                                        <a href="http://brainvis.wustl.edu/wiki/index.php/Main_Page"> Van Essen Lab</a> at the Washington University
-                                        in St Louis School of Medicine.
-                                    </li>
-                                    <li>
-                                        <a href="http://ycmi-hbp.med.yale.edu/hbpdb"> Database of Human Brain Projects</a>     The Human Brain Project
-                                        is multi-agency initiative to construct databases of neuroscience data, and to provide tools for searching
-                                        and retrieving that data to support research, teaching and education of the public into normal and abnormal
-                                        functions of the nervous system.
-                                        This program was initiated in 1993, and has grown to the point where it presently supports 37 separate
-                                        projects. The data generated and archived by those projects comes from all levels of brain organization,
-                                        from many different methodologies, and many different species. The overall aim of the Human Brain Project
-                                        is to enable users to access and integrate all of this information to support greater use of the data and
-                                        better insights into brain function.  Toward that goal this Human Brain Project Database is designed to
-                                        assist the user in accessing the information contained in the current projects and other similar projects
-                                        on the web. It provides not only simple lists of the different projects, but also advanced tools for complex
-                                        searches that will enable the user to identify and extract different types of data distributed within
-                                        the different projects.
-                                    </li>
-                                    <li>
-                                        <a href="http://stke.sciencemag.org/cgi/ul/sigtransUl;CAT_7"> ST NetWatch: Modeling Tools </a>
-                                        Science magazine's	"The Signal Transduction Knowledge Environment" web site is maintaining a list of modeling tools.
-                                        It is largely molecular and there is also larger spatial scale modeling tools represented.
-                                    </li>
-                    
-                                </ul>
-                            </li>
-                            <li>
-                                <h5>Computational neuroscience and related laboratory lists</h5>
-                                <ul>
-                                    <li>
-                                        <a href="http://neuromuscular.wustl.edu/mother/chan.html">http://neuromuscular.wustl.edu/mother/chan.html</a>
-                                        ION CHANNELS, TRANSMITTERS, RECEPTORS &amp; DISEASE
-                                        at the Neuromuscular Disease Center site, Washington University, St. Louis, MO
-                                    </li>
-                                    <li><a href="https://compneuroweb.com/"> Jim Perlewitz's list </a></li>
-                                    <li><a href="http://www.ionchannels.org"> IonChannels.org </a></li>
-                                    <li>
-                                        <a href="https://www.neuron.yale.edu/phpBB2/index.php"> The NEURON Forum </a> is designed to facilitate the exchange of
-                                        information about NEURON and foster the productive use of computational modeling in neuroscience in general.
-                                    </li>
-                                </ul>
-                            </li>
-                            <p></p>
-                            <li>
-                                <h5>Electronic Library</h5>
-                                <ul>
-                                    <li><a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi"> Pubmed</a></li>
-                                    <li><a href="http://www.humanapress.com/OnlineJournalArticles.pasp?issn=1539-2791&amp;issuecode=NI:1:1&amp;issuesort=10"> Neuroinformatics Journal</a></li>
-                                    <li><a href="http://www.xml.com/lpt/a/2000/11/29/schemas/part1.html"> Learn about XML schemas</a></li>
-                                </ul>
-                            </li>
-                            <p></p>
-                            <li>
-                                <h5>Parallel Computing</h5>
-                                <ul>
-                                    <li><a href="http://www.llnl.gov/computing/tutorials/mpi/"> MPI (Message Passing Interface) reference page<br></a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <h5>Miscellaneous</h5>
-                                <ul>
-                                    <li>
-                                        The <a href="http://www.guidetopharmacology.org/">IUPHAR</a> ION CHANNEL COMPENDIUM.
-                                        The International Union of Basic and Clinical Pharmacology has sponsored database which tabulates gene names with
-                                        the function and expression of ion channels and receptors.  This database is an invaluable aid for remembering the myrid names
-                                        and facts associated with ion channels and is highly recommended.
-                                    </li>
-                                    <li>For a full inventory of ion channels, see <a href="http://channelpedia.net">Channelpedia</a>.</li>
-                                    <li><a href="http://www.scholarpedia.org/article/Model_Sharing_in_Computational_Neuroscience"> A Scholarpedia article "Model Sharing in Computational Neuroscience" by Tom Morse </a></li>
-                                    <li><a href="http://www.boomer.org/pkin/soft.html"> Pharmacokinetic Software list by David Bourne</a></li>
-                                    <li>
-                                        The <a href="http://www.almaden.ibm.com/st/computational_science/ck/msim/">chemical kinetics simulation  </a> project,
-                                        originated at IBM's Almaden Research Center in San Jose, California, is a multi-faceted
-                                        effort aimed at understanding, predicting and controlling chemical reactions used in
-                                        processing of inorganic and polymeric thin films. Modelling and experiment are intertwined
-                                        to develop new insights to the behavior of these materials under a wide range of conditions,
-                                        and to use these insights to enhance discovery as well as applications. We are involved in
-                                        the development of both simulation algorithms and experimental probes.
-                    
-                                        One of our codes - the Chemical Kinetics Simulator program, CKS for short - is available for
-                                        downloading. It is a scientific software tool developed by chemists in the kinetics simulation
-                                        project that provides the bench scientist with an easy-to-use, rapid, interactive method for the
-                                        accurate simulation of chemical reactions. The package includes extensive documentation and
-                                        is available in versions for OS/2 2.x and higher, Apple Macintosh and Power Macintosh, and
-                                        Microsoft Windows 3.1/Windows 95/Windows NT.
-                    
-                                        Simulations are an environmentally responsible component of research and development programs.
-                                        Realistic, reliable chemical models allow scientists and engineers to minimize the amount of
-                                        physical experimentation used for a study, and avoid unnecessary generation of hazardous waste -
-                                        CKS is particularly useful for this purpose.
-                                    </li>
-                                    <li>
-                                        The <a href="http://nsr.bioeng.washington.edu/index.html">National Simulation Resource (NSR)</a>
-                                        for Transport, Metabolism and Reaction creates, collects and disseminates material of interest to
-                                        biological modelers. Here is a link to browse their
-                                        <a href="http://nsr.bioeng.washington.edu/Models/modelDB/browse/">models</a>.
-                                    </li>
-                                    <li>
-                                        <a href="http://neurolex.org/wiki/Category:Beyond_the_pdf">Collaborative tools</a> for Neuroscience research were discussed at a
-                                        <a href="http://sites.google.com/site/beyondthepdf/">beyondthepdf</a> meeting.
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-</div>
+    <div class="col-lg-12">
+        <div style="width:98%; margin: auto">
+            <center><h3>ModelDB - Resources</h3></center>
+            <ul>
+                <li>
+                    <h5>Simulators and Simulator Tools</h5>
+                    <ul>
+                        <li>
+                            <a target="_blank" href="http://neuron.yale.edu">NEURON</a> for empirically-based simulations of neurons and networks of neurons.
+                        </li>
+                        <li>
+                            <a target="_blank" href="http://www.genesis-sim.org/">GENESIS</a> GEneral NEural SImulation System developed at Caltech to provide a standard and flexible means of
+                            constructing realistic simulations of biological neural systems.
+                            <a href="http://moose.ncbs.res.in/">MOOSE</a> is the Multiscale Object-Oriented Simulation Environment.
+                            It is the base and numerical core for large, detailed simulations including Computational Neuroscience and Systems Biology.
+                            ... MOOSE spans the range from single molecules to subcellular networks, from single cells to neuronal networks, and to still
+                            larger systems. it is backwards-compatible with GENESIS, and forward compatible with Python and XML-based model definition
+                            standards like SBML and MorphML.
+                        </li>
+                        <li>
+                            <a href="http://www.compneuro.org/catacomb/">Catacomb </a>consists of a set of frameworks for
+                            various types of models in neuroscience, user interfaces to facilitate building models within these frameworks, and numerical algorithms to
+                            compute their behavior. The available frameworks include reaction kinetics, reaction diffusion systems, kinetic scheme models of ion
+                            channels, small neuron models and integrate and fire networks.
+                        </li>
+                        <li>
+                            <a target="_blank" href="http://www.mcell.cnl.salk.edu/">MCell</a> makes it possible to incorporate high resolution ultrastructure into models of ligand diffusion and signaling, and
+                            has evolved from experimental and theoretical work of the MCell group: Joel Stiles (Biomedical Applications, Pittsburgh Supercomputing Center),
+                            Miriam Salpeter (Neurobiology &amp; Behavior, Cornell University), Edwin Salpeter (Department of Physics and Astronomy, Cornell University), and
+                            Thomas Bartol and Terrence Sejnowski (Computational Neurobiology Laboratory, Salk Institute).<br>
+                        </li>
+                        <li>
+                            <a target="_blank" href="//vcell.org/">Virtual Cell Environment</a>
+                            ... "The user can build complex models with a web-based Java interface to specify compartmental topology and
+                            geometry, molecular characteristics, and relevant interaction parameters. The Virtual Cell automatically
+                            converts the biological description into a corresponding mathematical system of ordinary and/or partial
+                            differential equations. Distinct biological and mathematical frameworks are encompassed within a single
+                            graphical interface. The mathematic-savy user may directly specify the complete mathematical description
+                            of the model, bypassing the schematic interface. The Virtual Cell will then solve the equations by
+                            applying numerical solvers and generate appropriate software code to perform and analyze simulations.
+                            Results can be displayed and analyzed on-line or downloaded to the users computer in a variety of formats."
+                            There are almost <a href="https://vcell.org/vcell-published-models">200 published models</a> of chemical pathways.
+                        </li>
+                        <li>
+                            The <a href="http://surf-hippo.neurophysics.eu/">Surf-Hippo</a> neuron simulator is a
+                            public domain package written in Lisp for Unix workstations and PCs that is used to investigate
+                            morphometrically and biophysically detailed compartmental models of single neurons and networks of neurons.
+                            Surf-Hippo allows ready construction of cells and networks using built-in functions and various
+                            anatomical file formats (NTS, Rodney Douglas, and Rocky Nevin formats, using a modified version of the
+                            anatomy file conversion program ntscable by JC Wathey; Neurolucida).<br>
+                        </li>
+                        <li>
+                            <a href="http://www.nest-initiative.org/"> NEST - The Neural Simulation Technology Initiative </a> is
+                            a collaborative effort to advance simulation technology for large, biologically realistic networks of spiking neurons.
+                            ... <br> The main goals of the collaboration are: 1) development of new simulation methods and algorithms, 2) development of
+                            new analysis and visualization tools, as well as the 3) collection of information and resources related to neural simulations.
+                            These goals are expressed in the joint development of a simulation system for biologically realistic neuronal networks.  This
+                            groups software was previously called BLISS and SYNOD. <br>
+                        </li>
+                        <li>
+                            <a href="http://www.math.pitt.edu/~bard/xpp/xpp.html"> XPP-Aut </a> X-windows phase
+                            plane analysis program by Bard Ermentrout. Designed to solve dynamical systems problems that take
+                            several different forms: (i) ordinary differential equations (ODEs); (ii)
+                            delay differential equations (DDEs); (iii) differential-algebraic equations
+                            (DAEs); (iv) Volterra integro-differential equations (IDEs); (v) discrete
+                            dynamical systems (MAPs); (vi) boundary value problems (BVP).  Includes "locbif" (locate
+                            bifurcations), a phase plane analysis tool.  Runs under Windows or Unix.<br>
+                        </li>
+                        <li>
+                            <a href="http://mathlab.cit.cornell.edu/dyn_sys/dstool/dstool.html">DsTool</a> is a computer program for the interactive
+                            investigation of dynamical systems on computers using unix and the X window system. The aims of the program
+                            are described in an article entitled dstool: Computer Assisted Exploration of Dynamical Systems (Notices of
+                            the American Mathemtical Society, 39, 303--309, 1992).
+                            Originally written at Cornell by Mark Myers, Rick Wicklin
+                            and Patrick Worfolk, it has been improved and modified by contributions from Allen Back and the staff of the
+                            former Geometry Center at the University of Minneapolis. <br>
+                        </li>
+                        <li>
+                            <a href="http://amath.colorado.edu/faculty/jdm/faq-[5].html#Heading43"> A list of dynamical system tools </a>
+                            This comprehensive list is part of an interesting and informative <a href="http://amath.colorado.edu/faculty/jdm/faq.html"> nonlinear science FAQ (math) site </a> maintained by
+                            <a href="http://amath.colorado.edu/faculty/jdm/"> James Meiss</a>. <br>
+                        </li>
+                        <li>
+                            <a href="http://nerve.bsd.uchicago.edu/">Electrophysiology - Simulation programs </a>by
+                            Fransisco (Pancho) Bezanilla. This page contain several simulation program&nbsp;
+                            written as applets and can be run across the web.
+                        </li>
+                        <li>
+                            <a href="http://www.llnl.gov/CASC/nsde/">Nonlinear Solvers and Differential Equations (NSDE)</a> at
+                            <a href="http://www.llnl.gov">Lawrence Livermore National Laboratory (LLNL)</a>.  This page (NSDE)
+                            contains a
+                            link to an excellent list of publications in numerical analysis that includes manuscript pdfs.
+                        </li>
+                        <li>
+                            <a href="http://www.neuralsimulationlanguage.org/about.html"> NSL, Neural Simulation Language </a>, is a simulation system for
+                            large-scale general neural networks.	NSL provides a simulation environment simplifying the
+                            task of modeling neural networks. In particular, NSL supports neural models having as basic
+                            data structure neural layers with similar properties and similar connection patterns, where
+                            neurons are modeled as leaky integrators with connections subject to diverse learning rules.
+                        </li>
+                        <li>
+                            <a href="http://sourceforge.net/projects/matcont/"> MATCONT </a> is a graphical MATLAB package for the
+                            interactive numerical study of dynamical systems.  It is developed in parallel with the command line continuation toolbox
+                            CL_MATCONT. Both MATCONT and CL_MATCONT allow to compute curves of equilibria, limit points, Hopf points, limit cycles and
+                            bifurcation points of limit cycles. See <a href="http://portal.acm.org/citation.cfm?doid=779359.779362">
+                                A. DHOOGE, W. GOVAERTS, YU. A. KUZNETSOV. MATCONT: A MATLAB package for numerical bifurcation analysis of ODEs A.
+                                ACM Transactions on Mathematical Software, Vol. 29, No. 2, June 2003, Pages 141-164.
+                            </a> for an introduction and
+                            brief software survey.
+                        </li>
+                        <li>
+                            <a href="http://psych.colorado.edu/~oreilly/PDP++/PDP++.html">PDP++</a> The PDP++ software is a
+                            neural-network simulation system written in C++. It represents the next generation of the PDP software
+                            originally released with the McClelland and Rumelhart "Explorations in Parallel Distributed Processing Handbook",
+                            MIT Press, 1987.
+                            It is easy enough for novice users, but very powerful and flexible for research use.
+                        </li>
+        
+                        <li>
+                            <a href="//senselab.med.yale.edu/simtooldb/">SimToolDB</a>
+                            provides an accessible location for storing and efficiently retrieving tools which aid
+                            simulations of neuronal and network compartmental models
+                        </li>
+        
+                        <li>
+                            <a href="http://www.st-andrews.ac.uk/~wjh/spikeshaper">SpikeShaper</a>
+                            is a new simple tool for exploring Hodgkin-Huxley models recently published in
+                            <a href="http://dx.doi.org/10.1007/s12021-007-9002-x">Neuroinformatics</a>
+                        </li>
+                        <li>
+                            "<a href="https://briansimulator.org/">Brian</a> is a simulator for spiking neural networks available on almost all platforms. The motivation for this project is that a simulator should not only save the time of processors, but also the time of scientists.
+                            Brian is easy to learn and use, highly flexible and easily extensible. The Brian package itself and simulations using it are all written in the Python programming language, which is an easy, concise and highly developed language with many advanced features and development tools, excellent documentation and a large community of users providing support and extension packages. ..."
+                        </li>
+                        <li>
+                            "<a href="https://qub.mandelics.com/">QUB</a> is a software package for Markov analysis of single-molecule kinetics, especially ion channel records.
+                            With QuB's user-friendly graphical interfaces, you can
+                            * simulate single-channel currents for any model
+                            * calculate rate constants and voltage-dependence without fitting histograms
+                            * detect current transitions in the presence of noise
+                            * filter data, correct baseline, and select subintervals
+                            * test all possible model topologies
+                            * fit data to any function or system of ODEs
+                            * (more...)"
+        
+                        </li>
+                        <li>
+                            <a href="http://www.neurogems.org/neosim2/"> NEOSIM </a>Neural Open Simulation. The NEOSIM project
+                            aims to develop efficient, portable software tools for large scale systems
+                            modeling of the nervous system, integrating computational models ranging
+                            from the sub-cellular to the whole brain level.
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <h5>Morphology Modeling</h5>
+                    <ul>
+                        <li>
+                            <a href="http://neuromorpho.org/">NeuroMorpho.org</a> is a centrally curated inventory of  digitally reconstructed neurons.
+                            NeuroMorpho.Org contains contributions from over two-dozen labs and is continuously updated as new morphological reconstructions are
+                            collected, published, and shared, with the goal of densely covering all available data.
+                        </li>
+                        <li>
+                            <a target="_blank" href="http://krasnow1.gmu.edu/cn3/L-Neuron/index.htm">L-NEURON</a> A modeling tool for the efficient
+                            generation and parsimonious description of dendritic morphology.
+                        </li>
+                        <li><a target="_blank" href="http://www.anc.ed.ac.uk/~arjen/branching.html">Some of A. van Ooyen's links</a></li>
+                        <li>
+                            <a href="http://www.neugen.org/" target="_blank">NeuGen</a> is  made  for  the generation  of  dendritic  and  axonal morphology of  realistic  neurons  and  neuronal networks  in  3D.
+                            The idea for the development of NeuGen has been to be able to simulate networks of synaptically connected neurons in a cortical column. The NeuGen project is mainly a result of the fact that experimental data is available nowadays to extract the anatomical fingerprints of the cells and to generate synthetic neuron geometries.
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <h5>HBP Links</h5>
+                    <ul>
+                        <li>
+                            The <a href="http://ccdb.ucsd.edu/">Cell Centered Database</a> or CCDB was created to house the types of high
+                            resolution 3D light and electron microscopic reconstructions produced at the <a href="http://ncmir.ucsd.edu">
+                                National Center for Microscopy and Imaging
+                                Research
+                            </a>. It contains structural and protein distribution information
+                            derived from confocal, multiphoton and electron microscopy, including correlated
+                            microscopy. Many of the data sets are derived from <a href="http://www.sci.sdsu.edu/TFrey/MitoMovie.htm">electron tomography</a>.
+                            Electron tomography is similar in concept to medical imaging techniques like CAT
+                            scans and MRI in that it derives a 3D volume from a series of 2D projections
+                            through a structure. In this case, the structures are contained in sections
+                            prepared for electron microscopy which are tilted through a limited angular
+                            range. Many of the data sets in the CCDB come from studies of the nervous
+                            system, although the CCDB is not restricted to neuronal information.
+                        </li>
+        
+                        <li>
+                            <a href="http://www.visiome.org"> The Visiome Platform </a>
+                            Understanding the brain function requires integration of diverse information from the level of molecule to the level of neuronal networks.
+                            However, the huge amount of information is making it almost impossible for any individual researcher
+                            to construct an integrated view of the brain. To solve this problem requires to make useful neuroinformatics
+                            tools for information storing, maintenance and sharing. In the present study, we constructed an integrated
+                            system for vision neuroscience named Visiome Environment as a test bed for useful neuroinformatics tools.
+                            Visiome Platform is the central component of the Visiome Environment that provides access to reusable resources in the research field of
+                            vision science. The basic concept of the Visiome Platform is to make a research archive on the internet integrating mathematical models,
+                            experimental data, analysis libraries and related information.
+                        </li>
+        
+                        <li>
+                            <a href="http://www.neuroml.org">NeuroML</a> is an emerging declarative standard for
+                            representing computational neuroscience models.
+                        </li>
+        
+                        <li>
+                            <a href="http://www.genesis-sim.org/hbp">
+                                The GENESIS Neural Database and Modeler's Workspace
+                            </a>
+                            Project Vision: Develop an easy-to-use tool for computational
+                            neuroscientists that facilitates the following tasks: creating, editing and
+                            visualizing models and other objects; interacting with neuronal databases;
+                            interacting with simulation systems such as GENESIS; and collaborating with
+                            other modelers using simultaneous shared editing and visualization.
+                        </li>
+                        <li>
+                            <a target="_blank" href="http://www.cellml.org/examples/repository/index.html">CellML</a>
+                            supports both
+                            quantitative and qualitative pathway models. The CellML 1.0
+                            Specification defines any model which defines the change in the concentration of
+                            a chemical species involved in a reaction, as a quantitative pathway model. Here
+                            we adapt that definition to include both pathway and electrophysiological
+                            models.  CellML has plans to build a simulator to execute CellML models which are now just
+                            a specification.
+        
+        
+                    </li></ul>
+                </li>
+                <li>
+                    <h5>Databases of Neuroscience Databases and Lists of Databases</h5>
+        
+                    <ul>
+                        <li>
+                            <a href="http://www.neuroelectro.org/">Neuroelectro</a>
+                            "The goal of the NeuroElectro Project is to extract information about the
+                            electrophysiological properties (e.g. resting membrane potentials and membrane time
+                            constants) of diverse neuron types from the existing literature and place it into a
+                            centralized database."
+                        </li>
+                        <li>
+                            <a href="http://neuinfo.org">Neuroscience Information Framework</a>
+                            "The Neuroscience Information Framework is a dynamic inventory of Web-based neuroscience
+                            resources: data, materials, and tools accessible via any computer connected to the
+                            Internet. An initiative of the NIH Blueprint for Neuroscience Research, NIF advances
+                            neuroscience research by enabling discovery and access to public research data and
+                            tools worldwide through an open source, networked environment."
+                        </li>
+                        <li>
+                            The <a href="http://projectreporter.nih.gov/" title="http://projectreporter.nih.gov/">
+                                RePORT Expenditures and
+                                Results (RePORTER)
+                            </a> query tool. This tool provides search fields, hit lists
+                            that can be sorted and downloaded to Excel, NIH funding for each
+                            project (expenditures), and publications and patents that have
+                            acknowledged support from each project (results).&nbsp; RePORTER also
+                            provides links to <a href="http://www.pubmedcentral.nih.gov/" title="http://www.pubmedcentral.nih.gov/ PubMed Central">PubMed Central</a>,
+                            <a href="http://www.ncbi.nlm.nih.gov/pubmed" title="http://www.ncbi.nlm.nih.gov/pubmed PubMed">PubMed</a>, and the <a href="http://patft.uspto.gov/" title="http://patft.uspto.gov/ US Patent &amp; Trademark Office Patent Full  Text and Image Database">
+                                US
+                                Patent &amp; Trademark Office Patent Full Text and Image Database
+                            </a>
+                            for more information on research results.&nbsp; <br>
+                            <a href="http://projectreporter.nih.gov/" title="http://projectreporter.nih.gov/ Begin  using RePORTER"><strong></strong></a>
+                        </li>
+                        <li>
+                            NSF's grant search tool:<a href="http://www.nsf.gov/awardsearch/" title="Award Search">NSF Award Search: Simple Search</a>
+                        </li>
+                        <li>
+                            <a href="http://brainvis.wustl.edu/wiki/index.php/Main_Page">Van Essen Lab</a> at the Washington University
+                            in St Louis School of Medicine.
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <h5>Computational neuroscience and related laboratory lists</h5>
+                    <ul>
+                        <li>
+                            <a href="http://neuromuscular.wustl.edu/mother/chan.html">http://neuromuscular.wustl.edu/mother/chan.html</a>
+                            ION CHANNELS, TRANSMITTERS, RECEPTORS &amp; DISEASE
+                            at the Neuromuscular Disease Center site, Washington University, St. Louis, MO
+                        </li>
+                        <li><a href="https://compneuroweb.com/"> Jim Perlewitz's list </a></li>
+                        <li>
+                            <a href="https://www.neuron.yale.edu/phpBB2/index.php"> The NEURON Forum </a> is designed to facilitate the exchange of
+                            information about NEURON and foster the productive use of computational modeling in neuroscience in general.
+                        </li>
+                    </ul>
+                </li>
+                <p></p>
+                <li>
+                    <h5>Electronic Library</h5>
+                    <ul>
+                        <li><a href="//pubmed.gov">Pubmed</a></li>
+                        <li><a href="https://www.springer.com/journal/12021">Neuroinformatics Journal</a></li>
+                        <li><a href="https://www.frontiersin.org/journals/neuroinformatics">Frontiers in Neuroinformatics</a></li>
+                    </ul>
+                </li>
+                <p></p>
+                <li>
+                    <h5>Miscellaneous</h5>
+                    <ul>
+                        <li>
+                            The <a href="http://www.guidetopharmacology.org/">IUPHAR</a> ION CHANNEL COMPENDIUM.
+                            The International Union of Basic and Clinical Pharmacology has sponsored database which tabulates gene names with
+                            the function and expression of ion channels and receptors.  This database is an invaluable aid for remembering the myrid names
+                            and facts associated with ion channels and is highly recommended.
+                        </li>
+                        <li>For a full inventory of ion channels, see <a href="http://channelpedia.net">Channelpedia</a>.</li>
+                        <li><a href="http://www.scholarpedia.org/article/Model_Sharing_in_Computational_Neuroscience"> A Scholarpedia article "Model Sharing in Computational Neuroscience" by Tom Morse </a></li>
+                        <li>
+                            The <a href="http://nsr.bioeng.washington.edu/index.html">National Simulation Resource (NSR)</a>
+                            for Transport, Metabolism and Reaction creates, collects and disseminates material of interest to
+                            biological modelers. Here is a link to browse their
+                            <a href="http://nsr.bioeng.washington.edu/Models/modelDB/browse/">models</a>.
+                        </li>
+                        <li>
+                            Collaborative tools for Neuroscience research were discussed at a
+                            <a href="http://sites.google.com/site/beyondthepdf/">beyondthepdf</a> meeting.
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
 </div>
 {% endblock %}
