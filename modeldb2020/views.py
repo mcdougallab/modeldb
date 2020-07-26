@@ -57,12 +57,12 @@ def _display_author_list(request, authors, kind):
     }
     return render(request, 'listbyauthor.html', context)
 
-def _filter_models_for_top_category(the_models, category, container):
+def _filter_models_for_top_category(the_models, category, container, ignore=None):
     items = []
     for model in the_models:
         my_items = model._model.get(category)
         if my_items is not None:
-            items.extend([item['object_id'] for item in my_items['value']])
+            items.extend([item['object_id'] for item in my_items['value'] if item['object_name'] != ignore])
     items = collections.Counter(items).most_common(10)
     items = [(item[0], container[str(item[0])]['name'], item[1]) for item in items if str(item[0]) in container]
     return items
@@ -83,7 +83,7 @@ def modelauthor(request, author=None, kind=None):
     neurons = _filter_models_for_top_category(the_models, 'neurons', celltypes)
 
     # find the set of all papers, drop duplicates
-    papers_all = list(itertools.chain.from_iterable([model.papers for model in the_models]))
+    papers_all = itertools.chain.from_iterable([model.papers for model in the_models])
     papers = []
     paper_ids = set()
     for paper in papers_all:
@@ -224,8 +224,10 @@ def modellist(request):
     if obj is None:
         return listbymodelname(request)
 
+    my_models = [models.Model(model['id'], files_needed=False) for model in obj.models()]
+
     # find the set of all papers, drop duplicates
-    papers_all = list(itertools.chain.from_iterable([models.Model(model['id'], files_needed=False).papers for model in obj.models()]))
+    papers_all = itertools.chain.from_iterable([model.papers for model in my_models])
     papers = []
     paper_ids = set()
     for paper in papers_all:
@@ -236,6 +238,10 @@ def modellist(request):
 
     authors = [name for name in itertools.chain.from_iterable([paper.authors for paper in papers])]
     authors = collections.Counter(authors).most_common(10)
+
+    concepts = _filter_models_for_top_category(my_models, 'model_concept', modelconcepts, ignore=obj.name)
+    neurons = _filter_models_for_top_category(my_models, 'neurons', celltypes, ignore=obj.name)
+    my_currents = _filter_models_for_top_category(my_models, 'currents', currents, ignore=obj.name)
 
     seealso = {}
     more_info = ''
@@ -274,7 +280,10 @@ def modellist(request):
         'moreinfo': more_info,
         'logo': logo,
         'homepage': homepage,
-        'authors': authors
+        'authors': authors,
+        'concepts': concepts,
+        'neurons': neurons,
+        'currents': my_currents
     }
     return render(request, 'modellist.html', context)
 
