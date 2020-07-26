@@ -27,12 +27,12 @@
             return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
         }
         $.ajaxSetup({
-        beforeSend: function(xhr, settings) {
-            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
             }
-        }
-    });
+        });
         
         
         
@@ -127,10 +127,10 @@
                 {% endif %}
                 {% for my_ref in ref.1 %}
                 <p>{{my_ref.html | safe}}
-                    {% if my_ref.model_link %}
+                    {% if my_ref.models %}
                         <ul>
-                            {% for link in my_ref.model_link %}
-                                <li><a href="/showmodel?model={{link.id}}">{{link.name}} [Model]</a></li>
+                            {% for my_model in my_ref.models %}
+                                <li><a href="/{{my_model.id}}">{{my_model.name}} [Model]</a></li>
                             {% endfor %}
                         </ul>
                     {% endif %}
@@ -141,6 +141,13 @@
                 <div><b>References and models that cite this paper</b></div>
                 {% for my_ref in ref.2 %}
                 <p>{{my_ref.html | safe}}</p>
+                {% if my_ref.models %}
+                    <ul>
+                        {% for my_model in my_ref.models %}
+                            <li><a href="/{{my_model.id}}">{{my_model.name}} [Model]</a></li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
                 {% if my_ref.model_link %}
                 <ul>
                     {% for link in my_ref.model_link %}

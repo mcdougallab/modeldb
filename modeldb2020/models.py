@@ -76,7 +76,7 @@ def refresh():
     global modeldb, currents, genes, regions, receptors
     global transmitters, simenvironments, modelconcepts
     global modeltypes, celltypes, papers, cites_paper_unsorted
-    global all_authors, first_authors, icg
+    global all_authors, first_authors, icg, models_by_paper
 
     modeldb = load_collection('models')
     currents = load_collection('currents')
@@ -90,6 +90,11 @@ def refresh():
     celltypes = load_collection('celltypes')
     papers = load_collection('papers')
     icg = {item['id']: item['data'] for item in sdb.icg.find()}
+    models_by_paper = {}
+    for model_id, model_data in modeldb.items():
+        for item in model_data['model_paper']['value']:
+            models_by_paper.setdefault(item['object_id'], [])
+            models_by_paper[item['object_id']].append(model_id)
 
     all_authors = {}
     first_authors = {}
@@ -753,6 +758,14 @@ class Paper:
     @property
     def id(self):
         return self._id
+    
+    @property
+    def models(self):
+        #print(self._id, models_by_paper.keys())
+        if int(self._id) in models_by_paper:
+            return [Model(_id, files_needed=False) for _id in models_by_paper[int(self._id)]]
+        else:
+            return []
 
 
 class PrivateModel(Model):
