@@ -164,13 +164,16 @@ def process_model_submit(request):
     _process_submit_list(request, 'celltypes', 'neurons', 25, entry)
     _process_submit_list(request, 'receptors', 'receptors', 26, entry)
     _process_submit_list(request, 'currents', 'currents', 27, entry)
-    _process_submit_list(request, 'transmitters', 'neurotransmitters', 28, entry)
+    _process_submit_list(request, 'neurotransmitters', 'neurotransmitters', 28, entry)
     _process_submit_list(request, 'model_type', 'model_type', 112, entry)
     _process_submit_list(request, 'concepts', 'model_concept', 113, entry)
     _process_submit_list(request, 'simenvironment', 'modeling_application', 114, entry)
-    _process_submit_list(request, 'genes', 'gene', 476, entry)
-    _process_submit_list(request, 'regions', 'region', 471, entry)
+    _process_submit_list(request, 'gene', 'gene', 476, entry)
+    _process_submit_list(request, 'region', 'region', 471, entry)
+    _process_submit_list(request, 'model_type', 'model_type', 112, entry)
 
+    import pprint
+    pprint.pprint(entry)
     models.add_private_model(entry)
 
     context = {
@@ -191,6 +194,7 @@ def _process_submit_list(request, listname, fieldname, attr_id, entry):
 
 def submit_model(request):
     metadata = [
+        ['Model type', 'model_type', _id_and_name(modeltypes)],
         ['Neurons', 'celltypes', _id_and_name(celltypes)],
         ['Currents', 'currents', _id_and_name(currents)],
         ['Neurotransmitters', 'neurotransmitters', _id_and_name(transmitters)],
