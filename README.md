@@ -68,6 +68,7 @@ This repository is currently intended to be bootstrapped from the classic EAV/CR
 - be sure to turn off debugging in the settings file
 - the database needs to be writeable and it needs to be in a folder that's writeable (so not in a path that hosts the website code)
 - make sure the folders with private-zips and unprocessed refs can be written to by the server
+- if you make any changes on a bitnami machine with apache setup; run `sudo /opt/bitnami/ctlscript.sh restart apache` to restart
 
 ## On ModelViews
 
