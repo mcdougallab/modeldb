@@ -172,8 +172,6 @@ def process_model_submit(request):
     _process_submit_list(request, 'region', 'region', 471, entry)
     _process_submit_list(request, 'model_type', 'model_type', 112, entry)
 
-    import pprint
-    pprint.pprint(entry)
     models.add_private_model(entry)
 
     context = {
