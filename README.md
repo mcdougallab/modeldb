@@ -29,10 +29,10 @@ This repository is currently intended to be bootstrapped from the classic EAV/CR
             pwd: "password",
             roles: [{role: "userAdmin", db:"modeldb"}]})
             
-- Install Python dependencies (`sudo pip3 install -r requirements.txt`)
 - Install git so you can clone this repository, if it's not already installed `sudo apt install git`
 - Clone this repository
-- Create two directories for storing (1) the model zip files and (2) private model zip files
+- Install Python dependencies (`sudo pip3 install -r requirements.txt`)
+- Create four directories for storing (1) the model zip files, (2) private model zip files, (3) unprocessed references, (4) modelview data.
 - Create a settings file in the exact path `/home/bitnami/modeldb-settings.json`. It should have values for:
   - `secret_key` (I'm unclear on if there are any rules on this, but I guess a random 50 character string should work)
   - `mongodb_user`
