@@ -1,0 +1,67 @@
+{% extends "main.html" %}
+{% load static %}
+
+{% block head %}
+<script src='{% static "csrf-support.js" %}'></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.17.1/bootstrap-table.min.css" integrity="sha512-zfridm8+ad8KSyxzl1REhqDP5975y8Q0AYaF22bcVGOnaVxlekxODmCGu0TP+Kbk3JbiNK5ENTHs7pT+yf+rBA==" crossorigin="anonymous" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.17.1/bootstrap-table.min.js" integrity="sha512-KtafFo5oE7fpMVyO/gXFnwsAXeGwl8Kxyikp1SCtMc+mXrvzO7WP1Zs70gSNmkcrBd9PS3byB/HFKvAVKtTWdg==" crossorigin="anonymous"></script>
+<style>
+    .description {
+        font-style: italic;
+    }
+</style>
+<script>
+$(() => {
+    $('#modeltable').bootstrapTable({
+        pagination: true,
+        search: true,
+        data: {{ datajson | safe}},
+        formatSearch: () => 'filter'
+    })
+});
+
+function idlink(id) {
+    return `<a href="/${id}">${id}</a>`;
+}
+function gobutton(id) {
+    return `<span id="button${id}"><button onclick="make_public(${id})" class="btn btn2">Make public</button></span>`;
+}
+function make_public(id) {
+    $.post(
+        `/api/v1/make_public`,
+        {
+            'id': id
+        },
+        (data, status) => {
+            if (status == 'success') {
+                $(`#button${id}`).html('made public')
+            }
+        }
+    );
+}
+</script>
+{% endblock %}
+{% block header %}
+    <h1>
+        Models requested to be made public
+    </h1>
+    <p class="description">
+        Before making any model public, be sure to check: (1) that it reproduces a figure
+        from the literature, (2) that there is an html README, (3) that it has appropriate
+        metadata annotation including structured entries for implementers and references,
+        (4) that the GitHub entry has been created, and (5) that the title is appropriate
+        and includes a hint at the citation (ends with e.g. (Morse et al 2010)).
+    </p>
+{% endblock %}
+{% block content %}
+    <table id="modeltable" data-toggle="modeltable">
+        <thead>
+            <tr>
+                <th data-sortable="true" data-field="id" data-formatter="idlink">ID</th>
+                <th data-sortable="true" data-field="t">Title</th>
+                <th data-field="id" data-formatter="gobutton">&nbsp;</th>
+            </tr>
+        </thead>
+    </table>
+{% endblock %}
+

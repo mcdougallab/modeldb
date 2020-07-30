@@ -1,8 +1,7 @@
 {% extends "bigleftcol.html" %}
 {% load static %}
 {% block head %}
-
-
+    <script src='{% static "csrf-support.js" %}'></script>
 
 
     <style>
@@ -38,6 +37,22 @@
 
     <script>
         var _shape_plots = [];
+
+        $(() => {
+            $('#makepublic').click(() => {
+                $.post(
+                    `/api/v1/request_make_public`,
+                    {
+                        'id': {{Model.id}}
+                    },
+                    (data, status) => {
+                        if (status == 'success') {
+                            $('#makepublic').hide();
+                        }
+                    }
+                );
+            });
+        });
         
         $.getJSON(`/api/v1/morphology/{{Model.id}}`, function(data) {
             $('#shapeplotcontainer').show();
@@ -96,6 +111,7 @@
         {% endif %}
     {% endif %}
     {% if Model.data_to_curate %}
+        <button id="makepublic" class="btn btn2">Request to make public</button><br><br>
         <a href="/forget_access?model={{Model.id}}" class="btn btn2">Forget access</a>
     {% endif %}
     <div>

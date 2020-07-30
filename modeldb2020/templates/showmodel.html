@@ -10,6 +10,16 @@
             <button title="Edit notes" id="edit_notes"><i class="fas fa-edit" aria-hidden="true"></i></button>
         {% endif %}
     </p>
+    {% if Model.expmotivation %}
+        <p>
+            <b>Experimental motivation:</b>
+            {{Model.expmotivation}}
+            {% if access == 'rw' %}
+                <button title="Edit experimental motivation" id="edit_expmotivation"><i class="fas fa-edit" aria-hidden="true"></i></button>
+            {% endif %}
+        </p>
+    {% endif %}
+
     {% if Model.model_type or access == 'rw' %}
         <p><b>Model Type:</b>
             {% for item in Model.model_type.value %}

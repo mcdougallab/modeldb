@@ -45,6 +45,27 @@ def get_filter(request):
         return True
     return result
 
+def request_make_public(request):
+    from .views import all_model_access
+    model_id = request.POST.get('id')
+    if ModelDB.has_private_model(model_id):
+        access = request.session.get(model_id)
+        if access == 'rw' or all_model_access(request):
+            ModelDB.request_to_make_public(model_id)
+            return HttpResponse('success')
+    return HttpResponse('403 Forbidden', status=403)
+
+
+def make_public(request):
+    from .views import all_model_access
+    model_id = request.POST.get('id')
+    if ModelDB.has_private_model(model_id):
+        if all_model_access(request):
+            ModelDB.make_public(model_id)
+            return HttpResponse('success')
+    print('failed; no access rights')
+    return HttpResponse('403 Forbidden', status=403)
+
 
 def unprocessed_refs_view(request, _id=None):
     data = request.POST.get('data')

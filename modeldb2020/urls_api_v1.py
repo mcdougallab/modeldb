@@ -9,6 +9,8 @@ urlpatterns = [
     path('models/<int:model_id>', api_v1.models_view),
     path('models/<slug:field>', api_v1.models_view),
     path('models', api_v1.models_view),
+    path('request_make_public', api_v1.request_make_public),
+    path('make_public', api_v1.make_public),
     path('celltypes/<int:_id>', api_v1.celltypes_view),
     path('celltypes/<slug:field>', api_v1.celltypes_view),
     path('celltypes', api_v1.celltypes_view),

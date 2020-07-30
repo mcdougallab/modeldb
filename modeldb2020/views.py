@@ -35,6 +35,9 @@ def index(request):
 def _id_and_name(data):
     return sorted([(item['id'], item['name']) for item in data.values()], key=lambda item: item[1])
 
+def all_model_access(request):
+    # TODO: this should really be about the users authentication level not the simple act of being authenticated
+    return request.user.is_authenticated
 
 def unprocessed_refs_access(request):
     # TODO: this should really be about the users authentication level not the simple act of being authenticated
@@ -296,6 +299,18 @@ def ptrm(request):
     }
     return render(request, 'ptrm.html', context)
 
+
+@ensure_csrf_cookie
+def models_requested_public(request):
+    if all_model_access(request):
+        context = {
+            'title': 'ModelDB: models requested to be made public',
+            'datajson': json.dumps([{'id': model.id, 't': model.name} for model in ModelDB.get_requested_public()])
+        }
+        return render(request, 'models-requested-public.html', context)
+    else:
+        return redirect(f'/login?next={request.path}')
+
 def listbymodelname(request):
     context = {
         'title': 'ModelDB: Models List',
@@ -395,6 +410,8 @@ def showmodel(request):
     if not ModelDB.has_model(model_id):
         if ModelDB.has_private_model(model_id):
             access = request.session.get(model_id)
+            if all_model_access(request):
+                access = 'rw'
             if access is None:
                 code = request.POST.get('access_code')
                 # TODO: refactor this block of code; it is repetitive

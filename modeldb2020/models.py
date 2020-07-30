@@ -1,6 +1,8 @@
 import json
 import zipfile
 import os
+import threading
+import shutil
 import fnmatch
 import bcrypt
 from pymongo import MongoClient, ReturnDocument
@@ -292,6 +294,30 @@ class ModelDB(models.Model):
                 result.append(self.model(model['id']))
         
         return result
+
+    def request_to_make_public(self, model_id):
+        document = {'id': model_id}
+        if not sdb.requested_public.find_one(document):
+            sdb.requested_public.insert_one(document)
+    
+    def get_requested_public(self, search={}):
+        return [self.private_model(doc['id']) for doc in sdb.requested_public.find(search)]
+
+    def make_public(self, model_id):
+        global _refresh_thread
+        private_model = self.private_model(model_id)._model
+        new_model = dict(private_model)
+        del new_model['data_to_curate']
+        new_model['_citation_text'] = private_model['data_to_curate'].get('citation')
+        new_model['_implementers_text'] = private_model['data_to_curate'].get('implementers')
+        sdb.private_models.delete_one(private_model)
+        sdb.models.insert_one(new_model)
+        document = {'id': str(model_id)}
+        sdb.requested_public.delete_one(document)       
+        shutil.move(os.path.join(settings.security["modeldb_private_zip_dir"], f'{model_id}.zip'),
+                    os.path.join(settings.security["modeldb_zip_dir"], f'{model_id}.zip'))
+        _refresh_thread = threading.Thread(target=refresh, daemon=True)
+        _refresh_thread.start()
 
 
     def get_models(self):
