@@ -76,7 +76,7 @@ def refresh():
     global modeldb, currents, genes, regions, receptors
     global transmitters, simenvironments, modelconcepts
     global modeltypes, celltypes, papers, cites_paper_unsorted
-    global all_authors, first_authors, icg, models_by_paper
+    global all_authors, first_authors, icg, models_by_paper, ptrm
 
     modeldb = load_collection('models')
     currents = load_collection('currents')
@@ -144,6 +144,15 @@ def refresh():
     for paper in papers.values():
         if 'doi' in paper:
             paper['doi']['value_lower'] = paper['doi']['value'].lower().strip()
+
+    # find papers that reference ModelDB (too expensive to be done as a search everytime)
+    # TODO: could be done live if it was actually a DB query on an indexed field
+    ptrm = []
+    for paper_id in papers:
+        paper = Paper(paper_id)
+        if paper.modeldb_usage:
+            ptrm.append(paper)
+
 
 def find_celltypes_by_name(name):
     name = name.strip().lower()
@@ -244,6 +253,9 @@ class ModelDB(models.Model):
             ('can_change_privacy', 'Can make models private or public')
         ]
 
+    @property
+    def paper_mentions(self):
+        return ptrm
 
     def has_private_model(self, id_):
         print('calling has_private_model', id_)
@@ -688,6 +700,13 @@ class Paper:
     def volume(self):
         try:
             return self._raw.get('volume', {'value': ''})['value']    
+        except:
+            return ''
+
+    @property
+    def modeldb_usage(self):
+        try:
+            return self._raw['stated_usage']['value'][0]['object_name']
         except:
             return ''
 

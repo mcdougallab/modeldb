@@ -289,6 +289,13 @@ def modellist(request):
     }
     return render(request, 'modellist.html', context)
 
+def ptrm(request):
+    context = {
+        'title': 'Papers that reference ModelDB',
+        'datajson': json.dumps([{'p': paper.html, 'u': paper.modeldb_usage} for paper in ModelDB.paper_mentions])
+    }
+    return render(request, 'ptrm.html', context)
+
 def listbymodelname(request):
     context = {
         'title': 'ModelDB: Models List',

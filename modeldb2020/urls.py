@@ -52,6 +52,7 @@ urlpatterns = [
     re_path(r'^findbyreceptor$(?i)', views.findbyreceptor, name='findbyreceptor'),
     re_path(r'^findbytransmitter$(?i)', views.findbytransmitter, name='findbytransmitter'),
     re_path(r'^findbygenelist$(?i)', views.findbygene, name='findbygene'),
+    re_path(r'^ptrm$(?i)', views.ptrm, name='ptrm'),
     re_path(r'^findbyconcept$(?i)', views.findbyconcept, name='findbyconcept'),
     re_path(r'^findbysimulator$(?i)', views.findbysimulator, name='findbysimulator'),
     re_path(r'^(?:mdb)?citations$(?i)', views.mdbcitations, name='mdbcitations'),
