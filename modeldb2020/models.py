@@ -10,16 +10,16 @@ from django.db import models
 from . import settings
 
 mongodb = MongoClient()
-sdb = mongodb[settings.security['db_name']]
-sdb.authenticate(settings.security['mongodb_user'], settings.security['mongodb_pw'])
+sdb = mongodb[settings.security["db_name"]]
+sdb.authenticate(settings.security["mongodb_user"], settings.security["mongodb_pw"])
+
 
 def new_object_id():
     """returns a new object id"""
     return sdb.meta.find_one_and_update(
-        {},
-        {'$inc': {'id_count': 1}},
-        return_document=ReturnDocument.AFTER
-    )['id_count']
+        {}, {"$inc": {"id_count": 1}}, return_document=ReturnDocument.AFTER
+    )["id_count"]
+
 
 def add_private_model(entry):
     sdb.private_models.insert_one(entry)
@@ -28,49 +28,46 @@ def add_private_model(entry):
 def set_unprocessed_refs(paper_id, data):
     # TODO: make this more forgiving of lines with whitespace but no content
     id_ = new_object_id()
-    lines = data.split('\n')
+    lines = data.split("\n")
     items = []
-    if '\n\n' in data:
+    if "\n\n" in data:
         item = []
         for line in lines:
             if line:
                 item.append(line)
             else:
                 if item:
-                    items.append('\n'.join(item))
+                    items.append("\n".join(item))
                 item = []
         if item:
-            items.append('\n'.join(item))
+            items.append("\n".join(item))
     else:
         items = [line for line in lines if line]
 
-    folder = os.path.join(settings.security['unprocessed_refs_dir'], str(id_))
+    folder = os.path.join(settings.security["unprocessed_refs_dir"], str(id_))
     os.makedirs(folder)
 
     for i, item in enumerate(items):
-        with open(os.path.join(folder, f'{i}.json'), 'w') as f:
-            content = {'text': item, 'process_stage': 0}
+        with open(os.path.join(folder, f"{i}.json"), "w") as f:
+            content = {"text": item, "process_stage": 0}
             f.write(json.dumps(content))
-    
-    content = {
-        'paper': paper_id,
-        'ref_process_stage': [0 for item in items],
-        'id': id_
-    }
+
+    content = {"paper": paper_id, "ref_process_stage": [0 for item in items], "id": id_}
 
     sdb.unprocessed_refs.insert_one(content)
 
     return id_
 
+
 # TODO: force object_id to be string here so we don't have to do it later
 def load_collection(name):
-    new_collection = {str(item['id']): item for item in getattr(sdb, name).find()}
+    new_collection = {str(item["id"]): item for item in getattr(sdb, name).find()}
     # expand parent data (if any) into reciprocal parent-child data
     for item in new_collection.values():
-        if 'parent' in item:
-            item['parent'] = str(item['parent'])
-            new_collection[item['parent']].setdefault('children', [])
-            new_collection[item['parent']]['children'].append(str(item['id']))
+        if "parent" in item:
+            item["parent"] = str(item["parent"])
+            new_collection[item["parent"]].setdefault("children", [])
+            new_collection[item["parent"]]["children"].append(str(item["id"]))
     return new_collection
 
 
@@ -80,72 +77,71 @@ def refresh():
     global modeltypes, celltypes, papers, cites_paper_unsorted
     global all_authors, first_authors, icg, models_by_paper, ptrm
 
-    modeldb = load_collection('models')
-    currents = load_collection('currents')
-    genes = load_collection('genes')
-    regions = load_collection('regions')
-    receptors = load_collection('receptors')
-    transmitters = load_collection('transmitters')
-    simenvironments = load_collection('simenvironments')
-    modelconcepts = load_collection('modelconcepts')
-    modeltypes = load_collection('modeltypes')
-    celltypes = load_collection('celltypes')
-    papers = load_collection('papers')
-    icg = {item['id']: item['data'] for item in sdb.icg.find()}
+    modeldb = load_collection("models")
+    currents = load_collection("currents")
+    genes = load_collection("genes")
+    regions = load_collection("regions")
+    receptors = load_collection("receptors")
+    transmitters = load_collection("transmitters")
+    simenvironments = load_collection("simenvironments")
+    modelconcepts = load_collection("modelconcepts")
+    modeltypes = load_collection("modeltypes")
+    celltypes = load_collection("celltypes")
+    papers = load_collection("papers")
+    icg = {item["id"]: item["data"] for item in sdb.icg.find()}
     models_by_paper = {}
     for model_id, model_data in modeldb.items():
-        for item in model_data['model_paper']['value']:
-            models_by_paper.setdefault(item['object_id'], [])
-            models_by_paper[item['object_id']].append(model_id)
+        for item in model_data["model_paper"]["value"]:
+            models_by_paper.setdefault(item["object_id"], [])
+            models_by_paper[item["object_id"]].append(model_id)
 
     all_authors = {}
     first_authors = {}
 
-    no_authors_listed = 'No authors listed'
+    no_authors_listed = "No authors listed"
 
     for model in modeldb.values():
-        for paper in model['model_paper']['value']:
-            paper_id = str(paper['object_id'])
-            if 'authors' not in papers[paper_id]:
+        for paper in model["model_paper"]["value"]:
+            paper_id = str(paper["object_id"])
+            if "authors" not in papers[paper_id]:
                 all_authors.setdefault(no_authors_listed, [])
                 first_authors.setdefault(no_authors_listed, [])
-                all_authors[no_authors_listed].append(model['id'])
-                first_authors[no_authors_listed].append(model['id'])
+                all_authors[no_authors_listed].append(model["id"])
+                first_authors[no_authors_listed].append(model["id"])
             else:
                 try:
-                    for i, author in enumerate(papers[paper_id]['authors']['value']):
-                        author_name = author['object_name']
+                    for i, author in enumerate(papers[paper_id]["authors"]["value"]):
+                        author_name = author["object_name"]
                         all_authors.setdefault(author_name, [])
-                        all_authors[author_name].append(model['id'])
+                        all_authors[author_name].append(model["id"])
                         if i == 0:
                             first_authors.setdefault(author_name, [])
-                            first_authors[author_name].append(model['id'])
+                            first_authors[author_name].append(model["id"])
                 except KeyError:
                     pass
-    
+
     all_authors = {name: list(set(models)) for name, models in all_authors.items()}
     first_authors = {name: list(set(models)) for name, models in first_authors.items()}
 
-
     # Prepare dictionary used to provide the "references that cite a paper" on citation display pages
 
-    cites_paper_unsorted={}  # will contain value key pairs like 
+    cites_paper_unsorted = {}  # will contain value key pairs like
     # cites_paper_unsorted[paper_obj_id]=[list of obj ids of refs that cite paper_obj_id]
 
     # Loop over all the papers.  Actually the citing_paper_obj_id is not necessarily "citing" until it is found to have refs a line below
     for citing_paper_obj_id in papers:
         citing_paper_obj_id = str(citing_paper_obj_id)
-        if 'references' in papers[citing_paper_obj_id]:
+        if "references" in papers[citing_paper_obj_id]:
             # loop over the list of references in the paper:
-            for ref in papers[citing_paper_obj_id]['references']['value']:
-                cited_paper_obj_id = str(ref['object_id'])
+            for ref in papers[citing_paper_obj_id]["references"]["value"]:
+                cited_paper_obj_id = str(ref["object_id"])
                 cites_paper_unsorted.setdefault(cited_paper_obj_id, [])
                 cites_paper_unsorted[cited_paper_obj_id].append(citing_paper_obj_id)
 
     # lowercase hack (TODO: should be in DB?)
     for paper in papers.values():
-        if 'doi' in paper:
-            paper['doi']['value_lower'] = paper['doi']['value'].lower().strip()
+        if "doi" in paper:
+            paper["doi"]["value_lower"] = paper["doi"]["value"].lower().strip()
 
     # find papers that reference ModelDB (too expensive to be done as a search everytime)
     # TODO: could be done live if it was actually a DB query on an indexed field
@@ -161,7 +157,7 @@ def find_celltypes_by_name(name):
     result = []
     if name:
         for id_, celltype in celltypes.items():
-            if name in celltype['name'].lower():
+            if name in celltype["name"].lower():
                 result.append(CellType(id_))
     return result
 
@@ -171,7 +167,7 @@ def _find_thing_by_name(name, collection, constructor):
     result = []
     if name:
         for id_, item in collection.items():
-            if name in item['name'].lower():
+            if name in item["name"].lower():
                 result.append(constructor(id_))
     return result
 
@@ -179,23 +175,30 @@ def _find_thing_by_name(name, collection, constructor):
 def find_currents_by_name(name):
     return _find_thing_by_name(name, currents, Current)
 
+
 def find_simenvironments_by_name(name):
     return _find_thing_by_name(name, simenvironments, SimEnvironment)
+
 
 def find_transmitters_by_name(name):
     return _find_thing_by_name(name, transmitters, Transmitter)
 
+
 def find_receptors_by_name(name):
     return _find_thing_by_name(name, receptors, Receptor)
+
 
 def find_concepts_by_name(name):
     return _find_thing_by_name(name, modelconcepts, ModelConcept)
 
+
 def find_genes_by_name(name):
     return _find_thing_by_name(name, genes, Gene)
 
+
 def find_regions_by_name(name):
     return _find_thing_by_name(name, regions, Region)
+
 
 def find_papers_by_doi(doi):
     # TODO: this should probably just query the DB, but need a lowercase solution
@@ -203,10 +206,11 @@ def find_papers_by_doi(doi):
     result = []
     if doi:
         for paper in papers.values():
-            if 'doi' in paper:
-                if paper['doi']['value_lower'] == doi:
-                    result.append(Paper(paper['id']))
+            if "doi" in paper:
+                if paper["doi"]["value_lower"] == doi:
+                    result.append(Paper(paper["id"]))
     return result
+
 
 def find_authors(author):
     """finds model authors but not paper authors"""
@@ -218,41 +222,44 @@ def find_papers_by_author(author):
     # TODO: this should probably just query the DB, but need a lowercase solution
     author = author.strip().lower()
     result = []
-    if ' ' in author:
+    if " " in author:
         for paper in papers.values():
-            if 'authors' in paper:
-                if author in (item['object_name'].lower() for item in paper['authors']['value']):
-                    result.append(Paper(paper['id']))
+            if "authors" in paper:
+                if author in (
+                    item["object_name"].lower() for item in paper["authors"]["value"]
+                ):
+                    result.append(Paper(paper["id"]))
     elif author:
         for paper in papers.values():
-            if 'authors' in paper:
-                for item in paper['authors']['value']:
-                    name = item['object_name'].split()
+            if "authors" in paper:
+                for item in paper["authors"]["value"]:
+                    name = item["object_name"].split()
                     if name and author == name[0].lower():
-                        result.append(Paper(paper['id']))
+                        result.append(Paper(paper["id"]))
                         break
     return result
+
 
 def find_papers_by_title(text):
     # TODO: this should probably just query the DB, but need a lowercase solution
     text = text.strip().lower()
     result = []
     for paper in papers.values():
-        if 'title' in paper:
-            if text in paper['title']['value'].lower():
-                result.append(Paper(paper['id']))
+        if "title" in paper:
+            if text in paper["title"]["value"].lower():
+                result.append(Paper(paper["id"]))
     return result
 
 
 class ModelDB(models.Model):
     class Meta:
-        app_label = 'modeldb2020',
+        app_label = ("modeldb2020",)
         permissions = [
-            ('can_admin', 'Can do admin'),
-            ('can_pipeline', 'Can use pipeline'),
-            ('can_edit_model', 'Can edit model'),
-            ('can_view_private_models', 'Can view private models'),
-            ('can_change_privacy', 'Can make models private or public')
+            ("can_admin", "Can do admin"),
+            ("can_pipeline", "Can use pipeline"),
+            ("can_edit_model", "Can edit model"),
+            ("can_view_private_models", "Can view private models"),
+            ("can_change_privacy", "Can make models private or public"),
         ]
 
     @property
@@ -260,78 +267,103 @@ class ModelDB(models.Model):
         return ptrm
 
     def has_private_model(self, id_):
-        print('calling has_private_model', id_)
-        return bool(sdb.private_models.find_one({'id': int(id_)}))
+        print("calling has_private_model", id_)
+        return bool(sdb.private_models.find_one({"id": int(id_)}))
 
     def auth_private_model(self, id_, pwd):
-        '''returns None, rw, or r depending on access rights'''
-        raw_model = sdb.private_models.find_one({'id': int(id_)})
+        """returns None, rw, or r depending on access rights"""
+        raw_model = sdb.private_models.find_one({"id": int(id_)})
         if not raw_model:
             return None
-        pwd = pwd.encode('utf8')
-        rwac = raw_model['data_to_curate']['rwac']
-        rac = raw_model['data_to_curate'].get('rac')
-        print('rac', rac)
-        if bcrypt.checkpw(pwd, rwac.encode('utf8')):
-            return 'rw'
-        elif rac and bcrypt.checkpw(pwd, rac.encode('utf8')):
-            return 'r'
+        pwd = pwd.encode("utf8")
+        rwac = raw_model["data_to_curate"]["rwac"]
+        rac = raw_model["data_to_curate"].get("rac")
+        print("rac", rac)
+        if bcrypt.checkpw(pwd, rwac.encode("utf8")):
+            return "rw"
+        elif rac and bcrypt.checkpw(pwd, rac.encode("utf8")):
+            return "r"
         else:
             return None
 
-    def find_models(self, channels=[], transmitters=[], receptors=[], genes=[], simenvironment=[], modelconcepts=[], celltypes=[], modeltype=[],
-                    brainregions=[], title=[], authors=[]):
+    def find_models(
+        self,
+        channels=[],
+        transmitters=[],
+        receptors=[],
+        genes=[],
+        simenvironment=[],
+        modelconcepts=[],
+        celltypes=[],
+        modeltype=[],
+        brainregions=[],
+        title=[],
+        authors=[],
+    ):
         result = []
         for model in modeldb.values():
-            
-            if (hasany(model.get('transmitters'), transmitters) and hasany(model.get('receptors'), receptors) and hasany(model.get('genes'), genes)
-                and hasany(model.get('modeling_application'), simenvironment) and hasany(model.get('model_concept'), modelconcepts)
-                and hasany(model.get('neurons'), celltypes) and hasany(model.get('model_type'), modeltype)
-                and hasany(model.get('currents'), channels)
-                #and hasany(model.get('authors'), authors)
-                and hasanytitle([model.get('name')], title, add_star=True)
-                and hasany(model.get('brainregions'), brainregions)):
-                result.append(self.model(model['id']))
-        
+
+            if (
+                hasany(model.get("transmitters"), transmitters)
+                and hasany(model.get("receptors"), receptors)
+                and hasany(model.get("genes"), genes)
+                and hasany(model.get("modeling_application"), simenvironment)
+                and hasany(model.get("model_concept"), modelconcepts)
+                and hasany(model.get("neurons"), celltypes)
+                and hasany(model.get("model_type"), modeltype)
+                and hasany(model.get("currents"), channels)
+                # and hasany(model.get('authors'), authors)
+                and hasanytitle([model.get("name")], title, add_star=True)
+                and hasany(model.get("brainregions"), brainregions)
+            ):
+                result.append(self.model(model["id"]))
+
         return result
 
     def request_to_make_public(self, model_id):
-        document = {'id': model_id}
+        document = {"id": model_id}
         if not sdb.requested_public.find_one(document):
             sdb.requested_public.insert_one(document)
-    
+
     def get_requested_public(self, search={}):
-        return [self.private_model(doc['id']) for doc in sdb.requested_public.find(search)]
+        return [
+            self.private_model(doc["id"]) for doc in sdb.requested_public.find(search)
+        ]
 
     def make_public(self, model_id):
         global _refresh_thread
         private_model = self.private_model(model_id)._model
         new_model = dict(private_model)
-        del new_model['data_to_curate']
-        new_model['_citation_text'] = private_model['data_to_curate'].get('citation')
-        new_model['_implementers_text'] = private_model['data_to_curate'].get('implementers')
+        del new_model["data_to_curate"]
+        new_model["_citation_text"] = private_model["data_to_curate"].get("citation")
+        new_model["_implementers_text"] = private_model["data_to_curate"].get(
+            "implementers"
+        )
         sdb.private_models.delete_one(private_model)
         sdb.models.insert_one(new_model)
-        document = {'id': str(model_id)}
-        sdb.requested_public.delete_one(document)       
-        shutil.move(os.path.join(settings.security["modeldb_private_zip_dir"], f'{model_id}.zip'),
-                    os.path.join(settings.security["modeldb_zip_dir"], f'{model_id}.zip'))
+        document = {"id": str(model_id)}
+        sdb.requested_public.delete_one(document)
+        shutil.move(
+            os.path.join(
+                settings.security["modeldb_private_zip_dir"], f"{model_id}.zip"
+            ),
+            os.path.join(settings.security["modeldb_zip_dir"], f"{model_id}.zip"),
+        )
         _refresh_thread = threading.Thread(target=refresh, daemon=True)
         _refresh_thread.start()
-
 
     def get_models(self):
         return modeldb
 
     def __getitem__(self, name):
         return getattr(self, name)
-    
+
     def has_model(self, id_):
         return id_ in modeldb
 
     def object_by_id(self, object_id):
         return _object_by_id(object_id)
-    
+
     def model(self, id_):
         return Model(id_)
 
@@ -341,16 +373,19 @@ class ModelDB(models.Model):
     @property
     def num_models(self):
         return len(modeldb)
-    
+
     def models_by_name(self):
-        return sorted([{'id': key, 'name': model['name']} for key, model in modeldb.items()], key=lambda item: item['name'])
-    
+        return sorted(
+            [{"id": key, "name": model["name"]} for key, model in modeldb.items()],
+            key=lambda item: item["name"],
+        )
+
     @property
     def simenvironment_counts(self):
         counts = {}
         for model in modeldb.values():
-            for simulator in model.get('modeling_application', {'value': []})['value']:
-                sim_id = simulator['object_id']
+            for simulator in model.get("modeling_application", {"value": []})["value"]:
+                sim_id = simulator["object_id"]
                 counts.setdefault(sim_id, 0)
                 counts[sim_id] += 1
         return counts
@@ -358,12 +393,37 @@ class ModelDB(models.Model):
 
 def _object_by_id(object_id):
     object_id = str(object_id)
-    test_list = [modeldb, currents, genes, regions, receptors, transmitters, simenvironments, modelconcepts, modeltypes, celltypes, papers]
-    classes = [Model, Current, Gene, Region, Receptor, Transmitter, SimEnvironment, ModelConcept, ModelType, CellType, Paper]
+    test_list = [
+        modeldb,
+        currents,
+        genes,
+        regions,
+        receptors,
+        transmitters,
+        simenvironments,
+        modelconcepts,
+        modeltypes,
+        celltypes,
+        papers,
+    ]
+    classes = [
+        Model,
+        Current,
+        Gene,
+        Region,
+        Receptor,
+        Transmitter,
+        SimEnvironment,
+        ModelConcept,
+        ModelType,
+        CellType,
+        Paper,
+    ]
     for test, kind in zip(test_list, classes):
         if object_id in test:
             return kind(object_id)
     return None
+
 
 def hasany(present, wanted, add_star=False):
     # if we don't want anything, then we're always happy
@@ -373,13 +433,14 @@ def hasany(present, wanted, add_star=False):
         return False
     for check in wanted:
         if add_star:
-            check = '*' + check + '*'
+            check = "*" + check + "*"
         check = check.lower().strip()
         if check:
-            for item in present['value']:
-                if fnmatch.fnmatch(item['object_name'].lower(), check):
+            for item in present["value"]:
+                if fnmatch.fnmatch(item["object_name"].lower(), check):
                     return True
     return False
+
 
 def hasanytitle(present, wanted, add_star=False):
     # if we don't want anything, then we're always happy
@@ -389,7 +450,7 @@ def hasanytitle(present, wanted, add_star=False):
         return False
     for check in wanted:
         if add_star:
-            check = '*' + check + '*'
+            check = "*" + check + "*"
         check = check.lower().strip()
         if check:
             for item in present:
@@ -397,33 +458,34 @@ def hasanytitle(present, wanted, add_star=False):
                     return True
     return False
 
+
 class SenseLabClass:
     def __init__(self, _id):
         self._id = str(_id)
-    
+
     @property
     def name(self):
-        return self._data['name']
+        return self._data["name"]
 
     @property
     def description(self):
         try:
-            return self._data['Description']['value']
+            return self._data["Description"]["value"]
         except KeyError:
             try:
-                return self._data['description']['value']
+                return self._data["description"]["value"]
             except KeyError:
-                return ''
+                return ""
 
     def __repr__(self):
         return repr(self._data)
-    
+
     def __getitem__(self, name):
         return getattr(self, name)
 
     @property
     def id(self):
-        return self._data['id']
+        return self._data["id"]
 
     def models(self):
         # TODO: include children
@@ -431,99 +493,117 @@ class SenseLabClass:
         result = []
         for model_id, data in modeldb.items():
             if self.attr_name in data:
-                for obj in data[self.attr_name]['value']:
+                for obj in data[self.attr_name]["value"]:
                     # TODO: see the TODO on load_collection that will allow removing this str()
-                    if str(obj['object_id']) == self._id:
-                        result.append({'id': model_id, 'name': data['name']})
+                    if str(obj["object_id"]) == self._id:
+                        result.append({"id": model_id, "name": data["name"]})
                         break
-        return sorted(result, key=lambda item: item['name'])
+        return sorted(result, key=lambda item: item["name"])
 
 
 class Current(SenseLabClass):
-    classname = 'Current'
-    attr_name = 'currents'
+    classname = "Current"
+    attr_name = "currents"
+
     def __init__(self, _id):
         SenseLabClass.__init__(self, _id)
         self._data = currents[_id]
-    
+
     @property
     def function(self):
         try:
-            return self._data['Function']['value']
+            return self._data["Function"]["value"]
         except KeyError:
-            return ''
+            return ""
+
 
 class Gene(SenseLabClass):
-    classname = 'Gene'
-    attr_name = 'gene'
+    classname = "Gene"
+    attr_name = "gene"
+
     def __init__(self, _id):
         SenseLabClass.__init__(self, _id)
         self._data = genes[_id]
 
+
 class Region(SenseLabClass):
-    classname = 'Brain Region/Organism'
-    attr_name = 'region'
+    classname = "Brain Region/Organism"
+    attr_name = "region"
+
     def __init__(self, _id):
         SenseLabClass.__init__(self, _id)
         self._data = regions[_id]
-        print('constructed region', _id)
+        print("constructed region", _id)
+
 
 class Receptor(SenseLabClass):
-    classname = 'Receptor'
-    attr_name = 'receptors'
+    classname = "Receptor"
+    attr_name = "receptors"
+
     def __init__(self, _id):
         SenseLabClass.__init__(self, _id)
         self._data = receptors[_id]
 
+
 class Transmitter(SenseLabClass):
-    classname = 'Transmitter'
-    attr_name = 'neurotransmitters'
+    classname = "Transmitter"
+    attr_name = "neurotransmitters"
+
     def __init__(self, _id):
         SenseLabClass.__init__(self, _id)
         self._data = transmitters[_id]
 
+
 class SimEnvironment(SenseLabClass):
-    classname = 'Simulation Environment'
-    attr_name = 'modeling_application'
+    classname = "Simulation Environment"
+    attr_name = "modeling_application"
+
     def __init__(self, _id):
         SenseLabClass.__init__(self, _id)
         self._data = simenvironments[_id]
 
+
 class ModelConcept(SenseLabClass):
-    classname = 'Model Concept'
-    attr_name = 'model_concept'
+    classname = "Model Concept"
+    attr_name = "model_concept"
+
     def __init__(self, _id):
         SenseLabClass.__init__(self, _id)
         self._data = modelconcepts[_id]
 
+
 class ModelType(SenseLabClass):
-    classname = 'Model Type'
-    attr_name = 'model_type'
+    classname = "Model Type"
+    attr_name = "model_type"
+
     def __init__(self, _id):
         SenseLabClass.__init__(self, _id)
         self._data = modeltypes[_id]
 
+
 class CellType(SenseLabClass):
-    classname = 'Cell Type'
-    attr_name = 'neurons'
+    classname = "Cell Type"
+    attr_name = "neurons"
     class_id = 18
+
     def __init__(self, _id):
         SenseLabClass.__init__(self, _id)
         self._data = celltypes[_id]
-        
+
     def picture(self):
         try:
-            return self._data['Picture']['value'][0]['file_content'].replace('\n', '')
+            return self._data["Picture"]["value"][0]["file_content"].replace("\n", "")
         except:
             return None
-    
+
     def links(self):
-        print('self._data["links"]', self._data['links'])
-        return self._data.get('links', {})
-        #{item: self._data[item] for item in ['neuromorpho', 'neuroelectro', 'neurolex'] if item in self._data}
+        print('self._data["links"]', self._data["links"])
+        return self._data.get("links", {})
+        # {item: self._data[item] for item in ['neuromorpho', 'neuroelectro', 'neurolex'] if item in self._data}
+
 
 def models_with_uncurated_papers():
-    print('models_with_uncurated_papers')
+    print("models_with_uncurated_papers")
     result = []
     for id_ in modeldb:
         m = Model(id_, files_needed=False)
@@ -534,47 +614,47 @@ def models_with_uncurated_papers():
                 break
     return result
 
+
 def find_ode_files(file_hierarchy):
     result = []
     for item in file_hierarchy:
-        name = item['name']
-        item_type = item['type']
-        if item_type == 'folder':
-            result.extend([f'{name}/{old_name}' for old_name in find_ode_files(item['contents'])])
-        elif item_type == 'ode':
+        name = item["name"]
+        item_type = item["type"]
+        if item_type == "folder":
+            result.extend(
+                [f"{name}/{old_name}" for old_name in find_ode_files(item["contents"])]
+            )
+        elif item_type == "ode":
             result.append(name)
     return result
 
+
 def get_ode_params(ode_contents):
-    'extract parameter, value pairs from an ode file'
+    "extract parameter, value pairs from an ode file"
     result = []
-    ode_contents = ode_contents.decode('utf8')
-    lines = ode_contents.split('\n')
+    ode_contents = ode_contents.decode("utf8")
+    lines = ode_contents.split("\n")
     for line in lines:
         cleaned_line = line.strip()
-        if cleaned_line.startswith('p ') or cleaned_line.startswith('par '):
-            for param in (''.join(line.split()[1:])).split(','):
+        if cleaned_line.startswith("p ") or cleaned_line.startswith("par "):
+            for param in ("".join(line.split()[1:])).split(","):
                 try:
-                    name, value = param.split('=')
-                    if value[0] == '.':
-                        value = f'0{value}'
-                    result.append({'name': name, 'value': value})
+                    name, value = param.split("=")
+                    if value[0] == ".":
+                        value = f"0{value}"
+                    result.append({"name": name, "value": value})
                 except:
                     pass
-    return sorted(result, key=lambda item: item['name'].lower())
+    return sorted(result, key=lambda item: item["name"].lower())
+
 
 def get_parameters(model):
     result = []
     for filename in find_ode_files(model.file_hierarchy):
         params = get_ode_params(model.file(filename))
         if params:
-            result.append({
-                'filename': filename,
-                'params': params
-            })
-    return {'by_file': result}
-
-
+            result.append({"filename": filename, "params": params})
+    return {"by_file": result}
 
 
 class Model:
@@ -584,16 +664,19 @@ class Model:
         if files_needed:
             self._readme_file = None
             self._setup_filetree()
-    
+
     def modelview(self, data_type):
-        if data_type == 'parameters':
+        if data_type == "parameters":
             ode_files = get_parameters(self)
             return ode_files
         return None
-    
+
     @property
     def papers(self):
-        return [_object_by_id(item['object_id']) for item in self._model['model_paper']['value']]
+        return [
+            _object_by_id(item["object_id"])
+            for item in self._model["model_paper"]["value"]
+        ]
 
     def __getattr__(self, key):
         if key in self._model:
@@ -603,9 +686,14 @@ class Model:
 
     def zip(self):
         if self._zip is None:
-            self._zip = zipfile.ZipFile(os.path.join(settings.security["modeldb_zip_dir"], str(self._model['id']) + '.zip'))
+            self._zip = zipfile.ZipFile(
+                os.path.join(
+                    settings.security["modeldb_zip_dir"],
+                    str(self._model["id"]) + ".zip",
+                )
+            )
         return self._zip
-    
+
     @property
     def readme_file(self):
         return self._readme_file
@@ -613,67 +701,79 @@ class Model:
     @property
     def file_hierarchy(self):
         return self._file_hierarchy
-    
+
     def has_path(self, path):
         return path in self.zip().namelist() or self.has_folder(path)
-    
+
     def file(self, path):
         return self.zip().read(path)
-    
+
     def has_folder(self, path):
         name_list = self.zip().namelist()
-        path = path.strip('/') + '/'
+        path = path.strip("/") + "/"
         return any(item.startswith(path) for item in name_list)
- 
+
     def zip_file(self):
-        filename = str(self._model['id']) + '.zip'
-        with open(os.path.join(settings.security["modeldb_zip_dir"], filename), 'rb') as f:
+        filename = str(self._model["id"]) + ".zip"
+        with open(
+            os.path.join(settings.security["modeldb_zip_dir"], filename), "rb"
+        ) as f:
             return f.read()
 
     def folder_contents(self, path, _hierarchy=None):
         def _filter(items):
-            return sorted([{'name': item['name'], 'type': item['type'].lower()} for item in items], key=lambda item: item['name'].lower())
+            return sorted(
+                [
+                    {"name": item["name"], "type": item["type"].lower()}
+                    for item in items
+                ],
+                key=lambda item: item["name"].lower(),
+            )
+
         if _hierarchy is None:
             _hierarchy = self.file_hierarchy
-        if '/' in path:
-            first, rest = path.split('/', 1)
+        if "/" in path:
+            first, rest = path.split("/", 1)
         else:
             first, rest = path, None
         for item in _hierarchy:
-            if item['name'] == first:
+            if item["name"] == first:
                 if rest:
-                    return self.folder_contents(rest, _hierarchy=item['contents'])
-                return _filter(item['contents'])
-        assert(False)
-        
+                    return self.folder_contents(rest, _hierarchy=item["contents"])
+                return _filter(item["contents"])
+        assert False
+
     def _setup_filetree(self):
         if self._readme_file is None:
             file_hierarchy = []
             readme_file = None
-            first_file = ''
+            first_file = ""
             for subfilename in self.zip().namelist():
                 if not first_file and os.path.split(subfilename)[1]:
                     first_file = subfilename
-                if ('readme' in subfilename.lower() or subfilename.lower().split('/')[-1] in ('index.html', 'index.htm')) and readme_file is None:
+                if (
+                    "readme" in subfilename.lower()
+                    or subfilename.lower().split("/")[-1] in ("index.html", "index.htm")
+                ) and readme_file is None:
                     readme_file = subfilename
-                path = subfilename.split('/')
+                path = subfilename.split("/")
                 my_file_hierarchy = file_hierarchy
                 for i, item in enumerate(path):
                     for mfh in my_file_hierarchy:
-                        if mfh['name'] == item:
-                            my_file_hierarchy = mfh['contents']
+                        if mfh["name"] == item:
+                            my_file_hierarchy = mfh["contents"]
                             break
                     else:
-                        my_file_hierarchy.append({'name': item})
+                        my_file_hierarchy.append({"name": item})
                         if i != len(path) - 1:
-                            my_file_hierarchy[-1]['type'] = 'folder'
-                            my_file_hierarchy[-1]['contents'] = []
-                            my_file_hierarchy = my_file_hierarchy[-1]['contents']
+                            my_file_hierarchy[-1]["type"] = "folder"
+                            my_file_hierarchy[-1]["contents"] = []
+                            my_file_hierarchy = my_file_hierarchy[-1]["contents"]
                         else:
-                            if '.' not in item:
-                                my_file_hierarchy[-1]['type'] = 'file'
+                            if "." not in item:
+                                my_file_hierarchy[-1]["type"] = "file"
                             else:
-                                my_file_hierarchy[-1]['type'] = item.split('.')[-1]
+                                my_file_hierarchy[-1]["type"] = item.split(".")[-1]
             self._readme_file = readme_file if readme_file else first_file
             self._file_hierarchy = file_hierarchy
         return self._readme_file, self._file_hierarchy
@@ -682,7 +782,7 @@ class Model:
 class Paper:
     def __init__(self, paper_id):
         self._id = str(paper_id)
-    
+
     @property
     def _raw(self):
         return papers[str(self._id)]
@@ -690,72 +790,72 @@ class Paper:
     @property
     def authors(self):
         try:
-            return [item['object_name'] for item in self._raw['authors']['value']]
+            return [item["object_name"] for item in self._raw["authors"]["value"]]
         except:
             return []
-    
+
     @property
     def year(self):
         try:
-            return self._raw['year']['value']
+            return self._raw["year"]["value"]
         except:
-            return ''
+            return ""
 
     @property
     def model_link(self):
         try:
-            return self._raw['model_link']
+            return self._raw["model_link"]
         except:
-            return ''
-    
+            return ""
+
     @property
     def title(self):
         try:
-            return self._raw['title']['value']
+            return self._raw["title"]["value"]
         except:
-            return ''
+            return ""
 
     @property
     def journal(self):
         try:
-            return self._raw['journal']['value']    
+            return self._raw["journal"]["value"]
         except:
-            return ''
+            return ""
 
     @property
     def volume(self):
         try:
-            return self._raw.get('volume', {'value': ''})['value']    
+            return self._raw.get("volume", {"value": ""})["value"]
         except:
-            return ''
+            return ""
 
     @property
     def modeldb_usage(self):
         try:
-            return self._raw['stated_usage']['value'][0]['object_name']
+            return self._raw["stated_usage"]["value"][0]["object_name"]
         except:
-            return ''
+            return ""
 
     @property
     def url(self):
         try:
-            return self._raw['url']['value']
+            return self._raw["url"]["value"]
         except:
-            return ''
+            return ""
 
     @property
     def doi(self):
         try:
-            return self._raw['doi']['value']
+            return self._raw["doi"]["value"]
         except:
-            return ''
+            return ""
 
     @property
     def pubmed(self):
         try:
-            return self._raw['pubmed_id']['value']
+            return self._raw["pubmed_id"]["value"]
         except:
-            return ''
+            return ""
 
     @property
     def html(self):
@@ -763,72 +863,95 @@ class Paper:
         if not url:
             url = self.url
         else:
-            url = 'https://doi.org/' + url
-        
+            url = "https://doi.org/" + url
+
         if url:
             link_prefix = '<a href="{}">'.format(url)
-            link_suffix = '</a>'
+            link_suffix = "</a>"
         else:
-            link_prefix = link_suffix = ''
+            link_prefix = link_suffix = ""
 
         pubmed = self.pubmed
         if pubmed:
-            pubmed = ' [<a href="https://www.ncbi.nlm.nih.gov/pubmed?holding=modeldb&term={}">PubMed</a>]'.format(pubmed)
+            pubmed = ' [<a href="https://www.ncbi.nlm.nih.gov/pubmed?holding=modeldb&term={}">PubMed</a>]'.format(
+                pubmed
+            )
 
-        base_info = ', '.join(self.authors) + f'. ({self.year}).'
+        base_info = ", ".join(self.authors) + f". ({self.year})."
         base_info = f'<a href="/citations?id={self._id}">{base_info}</a>'
-        return base_info + f' {self.title} <i>' + link_prefix + self.journal + link_suffix + '</i> ' + self.volume + pubmed
-    
+        return (
+            base_info
+            + f" {self.title} <i>"
+            + link_prefix
+            + self.journal
+            + link_suffix
+            + "</i> "
+            + self.volume
+            + pubmed
+        )
+
     def __getitem__(self, item):
         return getattr(self, item)
-    
+
     @property
     def references(self):
-        if 'references' in self._raw:
-            return [Paper(item['object_id']) for item in self._raw['references']['value']]
+        if "references" in self._raw:
+            return [
+                Paper(item["object_id"]) for item in self._raw["references"]["value"]
+            ]
         else:
             return []
-    
+
     @property
     def citations(self):
         if self._id in cites_paper_unsorted:
             return [Paper(item) for item in cites_paper_unsorted[self._id]]
         else:
             return []
-    
+
     @property
     def name(self):
-        return self._raw['name']
-    
+        return self._raw["name"]
+
     @property
     def id(self):
         return self._id
-    
+
     @property
     def models(self):
-        #print(self._id, models_by_paper.keys())
+        # print(self._id, models_by_paper.keys())
         if int(self._id) in models_by_paper:
-            return [Model(_id, files_needed=False) for _id in models_by_paper[int(self._id)]]
+            return [
+                Model(_id, files_needed=False) for _id in models_by_paper[int(self._id)]
+            ]
         else:
             return []
 
 
 class PrivateModel(Model):
     def __init__(self, model_id):
-        self._model = sdb.private_models.find_one({'id': int(model_id)})
+        self._model = sdb.private_models.find_one({"id": int(model_id)})
         self._zip = None
         self._readme_file = None
         self._setup_filetree()
-        self._model.setdefault('model_paper', {'value': []})
+        self._model.setdefault("model_paper", {"value": []})
 
     def zip_file(self):
         filename = f"{self._model['id']}.zip"
-        with open(os.path.join(settings.security["modeldb_private_zip_dir"], filename), 'rb') as f:
+        with open(
+            os.path.join(settings.security["modeldb_private_zip_dir"], filename), "rb"
+        ) as f:
             return f.read()
 
     def zip(self):
         if self._zip is None:
-            self._zip = zipfile.ZipFile(os.path.join(settings.security["modeldb_private_zip_dir"], f"{self._model['id']}.zip"))
+            self._zip = zipfile.ZipFile(
+                os.path.join(
+                    settings.security["modeldb_private_zip_dir"],
+                    f"{self._model['id']}.zip",
+                )
+            )
         return self._zip
+
 
 refresh()
