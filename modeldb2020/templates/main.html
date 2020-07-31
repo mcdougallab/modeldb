@@ -135,12 +135,12 @@
                         <a href="#" class="dropdown-item disabled">My models</a>
                         <a class="dropdown-item" href="/models-with-uncurated-references">Models with uncurated references</a>
                         <a class="dropdown-item" href="/models-requested-public">Models requested to be made public</a>
-                        <a class="dropdown-item" href="/logout?next={{request.path}}">Logout</a>
+                        <a class="dropdown-item" href="/logout?next={{request.get_full_path | urlencode}}">Logout</a>
                     </div>
                 </li>
             {% else %}
                 <li class="nav-item">
-                    <a class="nav-link" href="/login?next={{request.path}}">Login</a>
+                    <a class="nav-link" href="/login?next={{request.get_full_path | urlencode}}">Login</a>
                 </li>
             {% endif %}
 

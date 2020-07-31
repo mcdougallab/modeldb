@@ -1,138 +1,228 @@
 {% extends "showmodel-base.html" %}
 
-
+{% block head %}
+    {% if access == 'rw' %}
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+        <script>
+            $(() => {
+                $("#neurons_select").select2({width: "100%",
+                    placeholder: "Select cell types",
+                });
+                $("#currents_select").select2({width: "100%",
+                    placeholder: "Select currents",
+                });
+                $("#receptors_select").select2({width: "100%",
+                    placeholder: "Select receptors",
+                });
+                $("#region_select").select2({width: "100%",
+                    placeholder: "Select brain region or organism",
+                });
+                $("#model_type_select").select2({width: "100%",
+                    placeholder: "Select model type",
+                });
+                $("#gene_select").select2({width: "100%",
+                    placeholder: "Select genes",
+                });
+                $("#neurotransmitters_select").select2({width: "100%",
+                    placeholder: "Select transmitters",
+                });
+                $("#model_concept_select").select2({width: "100%",
+                    placeholder: "Select model concepts",
+                });
+                $("#modeling_application_select").select2({width: "100%",
+                    placeholder: "Select simulation environments",
+                });
+            });
+        </script>
+        <style>
+            .fullwidth {
+                width: 100%
+            }
+        </style>
+    {% endif %}
+{% endblock %}
 {% block leftcol %}
 
 <div>
     <p>
-        {{Model.notes.value}}
-        {% if access == 'rw' %}
-            <button title="Edit notes" id="edit_notes"><i class="fas fa-edit" aria-hidden="true"></i></button>
+        {% if access == 'rw'%}
+            {% spaceless %}<textarea name="model_nodes" id="model_notes" class="fullwidth" placeholder="Model notes">{{Model.notes.value}}</textarea>{% endspaceless %}
+        {% else %}
+            {{Model.notes.value}}
         {% endif %}
     </p>
-    {% if Model.expmotivation %}
+    {% if Model.expmotivation or access == 'rw' %}
         <p>
             <b>Experimental motivation:</b>
-            {{Model.expmotivation}}
-            {% if access == 'rw' %}
-                <button title="Edit experimental motivation" id="edit_expmotivation"><i class="fas fa-edit" aria-hidden="true"></i></button>
-            {% endif %}
+            {% if access == 'rw'%}
+                <br>
+                {% spaceless %}<textarea name="model_nodes" id="expmotivation" class="fullwidth">{{Model.expmotivation}}</textarea>{% endspaceless %}
+            {% else %}
+                {{Model.expmotivation}}
+            {% endif %}            
         </p>
     {% endif %}
 
     {% if Model.model_type or access == 'rw' %}
         <p><b>Model Type:</b>
-            {% for item in Model.model_type.value %}
-                {% if not forloop.first %}
-                    ;
-                {% endif %}
-                <a href="/ModelList?id={{item.object_id}}">{{item.object_name}}</a>
-            {% endfor %}
-            {% if access == 'rw' %}
-                <button title="Edit model type" id="edit_model_type"><i class="fas fa-edit" aria-hidden="true"></i></button>
+            {% if access != 'rw' %}
+                {% for item in Model.model_type.value %}
+                    {% spaceless %}
+                        <a href="/ModelList?id={{item.object_id}}">{{item.object_name}}</a>{% if not forloop.last %};{% endif %}
+                    {% endspaceless %}
+                {% endfor %}
+            {% else %}
+                <br>
+                <select class="multiselect" name="model_type" id="model_type_select" multiple>
+                    {% for item in model_type.all %}
+                        <option value={{item.0}} {% if item.0 in model_type.present %}selected{% endif %}>{{item.1}}</option>
+                    {% endfor %}
+                </select>
             {% endif %}
         </p>
     {% endif %}
     {% if Model.region or access == 'rw' %}
         <p><b>Region(s) or Organism(s):</b>
-            {% for item in Model.region.value %}
-                {% if not forloop.first %}
-                    ;
-                {% endif %}
-                <a href="/ModelList?id={{item.object_id}}">{{item.object_name}}</a>
-            {% endfor %}
-            {% if access == 'rw' %}
-                <button title="Edit regions" id="edit_regions"><i class="fas fa-edit" aria-hidden="true"></i></button>
+            {% if access != 'rw' %}
+                {% for item in Model.region.value %}
+                    {% spaceless %}
+                        <a href="/ModelList?id={{item.object_id}}">{{item.object_name}}</a>{% if not forloop.last %};{% endif %}
+                    {% endspaceless %}
+                {% endfor %}
+            {% else %}
+                <br>
+                <select class="multiselect" name="region" id="region_select" multiple>
+                    {% for item in region.all %}
+                        <option value={{item.0}} {% if item.0 in region.present %}selected{% endif %}>{{item.1}}</option>
+                    {% endfor %}
+                </select>
             {% endif %}
         </p>
     {% endif %}
     {% if Model.neurons or access == 'rw' %}
         <p><b>Cell Type(s):</b>
-            {% for item in Model.neurons.value %}
-                {% if not forloop.first %};
-                {% endif %}
-                <a href="/ModelList?id={{item.object_id}}">{{item.object_name}}</a>
-            {% endfor %}
-            {% if access == 'rw' %}
-                <button title="Edit neurons" id="edit_neurons"><i class="fas fa-edit" aria-hidden="true"></i></button>
+            {% if access != 'rw' %}
+                {% for item in Model.neurons.value %}
+                    {% spaceless %}
+                        <a href="/ModelList?id={{item.object_id}}">{{item.object_name}}</a>{% if not forloop.last %};{% endif %}
+                    {% endspaceless %}
+                {% endfor %}
+            {% else %}
+                <br>
+                <select class="multiselect" name="neurons" id="neurons_select" multiple>
+                    {% for item in neurons.all %}
+                        <option value={{item.0}} {% if item.0 in neurons.present %}selected{% endif %}>{{item.1}}</option>
+                    {% endfor %}
+                </select>
             {% endif %}
         </p>
     {% endif %}         
     {% if Model.currents or access == 'rw' %}
         <p><b>Currents:</b>
-            {% for item in Model.currents.value %}
-                {% if not forloop.first %}
-                    ;
-                {% endif %}
-                <a href="/ModelList?id={{item.object_id}}">{{item.object_name}}</a>
-            {% endfor %}
-            {% if access == 'rw' %}
-                <button title="Edit currents" id="edit_currents"><i class="fas fa-edit" aria-hidden="true"></i></button>
+            {% if access != 'rw' %}
+                {% for item in Model.currents.value %}
+                    {% spaceless %}
+                        <a href="/ModelList?id={{item.object_id}}">{{item.object_name}}</a>{% if not forloop.last %};{% endif %}
+                    {% endspaceless %}
+                {% endfor %}
+            {% else %}
+                <br>
+                <select class="multiselect" name="currents" id="currents_select" multiple>
+                    {% for item in currents.all %}
+                        <option value={{item.0}} {% if item.0 in currents.present %}selected{% endif %}>{{item.1}}</option>
+                    {% endfor %}
+                </select>
             {% endif %}
         </p>
     {% endif %}
     {% if Model.receptors or access == 'rw' %}
         <p><b>Receptors:</b>
-            {% for item in Model.receptors.value %}
-                {% if not forloop.first %}
-                    ;
-                {% endif %}
-                <a href="/ModelList?id={{item.object_id}}">{{item.object_name}}</a>
-            {% endfor %}
-            {% if access == 'rw' %}
-                <button title="Edit receptors" id="edit_receptors"><i class="fas fa-edit" aria-hidden="true"></i></button>
+            {% if access != 'rw' %}
+                {% for item in Model.receptors.value %}
+                    {% spaceless %}
+                        <a href="/ModelList?id={{item.object_id}}">{{item.object_name}}</a>{% if not forloop.last %};{% endif %}
+                    {% endspaceless %}
+                {% endfor %}
+            {% else %}
+                <br>
+                <select class="multiselect" name="receptors" id="receptors_select" multiple>
+                    {% for item in receptors.all %}
+                        <option value={{item.0}} {% if item.0 in receptors.present %}selected{% endif %}>{{item.1}}</option>
+                    {% endfor %}
+                </select>
             {% endif %}
         </p>
     {% endif %}
     {% if Model.gene or access == 'rw' %}
         <p><b>Genes:</b>
-            {% for item in Model.gene.value %}
-                {% if not forloop.first %}
-                    ;
-                {% endif %}
-                <a href="/ModelList?id={{item.object_id}}">{{item.object_name}}</a>
-            {% endfor %}
-            {% if access == 'rw' %}
-                <button title="Edit genes" id="edit_genes"><i class="fas fa-edit" aria-hidden="true"></i></button>
+            {% if access != 'rw' %}
+                {% for item in Model.gene.value %}
+                    {% spaceless %}
+                        <a href="/ModelList?id={{item.object_id}}">{{item.object_name}}</a>{% if not forloop.last %};{% endif %}
+                    {% endspaceless %}
+                {% endfor %}
+            {% else %}
+                <br>
+                <select class="multiselect" name="gene" id="gene_select" multiple>
+                    {% for item in gene.all %}
+                        <option value={{item.0}} {% if item.0 in gene.present %}selected{% endif %}>{{item.1}}</option>
+                    {% endfor %}
+                </select>
             {% endif %}
         </p>
     {% endif %}
     {% if Model.neurotransmitters or access == 'rw' %}
         <p><b>Transmitters:</b>
-            {% for item in Model.neurotransmitters.value %}
-                {% if not forloop.first %}
-                    ;
-                {% endif %}
-                <a href="/ModelList?id={{item.object_id}}">{{item.object_name}}</a>
-            {% endfor %}
-            {% if access == 'rw' %}
-                <button title="Edit transmitters" id="edit_transmitters"><i class="fas fa-edit" aria-hidden="true"></i></button>
+            {% if access != 'rw' %}
+                {% for item in Model.neurotransmitters.value %}
+                    {% spaceless %}
+                        <a href="/ModelList?id={{item.object_id}}">{{item.object_name}}</a>{% if not forloop.last %};{% endif %}
+                    {% endspaceless %}
+                {% endfor %}
+            {% else %}
+                <br>
+                <select class="multiselect" name="neurotransmitters" id="neurotransmitters_select" multiple>
+                    {% for item in neurotransmitters.all %}
+                        <option value={{item.0}} {% if item.0 in neurotransmitters.present %}selected{% endif %}>{{item.1}}</option>
+                    {% endfor %}
+                </select>
             {% endif %}
         </p>
     {% endif %}
     {% if Model.model_concept or access == 'rw' %}
         <p><b>Model Concept(s):</b>
-            {% for item in Model.model_concept.value %}
-                {% if not forloop.first %}
-                    ;
-                {% endif %}
-                <a href="/ModelList?id={{item.object_id}}">{{item.object_name}}</a>
-            {% endfor %}
-            {% if access == 'rw' %}
-                <button title="Edit model concepts" id="edit_model_concept"><i class="fas fa-edit" aria-hidden="true"></i></button>
+            {% if access != 'rw' %}
+                {% for item in Model.model_concept.value %}
+                    {% spaceless %}
+                        <a href="/ModelList?id={{item.object_id}}">{{item.object_name}}</a>{% if not forloop.last %};{% endif %}
+                    {% endspaceless %}
+                {% endfor %}
+            {% else %}
+                <br>
+                <select class="multiselect" name="model_concept" id="model_concept_select" multiple>
+                    {% for item in model_concept.all %}
+                        <option value={{item.0}} {% if item.0 in model_concept.present %}selected{% endif %}>{{item.1}}</option>
+                    {% endfor %}
+                </select>
             {% endif %}
         </p>
     {% endif %}  
     {% if Model.modeling_application or access == 'rw' %}
         <p><b>Simulation Environment:</b>
-            {% for item in Model.modeling_application.value %}
-                {% if not forloop.first %}
-                    ;
-                {% endif %}
-                <a href="/ModelList?id={{item.object_id}}">{{item.object_name}}</a>
-            {% endfor %}
-            {% if access == 'rw' %}
-                <button title="Edit simulation environment" id="edit_modeling_application"><i class="fas fa-edit" aria-hidden="true"></i></button>
+            {% if access != 'rw' %}
+                {% for item in Model.modeling_application.value %}
+                    {% spaceless %}
+                        <a href="/ModelList?id={{item.object_id}}">{{item.object_name}}</a>{% if not forloop.last %};{% endif %}
+                    {% endspaceless %}
+                {% endfor %}
+            {% else %}
+                <br>
+                <select class="multiselect" name="modeling_application" id="modeling_application_select" multiple>
+                    {% for item in modeling_application.all %}
+                        <option value={{item.0}} {% if item.0 in modeling_application.present %}selected{% endif %}>{{item.1}}</option>
+                    {% endfor %}
+                </select>
             {% endif %}
         </p>
     {% endif %}        
@@ -140,13 +230,13 @@
     {% if Model.implemented_by or access == 'rw' %}
         <p><b>Implementer(s):</b>
             {% for item in Model.implemented_by.value %}
-                {% if not forloop.first %}
-                    ;
-                {% endif %}
-                <a href="/ModelList?id={{item.object_id}}">{{item.object_name}}</a>
+                {% spaceless %}
+                    <a href="/ModelList?id={{item.object_id}}">{{item.object_name}}</a>{% if not forloop.last %};{% endif %}
+                {% endspaceless %}
             {% endfor %}
             {% if Model.data_to_curate %}
-                {{Model.data_to_curate.implementers}}
+                <br>
+                <textarea name="model_implementers" id="modelimplementers" class="fullwidth">{{Model.data_to_curate.implementers}}</textarea>
             {% endif %}
             {% if access == 'rw' %}
                 <button title="Edit implemented by" id="edit_implemented_by"><i class="fas fa-edit" aria-hidden="true"></i></button>
@@ -161,7 +251,8 @@
             {% endfor %}
         {% else %}
             {% if Model.data_to_curate %}
-                <p class="indented">{{Model.data_to_curate.citation}}</p>
+                <br>
+                <textarea name="model_citation" id="modelcitation" class="fullwidth">{{Model.data_to_curate.citation}}</textarea>
             {% endif %}
         {% endif %}
         {% if access == 'rw' %}
@@ -178,6 +269,10 @@
 {% endblock %}
 
 {% block belowshapeplot %}
+    {% if access == 'rw' %}
+        <br>
+        <button class="btn btn2">Save changes (not implemented)</button>
+    {% endif %}
 {% if not Model.data_to_curate %}
     <hr width="75%"/>
     {% if Model.simPFid %}

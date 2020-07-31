@@ -267,7 +267,6 @@ class ModelDB(models.Model):
         return ptrm
 
     def has_private_model(self, id_):
-        print("calling has_private_model", id_)
         return bool(sdb.private_models.find_one({"id": int(id_)}))
 
     def auth_private_model(self, id_, pwd):
@@ -682,7 +681,7 @@ class Model:
         if key in self._model:
             return self._model[key]
         else:
-            return None
+            return {}
 
     def zip(self):
         if self._zip is None:

@@ -451,6 +451,8 @@ def forget_access(request):
     del request.session[model_id]
     return showmodel_redirect(request, model_id=model_id)
 
+def _showmodel_edit_context(full_collection, present):
+    return {'all': _id_and_name(full_collection), 'present': [item['object_id'] for item in present.get('value', [])]}
 
 @ensure_csrf_cookie
 def showmodel(request):
@@ -576,6 +578,16 @@ def showmodel(request):
             "access": access,
             "extension": original_filename.split(".")[-1].lower(),
         }
+        if access == 'rw':
+            context['neurons'] = _showmodel_edit_context(celltypes, model.neurons)
+            context['currents'] = _showmodel_edit_context(currents, model.currents)
+            context['receptors'] = _showmodel_edit_context(receptors, model.receptors)
+            context['region'] = _showmodel_edit_context(regions, model.region)
+            context['model_type'] = _showmodel_edit_context(modeltypes, model.model_type)
+            context['gene'] = _showmodel_edit_context(genes, model.gene)
+            context['neurotransmitters'] = _showmodel_edit_context(transmitters, model.neurotransmitters)
+            context['model_concept'] = _showmodel_edit_context(modelconcepts, model.model_concept)
+            context['modeling_application'] = _showmodel_edit_context(simenvironments, model.modeling_application)
         if tab_id == 2:
             context["is_mod_file"] = original_filename.lower().endswith(".mod")
             if context["is_mod_file"]:
@@ -681,7 +693,7 @@ def _get_model(request, model_id, permissions=None):
     if ModelDB.has_model(model_id):
         model = ModelDB.model(model_id)
     elif (
-        ModelDB.has_private_model(model_id) and request.session[model_id] in permissions
+        ModelDB.has_private_model(model_id) and (request.session.get(model_id) in permissions or all_model_access(request))
     ):
         model = ModelDB.private_model(model_id)
     else:
