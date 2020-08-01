@@ -1004,7 +1004,7 @@ def _render_tree_element(obj, collection, base_link):
     subtree = ""
     if "children" in obj:
         subtree = f"<ul>{_newline.join(_render_tree_element(collection[child], collection, base_link) for child in sorted(obj['children'], key=lambda _id: collection[_id]['name'].lower()))}</ul>"
-    return f'<li><a href="{base_link}?id={obj["id"]}">{obj["name"]}{subtree}</li>'
+    return f'<li><a href="{base_link}?id={obj["id"]}">{obj["name"]}{subtree}</a></li>'
 
 
 def _render_tree(collection, base_link):
