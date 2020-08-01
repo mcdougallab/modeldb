@@ -1,0 +1,41 @@
+{% extends "main.html" %}
+
+{% block head %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.17.1/bootstrap-table.min.css" integrity="sha512-zfridm8+ad8KSyxzl1REhqDP5975y8Q0AYaF22bcVGOnaVxlekxODmCGu0TP+Kbk3JbiNK5ENTHs7pT+yf+rBA==" crossorigin="anonymous" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.17.1/bootstrap-table.min.js" integrity="sha512-KtafFo5oE7fpMVyO/gXFnwsAXeGwl8Kxyikp1SCtMc+mXrvzO7WP1Zs70gSNmkcrBd9PS3byB/HFKvAVKtTWdg==" crossorigin="anonymous"></script>
+<style>
+    .description {
+        font-style: italic;
+    }
+</style>
+<script>
+$(() => {
+    $('#papertable').bootstrapTable({
+        pagination: true,
+        search: true,
+        data: {{ datajson | safe}},
+        formatSearch: () => 'filter'
+    })
+});
+function paperid(id) {
+    return `<a href="/citations?id=${id}">${id}</a>`
+}
+</script>
+{% endblock %}
+{% block header %}
+    <h1>
+        Top cited papers by ModelDB papers
+    </h1>
+{% endblock %}
+{% block content %}
+    <table id="papertable" data-toggle="papertable">
+        <thead>
+            <tr>
+                <th data-sortable="true" data-field="id" data-formatter="paperid">PaperID</th>
+                <th data-sortable="true" data-field="p">Paper</th>
+                <th data-sortable="true" data-field="c">Count</th>
+            </tr>
+        </thead>
+    </table>
+{% endblock %}
+

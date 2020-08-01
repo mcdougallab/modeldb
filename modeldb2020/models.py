@@ -394,6 +394,18 @@ class ModelDB(models.Model):
         return counts
 
 
+def count_references(models=None):
+    if models is None:
+        models = [Model(model_id, files_needed=False) for model_id in modeldb]
+    ref_counts = {}
+    for model in models:
+        for paper in model.papers:
+            for ref in paper.references:
+                ref_counts.setdefault(ref._id, 0)
+                ref_counts[ref._id] += 1
+    return ref_counts
+
+
 def _object_by_id(object_id):
     object_id = str(object_id)
     test_list = [
@@ -677,8 +689,7 @@ class Model:
     @property
     def papers(self):
         return [
-            _object_by_id(item["object_id"])
-            for item in self._model["model_paper"]["value"]
+            Paper(item["object_id"]) for item in self._model["model_paper"]["value"]
         ]
 
     def __getattr__(self, key):
@@ -892,6 +903,11 @@ class Paper:
             + self.volume
             + pubmed
         )
+
+    @property
+    def text(self):
+        base_info = ", ".join(self.authors) + f". ({self.year})."
+        return f"{base_info} {self.title} {self.journal} {self.volume}"
 
     def __getitem__(self, item):
         return getattr(self, item)

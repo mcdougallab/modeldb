@@ -3,6 +3,7 @@ import html
 import json
 import os
 import datetime
+import heapq
 import collections
 import itertools
 import bcrypt
@@ -307,6 +308,16 @@ def modellist(request):
     ]
     authors = collections.Counter(authors).most_common(10)
 
+    ref_count = models.count_references(my_models)
+    top_refs = [
+        {
+            "id": paper_id,
+            "text": models.Paper(paper_id).text,
+            "count": ref_count[paper_id],
+        }
+        for paper_id in heapq.nlargest(5, ref_count, key=lambda item: ref_count[item])
+    ]
+
     concepts = _filter_models_for_top_category(
         my_models, "model_concept", modelconcepts, ignore=obj.name
     )
@@ -364,6 +375,7 @@ def modellist(request):
         "concepts": concepts,
         "neurons": neurons,
         "currents": my_currents,
+        "top_refs": top_refs,
     }
     return render(request, "modellist.html", context)
 
@@ -999,6 +1011,22 @@ def _parse_search(item):
 
 def _get_names(collection_data):
     return json.dumps(sorted([item["name"] for item in collection_data.values()]))
+
+
+def top_papers(request):
+    import time
+
+    ref_count = models.count_references()
+    top_refs = [
+        {
+            "id": int(paper_id),
+            "p": models.Paper(paper_id).text,
+            "c": ref_count[paper_id],
+        }
+        for paper_id in heapq.nlargest(100, ref_count, key=lambda item: ref_count[item])
+    ]
+    context = {"title": "ModelDB: top cited papers", "datajson": json.dumps(top_refs)}
+    return render(request, "top-papers.html", context)
 
 
 def search(request):

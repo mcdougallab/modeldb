@@ -54,7 +54,7 @@
                         <a href="https://neuroelectro.org/neuron/{{data.1}}/">NeuroElectro</a><br>
                     {% endif %}
                     {% if data.0 == 'neuromorpho' %}
-                        <a href='http://neuromorpho.org/MetaDataResult.jsp?summary={{data.1|safe}}''>NeuroMorpho.Org</a><br>
+                        <a href='http://neuromorpho.org/MetaDataResult.jsp?summary={{data.1|safe}}'>NeuroMorpho.Org</a><br>
                     {% endif %}
                     {% if data.0 == 'neurolex' %}
                         <a href="http://uri.neuinfo.org/nif/nifstd/{{data.1}}">NeuroLex/Interlex</a><br>
@@ -125,7 +125,17 @@
             <br>
         </div>
     {% endif %}    
-
+    {% if top_refs %}
+        <div>
+            Top references cited by these models:
+            <ul>
+                {% for ref in top_refs %}
+                    <li><a href="/citations?id={{ref.id}}">{{ref.text}}</a> ({{ref.count}})</li>
+                {% endfor %}
+            </ul>
+            <br>
+        </div>
+    {% endif %} 
     {% if seealso %}
         <div class="well hangingindent">
             <b>See also:</b><br><br>
