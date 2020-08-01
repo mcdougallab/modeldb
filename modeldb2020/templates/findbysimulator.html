@@ -45,7 +45,11 @@
                 {% endif %}
             </td>
             <td>
-                {{item.total}}
+                {% if item.hosted or item.link %}
+                    <a href="/modellist?id={% firstof item.id item.linkid %}&all_simu=true">{{item.total}}</a>
+                {% else %}
+                    {{item.total}}
+                {% endif %}
             </td>
         </tr>
     {% endfor %}

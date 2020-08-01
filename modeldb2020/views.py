@@ -53,10 +53,8 @@ def private_models(request):
         context = {
             "title": "ModelDB: Private Models",
             "request": request,
-            "obj": {
-                "models": ModelDB.find_private_models(),
-                "classname": "Private Models",
-            },
+            "obj": {"classname": "Private Models",},
+            "models": ModelDB.find_private_models(),
             "hide_header": True,
         }
         return render(request, "modellist.html", context)
@@ -281,6 +279,7 @@ def static(request, page="", title=""):
 
 def modellist(request):
     object_id = request.GET.get("id")
+    all_simu = request.GET.get("all_simu", "")
     if object_id is None:
         return listbymodelname(request)
 
@@ -288,9 +287,29 @@ def modellist(request):
     if obj is None:
         return listbymodelname(request)
 
-    my_models = [
-        models.Model(model["id"], files_needed=False) for model in obj.models()
-    ]
+    if isinstance(obj, models.SimEnvironment) and all_simu.lower() == "true":
+        name = obj.name.strip()
+        i = name.find("(web link")
+        if i >= 0:
+            name = name[:i].strip()
+        my_models = []
+        for sim_env_id, sim_env in simenvironments.items():
+            sim_name = sim_env["name"].strip()
+            if sim_name == name or sim_name.startswith(f"{name} (web link"):
+                # this next if ensures we're always using the non-web-link information in the all_simu case
+                if sim_name == name:
+                    obj = models.SimEnvironment(sim_env_id)
+                # be sure not to list the same model twice
+                prior_ids = set([model.id for model in my_models])
+                my_models += [
+                    models.Model(model["id"], files_needed=False)
+                    for model in models.SimEnvironment(sim_env_id).models()
+                    if model["id"] not in prior_ids
+                ]
+    else:
+        my_models = [
+            models.Model(model["id"], files_needed=False) for model in obj.models()
+        ]
 
     # find the set of all papers, drop duplicates
     papers_all = itertools.chain.from_iterable([model.papers for model in my_models])
@@ -376,6 +395,8 @@ def modellist(request):
         "neurons": neurons,
         "currents": my_currents,
         "top_refs": top_refs,
+        "all_simu": all_simu,
+        "models": my_models,
     }
     return render(request, "modellist.html", context)
 
@@ -465,7 +486,6 @@ def search_redirect(request):
 
 
 def uri_cleanup_redirect(request, uri=None):
-    print("uri_cleanup_redirect", uri)
     uri_lower = uri.lower()
     if uri_lower[-5:] == ".html":
         uri = uri[:-5]
