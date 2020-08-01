@@ -17,7 +17,7 @@ def declare_children(collection_name, relationships):
     collection = getattr(sdb, collection_name)
     for parent, children in relationships.items():
         for child in children:
-            collection.update_one({'id': str(child)}, {'$set': {'parent': str(parent)}})
+            collection.update_one({'id': child}, {'$set': {'parent': parent}})
 
 declare_children('currents',
     {
