@@ -15,6 +15,7 @@ import requests
 import json
 import base64
 import os
+
 try:
     from tqdm import tqdm as progress_bar
 except:
@@ -22,20 +23,20 @@ except:
     progress_bar = lambda collection: collection
 
 # filenames
-zip_dir = '/home/bitnami/modeldb-zips'
+zip_dir = "/home/bitnami/modeldb-zips"
 
 try:
     os.makedirs(zip_dir)
 except FileExistsError:
     pass
 
-prev_model_ids = [int(item.split('.') [0]) for item in os.listdir(zip_dir)]
+prev_model_ids = [int(item.split(".")[0]) for item in os.listdir(zip_dir)]
 
 model_ids = [
-    item['id']
+    item["id"]
     for item in requests.get(
-            'https://senselab.med.yale.edu/_site/webapi/object.json/?cl=19'
-        ).json()['objects']
+        "https://senselab.med.yale.edu/_site/webapi/object.json/?cl=19"
+    ).json()["objects"]
 ]
 
 for model_id in progress_bar(model_ids):
@@ -46,13 +47,9 @@ for model_id in progress_bar(model_ids):
     unprocessed_metadata = requests.get(
         f"https://senselab.med.yale.edu/_site/webapi/object.json/{model_id}"
     ).json()
-    metadata = {
-        'title': unprocessed_metadata['object_name'],
-        'id': model_id
-    }
-    for item in unprocessed_metadata['object_attribute_values']:
-        if item['attribute_id'] == 23:
+    metadata = {"title": unprocessed_metadata["object_name"], "id": model_id}
+    for item in unprocessed_metadata["object_attribute_values"]:
+        if item["attribute_id"] == 23:
             # the zip file
-            with open(os.path.join(zip_dir, f'{model_id}.zip'), 'wb') as f:
-                f.write(base64.standard_b64decode(
-                    item['value']['file_content']))
+            with open(os.path.join(zip_dir, f"{model_id}.zip"), "wb") as f:
+                f.write(base64.standard_b64decode(item["value"]["file_content"]))
