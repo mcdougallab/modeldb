@@ -46,6 +46,23 @@ def _id_and_name(data):
     )
 
 
+def private_models(request):
+    # note that find_private_models reads every zip file, which could potentially be a bottleneck
+    if all_model_access(request):
+        context = {
+            "title": "ModelDB: Private Models",
+            "request": request,
+            "obj": {
+                "models": ModelDB.find_private_models(),
+                "classname": "Private Models",
+            },
+            "hide_header": True,
+        }
+        return render(request, "modellist.html", context)
+    else:
+        return redirect(f"/login?next={request.path}")
+
+
 def all_model_access(request):
     # TODO: this should really be about the users authentication level not the simple act of being authenticated
     return request.user.is_authenticated
@@ -67,7 +84,12 @@ def list_by_first_author(request):
 def _display_author_list(request, authors, kind):
     order = sorted(authors)
     data = [{"n": name, "c": len(authors[name])} for name in order]
-    context = {"kind": kind, "datajson": json.dumps(data), "title": f"ModelDB: {kind}"}
+    context = {
+        "kind": kind,
+        "datajson": json.dumps(data),
+        "title": f"ModelDB: {kind}",
+        "request": request,
+    }
     return render(request, "listbyauthor.html", context)
 
 

@@ -285,6 +285,10 @@ class ModelDB(models.Model):
         else:
             return None
 
+    def find_private_models(self):
+        # TODO: allow filtering like in find_models
+        return [self.private_model(model["id"]) for model in sdb.private_models.find()]
+
     def find_models(
         self,
         channels=[],

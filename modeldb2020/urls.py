@@ -98,6 +98,7 @@ urlpatterns = [
         dict(page="help", title="Help"),
         name="help",
     ),
+    re_path(r"^private-models$(?i)", views.private_models, name="private_models"),
     re_path(r"^eavbindown$(?i)", views.download_zip, name="download_zip"),
     re_path(r"^getmodelfile$(?i)", views.download, name="download_file"),
     re_path(r"^findbycurrent$(?i)", views.findbycurrent, name="findbycurrent"),

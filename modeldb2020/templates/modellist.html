@@ -24,7 +24,9 @@
 {% block leftcol %}
 <div class="row">
         <div class="col-lg-12">
+{% if not hide_header %}
 <h4>Models:</h4>
+{% endif %}
 
 <ol class="modellist">
     {% for model in obj.models %}
