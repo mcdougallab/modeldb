@@ -1,7 +1,10 @@
 {% extends "main.html" %}
+{% load static %}
 
 
 {% block head %}
+    <script src='{% static "csrf-support.js" %}'></script>
+
     <script>
         function save_refs(id_) {
             $(`#modal${id_}`).modal('hide');
@@ -29,6 +32,12 @@
         }
 
     </script>
+    <style>
+        .btn:hover {
+            background-color: blue;
+            color: white;
+        }
+    </style>
 {% endblock %}
 
 
