@@ -100,9 +100,13 @@ def refresh():
 
     no_authors_listed = "No authors listed"
 
+    missing_papers = []
     for model in modeldb.values():
         for paper in model["model_paper"]["value"]:
             paper_id = str(paper["object_id"])
+            if paper_id not in papers:
+                missing_papers.append(paper_id)
+                continue
             if "authors" not in papers[paper_id]:
                 all_authors.setdefault(no_authors_listed, [])
                 first_authors.setdefault(no_authors_listed, [])
@@ -120,6 +124,10 @@ def refresh():
                 except KeyError:
                     pass
 
+    if missing_papers:
+        print('not all papers are present')
+        print('fix this with:')
+        print('    python3 load_obj.py papers ' + ' '.join(str(item) for item in missing_papers))
     all_authors = {name: list(set(models)) for name, models in all_authors.items()}
     first_authors = {name: list(set(models)) for name, models in first_authors.items()}
 
