@@ -49,7 +49,7 @@ This repository is currently intended to be bootstrapped from the classic EAV/CR
   - `get-zips.py`
   - `setup_cell_links.py`
   - `setup_trees.py`
-  - `get_icg_mappyings.py`
+  - `get_icg_mappings.py`
 - Apply the django migrations
   `python3 manage.py migrate`
 - You will also want to use django admin to create a user with admin permissions.
