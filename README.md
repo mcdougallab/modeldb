@@ -52,8 +52,9 @@ This repository is currently intended to be bootstrapped from the classic EAV/CR
   - `get_icg_mapping.py`
 - Apply the django migrations
   `python3 manage.py migrate`
-- You will also want to use django admin to create a user with admin permissions.
-  example from: https://docs.djangoproject.com/en/3.0/topics/auth/default/#creating-users
+- You will also want to use django admin to create a user with admin permissions from within the
+  shell you get via `python3 manage.py shell`.
+  Example from: https://docs.djangoproject.com/en/3.0/topics/auth/default/#creating-users
   ```
   from django.contrib.auth.models import User
   user = User.objects.create_user('john', 'lennon@thebeatles.com', 'johnpassword')```
