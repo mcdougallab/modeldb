@@ -656,9 +656,27 @@ def showmodel(request):
                 simenvironments, model.modeling_application
             )
         if tab_id == 2:
+            if not is_folder:
+                file_contents = model.file(original_filename)
+                duplicate_files = [
+                    row
+                    for row in models.files_with_matching_hash(file_contents)
+                    if row["model_id"] != int(model_id)
+                ]
+                duplicate_files_by_model = {}
+                for row in duplicate_files:
+                    duplicate_files_by_model.setdefault(row["model_id"], [])
+                    duplicate_files_by_model[row["model_id"]].append(row)
+                duplicate_files_final = []
+                for model, data in duplicate_files_by_model.items():
+                    name = models.Model(model, files_needed=False).name
+                    duplicate_files_final.append(
+                        {"model_name": name, "model": model, "data": data}
+                    )
+                context["duplicate_files"] = duplicate_files_final
             context["is_mod_file"] = original_filename.lower().endswith(".mod")
             if context["is_mod_file"]:
-                context["has_celsius"] = b"celsius" in model.file(original_filename)
+                context["has_celsius"] = b"celsius" in file_contents
                 mod_name = name[:-4]  # throw away the .mod
                 model_id_int = int(model_id)
                 try:

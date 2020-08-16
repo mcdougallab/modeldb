@@ -1,6 +1,7 @@
 import json
 import zipfile
 import os
+import hashlib
 import threading
 import shutil
 import fnmatch
@@ -672,6 +673,11 @@ def get_ode_params(ode_contents):
                 except:
                     pass
     return sorted(result, key=lambda item: item["name"].lower())
+
+
+def files_with_matching_hash(file_contents):
+    my_hash = hashlib.sha256(file_contents).hexdigest()
+    return sdb.model_files.find({"hash": my_hash})
 
 
 def get_parameters(model):

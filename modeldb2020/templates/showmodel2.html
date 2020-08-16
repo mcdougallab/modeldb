@@ -54,7 +54,6 @@
 
 {% block belowshapeplot %}
 {% if not is_folder %}
-    Reused in ??? other models. (expand)<br><br>
     {% if is_mod_file %}
         {% if has_celsius %}
             This mechanism is potentially temperature dependent.
@@ -66,6 +65,22 @@
             <a href="https://icg.neurotheory.ox.ac.uk/channels/{{icg_data.kind}}/{{icg_data.icg_id}}">View Ion Channel Genealogy entry</a>
             <br><br>
         {% endif %}
+    {% endif %}
+    {% if duplicate_files %}
+        Reused in {{duplicate_files|length}} other models:<br><br>
+        <ul>
+            {% for dup in duplicate_files %}
+                <li>{{dup.model_name}}
+                    <ul>
+                        {% for item in dup.data %}
+                            <li><a href="/showmodel?tab=2&model={{dup.model}}&file={{item.path}}">{{item.path}}</a></li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        Not reused in any other models.<br><br>
     {% endif %}
 {% endif %}
 {% endblock %}
