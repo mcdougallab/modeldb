@@ -24,11 +24,12 @@ for class_name, class_id in [
     ["simenvironments", 36],
     ["modelconcepts", 39],
     ["modeltypes", 38],
-    ["celltypes", 18]]:
+    ["celltypes", 18],
+]:
     if sys.argv[1] == class_name:
         break
 else:
-    print('unable to find class_id; exiting')
+    print("unable to find class_id; exiting")
     sys.exit()
 
 

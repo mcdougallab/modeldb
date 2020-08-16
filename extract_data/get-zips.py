@@ -24,7 +24,6 @@ except:
     progress_bar = lambda collection: collection
 
 
-
 SETTINGS_PATH = "/home/bitnami/modeldb-settings.json"
 
 with open(SETTINGS_PATH) as f:
@@ -72,6 +71,7 @@ sdb.authenticate(security["mongodb_user"], security["mongodb_pw"])
 
 # TODO: this pulls the metadata twice. Don't do that
 
+
 def get_metadata(object_id):
     data = requests.get(
         "https://senselab.med.yale.edu/_site/webapi/object.json/{}?woatts=23".format(
@@ -113,6 +113,7 @@ def get_model_metadata(object_id):
             result["neurons"]["value"] += result["more_cells"]["value"]
         del result["more_cells"]
     return result
+
 
 for _id in models_added:
     if not list(sdb.models.find({"id": _id})):

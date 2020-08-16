@@ -125,9 +125,12 @@ def refresh():
                     pass
 
     if missing_papers:
-        print('not all papers are present')
-        print('fix this with:')
-        print('    python3 load_obj.py papers ' + ' '.join(str(item) for item in missing_papers))
+        print("not all papers are present")
+        print("fix this with:")
+        print(
+            "    python3 load_obj.py papers "
+            + " ".join(str(item) for item in missing_papers)
+        )
     all_authors = {name: list(set(models)) for name, models in all_authors.items()}
     first_authors = {name: list(set(models)) for name, models in first_authors.items()}
 
@@ -710,8 +713,7 @@ class Model:
         if self._zip is None:
             self._zip = zipfile.ZipFile(
                 os.path.join(
-                    settings.security["modeldb_zip_dir"],
-                    str(self._model["id"]) + ".zip",
+                    settings.security["modeldb_zip_dir"], f"{self._model['id']}.zip",
                 )
             )
         return self._zip
@@ -736,7 +738,7 @@ class Model:
         return any(item.startswith(path) for item in name_list)
 
     def zip_file(self):
-        filename = str(self._model["id"]) + ".zip"
+        filename = f"{self._model['id']}.zip"
         with open(
             os.path.join(settings.security["modeldb_zip_dir"], filename), "rb"
         ) as f:

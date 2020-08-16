@@ -30,7 +30,7 @@ SECRET_KEY = security["secret_key"]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', 'modeldb.science', 'www.modeldb.science']
+ALLOWED_HOSTS = ["localhost", "modeldb.science", "www.modeldb.science"]
 
 
 # Application definition
