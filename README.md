@@ -51,7 +51,7 @@ This repository is currently intended to be bootstrapped from the classic EAV/CR
   - `setup_trees.py`
   - `get_icg_mapping.py`
   - `get_file_hashes.py`
-    - this generates the file reuse detction data
+    - this generates the file reuse detection data
 - Apply the django migrations
   `python3 manage.py migrate`
 - You will also want to use django admin to create a user with admin permissions from within the
