@@ -72,7 +72,7 @@
                 
                 $("#toggle_diam").click(function() {
                     $('#shapeplot').attr('data-mode', 1 - $('#shapeplot').attr('data-mode')); 
-                    _shape_plots[0].force_update();
+                    _shape_plots[0].force_update(1);
                 });
 
                 $("#toggle_color").click(function() {
@@ -90,6 +90,17 @@
             });
 
         });
+        var window_resize_timeout;
+          $(window).resize(function () {
+    clearTimeout(window_resize_timeout);
+    // only redraw things if haven't resized in 100ms
+    window_resize_timeout = setTimeout(function() {
+        // shape plots
+        for (var sp of _shape_plots) {
+            sp.tc.onContainerResize();
+        }        
+    }, 100);
+}); 
     </script>
 {% endblock %}
 
