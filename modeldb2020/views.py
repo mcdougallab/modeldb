@@ -49,7 +49,9 @@ def _id_and_name(data):
     )
 
 
-def sendmail(to, subject, msg, msg_html=None, sent_by="ModelDB Curator <curator@modeldb.science>"):
+def sendmail(
+    to, subject, msg, msg_html=None, sent_by="ModelDB Curator <curator@modeldb.science>"
+):
     server_name = settings.security.get("smtp_server")
     smtp_user = settings.security.get("smtp_user")
     smtp_password = settings.security.get("smtp_password")
@@ -63,10 +65,10 @@ def sendmail(to, subject, msg, msg_html=None, sent_by="ModelDB Curator <curator@
     Subject: {subject}
     {msg}"""
         else:
-            my_msg = MIMEMultipart('alternative')
-            my_msg['Subject'] = subject
-            my_msg['From'] = sent_by
-            my_msg['To'] = to
+            my_msg = MIMEMultipart("alternative")
+            my_msg["Subject"] = subject
+            my_msg["From"] = sent_by
+            my_msg["To"] = to
             my_msg.attach(MIMEText(msg, "plain"))
             my_msg.attach(MIMEText(msg_html, "html"))
             msg = my_msg.as_string()
@@ -513,61 +515,67 @@ def my_login(request):
     context = {"next": next_url}
     return render(request, "login.html", context)
 
+
 def rwac_reset_p(request, code=None):
     data = models.rwac_reset_model(code)
     if not data:
-        context = {'title': "Invalid Access Code Reset Link"}
+        context = {"title": "Invalid Access Code Reset Link"}
         return render(request, "rwac_reset0.html", context)
-    model_id = data['model']
+    model_id = data["model"]
     if not ModelDB.has_private_model(model_id):
         # no longer a private model; could be deleted or public
-        context = {'title': "Invalid Access Code Reset Link"}
+        context = {"title": "Invalid Access Code Reset Link"}
         return render(request, "rwac_reset0.html", context)
-    new_rwac = request.POST.get('rwac')
+    new_rwac = request.POST.get("rwac")
     if new_rwac:
         models.update_rwac(model_id, new_rwac)
         models.invalidate_rwac_reset_code(code)
-        context = {'model': model_id, 'title': 'Change successful'}
+        context = {"model": model_id, "title": "Change successful"}
         return render(request, "rwac_reset4.html", context)
     else:
-        context = {'model': model_id, 'title': 'Enter new read-write access code', "code": code}
+        context = {
+            "model": model_id,
+            "title": "Enter new read-write access code",
+            "code": code,
+        }
         return render(request, "rwac_reset3.html", context)
-    
+
 
 def rwac_reset(request, model_id=None):
     if not ModelDB.has_private_model(model_id):
         # can only reset private models
         return HttpResponse("404 not found", status=404)
-    email = request.POST.get('email')
-    context = {
-        "model": model_id,
-        "title": "Access Code Reset Request"
-    }
+    email = request.POST.get("email")
+    context = {"model": model_id, "title": "Access Code Reset Request"}
     if email:
         model = models.PrivateModel(model_id)
         model_email = model.public_submitter_email.strip()
         if model_email == email.strip():
             code = models.new_rwac_reset(model_id)
-            print(f'emails match; code = {code}')
-            sendmail(model_email, f"ModelDB Access Code Reset: Model {model_id}", 
-f"""To reset your ModelDB read-write access code for Model {model_id},
+            print(f"emails match; code = {code}")
+            sendmail(
+                model_email,
+                f"ModelDB Access Code Reset: Model {model_id}",
+                f"""To reset your ModelDB read-write access code for Model {model_id},
 please visit:
 
 http://modeldb.science/rwac-reset/p{code}
 
 within the next hour.""",
-f"""To reset your ModelDB read-write access code for Model {model_id},
+                f"""To reset your ModelDB read-write access code for Model {model_id},
 please visit:
 <br><br>
 <a href="http://modeldb.science/rwac-reset/p{code}">http://modeldb.science/rwac-reset/p{code}</a>
 <br><br>
-within the next hour.""")
+within the next hour.""",
+            )
 
         else:
-            print('emails do not match')
+            print("emails do not match")
         return render(request, "rwac_reset2.html", context)
     else:
         return render(request, "rwac_reset.html", context)
+
 
 def showmodel_redirect(request, model_id=None, tab_id=None, filename=None):
     # TODO: handle filename
