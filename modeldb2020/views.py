@@ -3,6 +3,7 @@ import html
 import json
 import os
 import datetime
+import smtplib
 import heapq
 import collections
 import itertools
@@ -45,6 +46,24 @@ def _id_and_name(data):
     return sorted(
         [(item["id"], item["name"]) for item in data.values()], key=lambda item: item[1]
     )
+
+
+def sendmail(to, subject, msg, sent_by="ModelDB Curator <curator@modeldb.science>"):
+    server_name = settings.security.get("smtp_server")
+    smtp_user = settings.security.get("smtp_user")
+    smtp_password = settings.security.get("smtp_password")
+    if server_name and smtp_user and smtp_password:
+        server = smtplib.SMTP(server_name)
+        server.starttls()
+        server.login(smtp_user, smtp_password)
+        msg = f"""To: {to}
+From: {sent_by}
+Subject: {subject}
+{msg}"""
+        server.sendmail(sent_by, to, msg)
+        server.quit()
+    else:
+        print("not sending email; smtp not setup")
 
 
 def private_models(request):
@@ -174,12 +193,21 @@ def models_with_uncurated_references(request):
 
 
 def process_model_submit(request):
+    from email.utils import parseaddr
+
     # TODO: probably some of this should move into models?
     the_file = request.FILES["zipfile"]
     filename = the_file.name
     if not filename.lower().endswith(".zip"):
         return HttpResponse(
             "403 Forbidden: non-zip upload; hit back and try again", status=403
+        )
+
+    # a little error checking on the emails
+    modeler_email = parseaddr(request.POST["modeleremail"])[1]
+    if "@" not in modeler_email or "." not in modeler_email:
+        return HttpResponse(
+            "403 Forbidden: invalid email; hit back and try again", status=403
         )
 
     new_id = models.new_object_id()
@@ -206,10 +234,7 @@ def process_model_submit(request):
         "notes": {"value": request.POST.get("notes"), "attr_id": 24},
         "license": request.POST.get("license"),
         "expmotivation": request.POST.get("expmotivation"),
-        "public_submitter_email": {
-            "value": request.POST["modeleremail"],
-            "attr_id": 309,
-        },
+        "public_submitter_email": {"value": modeler_email, "attr_id": 309,},
         "data_to_curate": {
             "rwac": bcrypt.hashpw(request.POST["rwac"].encode("utf8"), salt).decode(
                 "utf8"
@@ -238,6 +263,32 @@ def process_model_submit(request):
     _process_submit_list(request, "model_type", "model_type", 112, entry)
 
     models.add_private_model(entry)
+
+    sendmail(
+        modeler_email,
+        f"Your New ModelDB Entry: {new_id}",
+        f"""
+Dear {request.POST.get("modelername", "modeler")},
+
+This URL reminder was automatically generated from the ModelDB web site
+in response to a model submission which you just submitted:
+http://modeldb.science/{new_id}
+
+Thank you for your contribution to open science!
+
+Remember you must open your model entry and click "request to make public"
+before the model will be publicly accessible. In the meantime, you can use
+the read-write access code to modify your entry, or you may share the 
+read access code with e.g. your paper reviewers.
+
+If you are receiving this in error, you may safely ignore this message,
+or reply to let us know about the issue.
+
+Thank you,
+
+The ModelDB Group
+""",
+    )
 
     context = {
         "title": "Model upload successful",
