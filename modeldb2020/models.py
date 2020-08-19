@@ -4,6 +4,8 @@ import os
 import hashlib
 import threading
 import shutil
+import uuid
+import time
 import fnmatch
 import bcrypt
 from pymongo import MongoClient, ReturnDocument
@@ -14,6 +16,42 @@ mongodb = MongoClient()
 sdb = mongodb[settings.security["db_name"]]
 sdb.authenticate(settings.security["mongodb_user"], settings.security["mongodb_pw"])
 
+def clean_rwac_collection():
+    """delete any rwac reset info that is over an hour old"""
+    now = time.time()
+    sdb.rwac_reset.delete_many({'time': {'$lt': now - 3600}})
+
+
+def invalidate_rwac_reset_code(code):
+    sdb.rwac_reset.delete_many({'code': code})
+
+def update_rwac(model_id, new_rwac):
+    model = sdb.private_models.find_one_and_update({"id": int(model_id)}, {'$set': {'data_to_curate.rwac': get_salted_code(new_rwac)}})
+
+def get_salted_code(code):
+    return bcrypt.hashpw(code.encode("utf8"), bcrypt.gensalt()).decode(
+                "utf8"
+            )
+
+def rwac_reset_model(code):
+    """returns either the rwac reset info corresponding to code, or None if no such info.
+    
+    Note: this invalidates the code."""
+    clean_rwac_collection()
+    return sdb.rwac_reset.find_one({'code': code})
+
+
+def new_rwac_reset(model_id):
+    """return a code that can be used for a rwac reset within an hour"""
+    now = time.time()
+    clean_rwac_collection()
+    code = uuid.uuid4().hex
+    sdb.rwac_reset.insert_one({
+        'model': model_id,
+        'time': now,
+        'code': code
+    })
+    return code
 
 def new_object_id():
     """returns a new object id"""
@@ -731,6 +769,10 @@ class Model:
     @property
     def file_hierarchy(self):
         return self._file_hierarchy
+    
+    @property
+    def public_submitter_email(self):
+        return self._model.get("public_submitter_email", {}).get('value')
 
     def has_path(self, path):
         return path in self.zip().namelist() or self.has_folder(path)

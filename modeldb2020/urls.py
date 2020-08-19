@@ -127,6 +127,8 @@ urlpatterns = [
         name="uncurated",
     ),
     re_path(r"^forget_access$(?i)", views.forget_access, name="forget_access"),
+    path(r"rwac-reset/p<slug:code>", views.rwac_reset_p, name="rwac_reset_p"),
+    path(r"rwac-reset/<int:model_id>", views.rwac_reset, name="rwac_reset"),
     re_path(
         r"^(?P<kind>model)author/(?P<author>.+)$(?i)",
         views.modelauthor,

@@ -1,0 +1,15 @@
+{% extends "main.html" %}
+{% load static %}
+
+
+
+{% block content %}
+    <h3>Enter new read-write access code</h3><br>
+    <p>Enter the new read-write access code for model <a href="/{{model}}">{{model}}</a>:
+
+    <form action="/rwac-reset/p{{code}}" method="post">
+        {% csrf_token %}
+        Read-write access code: <input type="password" name="rwac" />
+        <input type="submit" value="Update"/>
+    </form>
+{% endblock %}

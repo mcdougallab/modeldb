@@ -1,0 +1,17 @@
+{% extends "main.html" %}
+{% load static %}
+
+
+
+{% block content %}
+    <h3>Reset read-write access code</h3><br>
+    <p>To change the read-write access code for model <a href="/{{model}}">{{model}}</a>,
+    enter the email you used to enter the model; if it matches our records, you will
+    receive a password reset link.</p>
+
+    <form action="/rwac-reset/{{model}}" method="post">
+        {% csrf_token %}
+        Email: <input type="email" name="email" />
+        <input type="submit" value="Submit"/>
+    </form>
+{% endblock %}

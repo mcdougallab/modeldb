@@ -1,0 +1,12 @@
+{% extends "main.html" %}
+{% load static %}
+
+
+
+{% block content %}
+    <h3>Request received</h3><br>
+    <p>We have received your request to reset the read-write access code
+    for model <a href="/{{model}}">{{model}}</a>. If the email you entered
+    matches our records, you will receive a reset link. If you do not receive
+    an email from us, then try entering your email again.</p>
+{% endblock %}
