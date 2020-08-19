@@ -42,6 +42,9 @@ This repository is currently intended to be bootstrapped from the classic EAV/CR
   - `modeldb_private_zip_dir`
   - `unprocessed_refs_dir`
   - `modelview_dir`
+  - `smtp_server` (optional, but required for sending mail)
+  - `smtp_user` (optional, but required for sending mail)
+  - `smtp_password` (optional, but required for sending mail)
 - Run the scripts in the `extract_data` directory in this order:
   - `init_db.py`
   - `extract_data.py`
