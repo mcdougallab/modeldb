@@ -29,6 +29,7 @@ function ThreeContainer(container) {
 ThreeContainer.prototype.onContainerResize = function() {
     var w = this.container.clientWidth;
     var h = this.container.clientHeight;
+    console.log(w,h);
 
     this.camera.aspect = w / h;
     this.camera.updateProjectionMatrix();

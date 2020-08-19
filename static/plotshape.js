@@ -6,7 +6,7 @@ var mouse = new THREE.Vector2();
 function set_neuron_section_data(new_data) {
     neuron_section_data = new_data;
     for(sp of _shape_plots) {
-        sp.update();
+        sp.update(0);
     }
 }
 
@@ -34,19 +34,23 @@ function clickEvent(event) {
     render.readRenderTargetPixels(plot.tc.pickingTexture, mouse.x, mouse.y, 1, 1, pixelBuffer);
 
     const id = (pixelBuffer[0] << 16) | (pixelBuffer[1] << 8) | (pixelBuffer[2]);
+    if (id != 0) {
+        console.log(id);
+    }
     o = id_map[id];
     if (o) {
         console.log('intersected!');
-        _section_intersected(browser_id, id);
     } 
 
 }
 
-ShapePlot.prototype.update = function() {
+ShapePlot.prototype.update = function(diam_flag) {
     if (this.section_data !== neuron_section_data[0]) {
         this.section_data = neuron_section_data[0];
-        this.camera_dist = neuron_section_data[1]*2.5;
-        this.tc.camera.position.set(0,0,this.camera_dist);
+        if (!diam_flag) {
+            this.camera_dist = neuron_section_data[1]*2.5;
+            this.tc.camera.position.set(0,0,this.camera_dist);
+            }
         this.tc.onContainerResize();
         this.tc.clearLines();
         var my_mode = this.container.attr('data-mode');
@@ -85,6 +89,7 @@ ShapePlot.prototype.update = function() {
             var zs = my_segment[2];
             var ds = my_segment[3];
             var arcs = my_segment[4];
+            console.log(my_segment)
             var geo = new THREE.Geometry();
             for(var j = 0 ; j < xs.length; j++) {
                 geo.vertices.push(new THREE.Vector3(xs[j], ys[j], zs[j]));
@@ -99,15 +104,15 @@ ShapePlot.prototype.update = function() {
     }
 }
 
-ShapePlot.prototype.force_update = function() {
+ShapePlot.prototype.force_update = function(diam_flag) {
     this.section_data = undefined;
-    this.update();
+    this.update(diam_flag);
 }
 
 
 ShapePlot.prototype.set_diam_scale = function(diam) {
     this.diam_scale = diam;
-    this.force_update();
+    this.force_update(0);
 }
 
 ShapePlot.prototype.update_colors = function(data) {
