@@ -68,6 +68,7 @@ This repository is currently intended to be bootstrapped from the classic EAV/CR
   - This is separate from apache, which is also running and can later be connected to your django system.
 
 ## Deployment hints
+- If you're deploying on bitnami's django stack, see their instructions at: https://docs.bitnami.com/virtual-machine/infrastructure/django/get-started/deploy-django-project/
 - be sure to turn off debugging in the settings file
 - the sqlite3 database needs to be writeable and it needs to be in a folder that's writeable (so not in a path that hosts the website code)
   (e.g. you might put it in /home/bitnami/db/ and modify settings.py accordingly)
@@ -75,6 +76,7 @@ This repository is currently intended to be bootstrapped from the classic EAV/CR
 - if you make any changes on a bitnami machine with apache setup; run `sudo /opt/bitnami/ctlscript.sh restart apache` to restart
 - wsgi.py needs the correct name of the settings module... e.g. if you put it in `Project` instead of `modeldb2020`, you should
   change `modeldb2020.settings` to `Project.settings`
+ - the settings file may need the full path to `TEMPLATES["DIRS"]`
 
 ## On ModelViews
 
