@@ -1,6 +1,6 @@
 import json
 import os
-from django.http import HttpResponse
+from django.http import HttpResponse, QueryDict
 from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.clickjacking import xframe_options_exempt
@@ -114,10 +114,31 @@ def unprocessed_refs_view(request, _id=None):
 def models_view(request, model_id=None, field=None):
     if model_id is not None:
         model_id = str(model_id)
-        if ModelDB.has_model(model_id):
-            return _output(request, ModelDB.model(model_id)._model)
+        if request.method == "GET":
+            if ModelDB.has_model(model_id):
+                return _output(request, ModelDB.model(model_id)._model)
+            else:
+                return HttpResponse("404 Not Found", status=404)
+        elif request.method == "PUT":
+            # TODO: is this the right way to pass data? explicitly converting to/from JSON?
+            data = json.loads(request.body)
+
+            from .views import all_model_access
+
+            is_public_model = ModelDB.has_model(model_id)
+            if not is_public_model:
+                is_private_model = ModelDB.has_private_model(model_id)
+            if is_public_model or is_private_model:
+                access = request.session.get(model_id)
+                if access == "rw" or all_model_access(request):
+                    if is_public_model:
+                        ModelDB.model(model_id).update(data)
+                    else:
+                        ModelDB.private_model(model_id).update(data)
+                    return HttpResponse("success")
+            return HttpResponse("403 Forbidden", status=403)
         else:
-            return HttpResponse("404 Not Found", status=404)
+            return HttpResponse("403 Forbidden", status=403)
     elif field is not None:
         my_filter = get_filter(request)
         return _output(

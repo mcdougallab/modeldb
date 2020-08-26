@@ -1,4 +1,5 @@
 {% extends "showmodel-base.html" %}
+{% load static %}
 
 {% block head %}
     {% if access == 'rw' %}
@@ -33,7 +34,63 @@
                 $("#modeling_application_select").select2({width: "100%",
                     placeholder: "Select simulation environments",
                 });
+                $('#savebutton').click(do_save);
             });
+            function do_save() {
+                $.ajax(
+                    '/api/v1/models/{{Model.id}}',
+                    {
+                        success: () => handle_save_response('', 'success'),
+                        error: () => handle_save_response('', 'failed'),
+                        data: JSON.stringify(build_all_data()),
+                        type: 'PUT'
+                    }
+                );
+            }
+            function handle_save_response(data, status) {
+                let msg;
+                if (status == 'success') {
+                    msg = 'Save successful';
+                    bgcolor = 'lightgreen';
+                } else {
+                    msg = 'Something went wrong';
+                    bgcolor = 'pink';
+                }
+                $('#saveresults').html(`<center>${msg}</center>`).css('background-color', bgcolor).show();
+                setTimeout(() => {
+                    $('#saveresults').hide();
+                }, 3000);
+            }
+            function build_all_data() {
+                // gather the data from the edit fields
+                // NOTE: this does not currently support the following:
+                //       model name, the non-free-text versions of implementers or citations
+                let data = {
+                    'notes': {'value': $('#model_notes').val()},
+                    'expmotivation': {'value': $('#expmotivation').val()}
+                }
+                {% if Model.data_to_curate %}
+                    data['data_to_curate'] = {
+                        'implementers': $('#modelimplementers').val(),
+                        'citation': $('#modelcitation').val()
+                    }
+                {% endif %}
+                for (let field of ['neurons', 'currents', 'receptors', 'region', 'model_type', 'gene', 'neurotransmitters', 'model_concept', 'modeling_application']) {
+                    data = build_data(field, data);
+                }
+                return(data);
+            }
+            function build_data(field_name, data) {
+                // data is the old object that will be modified and returned
+                // Note: we are not copying data here
+                // Note: we assume the select name is the field_name followed by _select
+                let result = [];
+                for (let item of $(`#${field_name}_select`).children('option:selected')) {
+                    result.push({'object_id': $(item).val()});
+                }
+                data[field_name] = {'value': result};
+                return data;
+            }
         </script>
         <style>
             .fullwidth {
@@ -47,7 +104,7 @@
 <div>
     <p>
         {% if access == 'rw'%}
-            {% spaceless %}<textarea name="model_nodes" id="model_notes" class="fullwidth" placeholder="Model notes">{{Model.notes.value}}</textarea>{% endspaceless %}
+            {% spaceless %}<textarea name="model_notes" id="model_notes" class="fullwidth" placeholder="Model notes">{{Model.notes.value}}</textarea>{% endspaceless %}
         {% else %}
             {{Model.notes.value}}
         {% endif %}
@@ -57,7 +114,7 @@
             <b>Experimental motivation:</b>
             {% if access == 'rw'%}
                 <br>
-                {% spaceless %}<textarea name="model_nodes" id="expmotivation" class="fullwidth">{{Model.expmotivation}}</textarea>{% endspaceless %}
+                {% spaceless %}<textarea name="expmotivation" id="expmotivation" class="fullwidth">{{Model.expmotivation}}</textarea>{% endspaceless %}
             {% else %}
                 {{Model.expmotivation}}
             {% endif %}            
@@ -266,12 +323,15 @@
 <!-- TODO: replace with something that handles window resizes -->
 <iframe src="/getModelFile?model={{Model.id}}&file={{filename}}&embed=True" onload='javascript:(function(o){o.style.height=(64+o.contentWindow.document.body.scrollHeight)+"px";}(this));' style="height:200px;width:100%;border:none;overflow:hidden;"></iframe>
 
+<div id="saveresults" style="display:none; position:fixed; top:0px; left:0px; width:100%;">
+</div>
+
 {% endblock %}
 
 {% block belowshapeplot %}
     {% if access == 'rw' %}
         <br>
-        <button class="btn btn2">Save changes (not implemented)</button>
+        <button class="btn btn2" id="savebutton">Save changes (not implemented)</button>
     {% endif %}
 {% if not Model.data_to_curate %}
     <hr width="75%"/>

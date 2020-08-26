@@ -743,6 +743,15 @@ class Model:
             return ode_files
         return None
 
+    def update(self, data):
+        print(f"Model {self._model['id']} update (not implemented)")
+        print("Current data:")
+        _model = dict(self._model)
+        del _model['_id']
+        print(json.dumps(_model, indent=4))
+        print("New data:")
+        print(json.dumps(data, indent=4))
+
     @property
     def papers(self):
         return [
