@@ -506,13 +506,14 @@ def my_login(request):
     password = request.POST.get("password")
     if password is not None:
         user = authenticate(username=username, password=password)
-        next_url = request.POST.get("next")
+        next_url = request.POST.get("next", "/")
         if user is not None:
             login(request, user)
-            return redirect(request.POST.get("next"))
+            return redirect(next_url)
     else:
-        next_url = request.GET.get("next")
+        next_url = request.GET.get("next", "/")
     context = {"next": next_url}
+    context.update(base_context)
     return render(request, "login.html", context)
 
 
