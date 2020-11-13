@@ -67,6 +67,12 @@ This repository is currently intended to be bootstrapped from the classic EAV/CR
   - This will make the website available on port 8888 (you can then access it from your host system via port-forwarding.
   - This is separate from apache, which is also running and can later be connected to your django system.
 
+## On the pipeline
+- This requires some files copied over from https://github.com/mcdougallab/pipeline
+  - cp pipeline/Project/pipeline_* ~/apps/django/django_projects/Project/Project/
+  - cp -r pipeline/Project/templates/pipeline/ ~/apps/django/django_projects/Project/Project/templates/
+- Also, note the authentication will need to be setup to use the different database
+
 ## Deployment hints
 - If you're deploying on bitnami's django stack, see their instructions at: https://docs.bitnami.com/virtual-machine/infrastructure/django/get-started/deploy-django-project/
 - be sure to turn off debugging in the settings file
