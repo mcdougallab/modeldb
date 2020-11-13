@@ -132,7 +132,7 @@ def get_pubmed_data(article):
         return {
             "pmid": int(pmid),
             "mesh": [item["text"] for item in mesh] if mesh else [],
-            "authors": author_list,
+            "authors": [author["full_name"] for author in author_list],
             "doi": doi,
         }
     except AttributeError:
