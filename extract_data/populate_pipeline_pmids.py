@@ -1,7 +1,5 @@
 """populate the pipeline from pmid list"""
 
-import pandas as pd
-import pprint
 from pymongo import MongoClient, ReturnDocument
 import json
 import xml.etree.ElementTree as ET
@@ -65,7 +63,6 @@ def get_pubtator_data(pmid):
     }
     if result["pmcid"] is None:
         for passage in article["passages"]:
-            print(passage)
             infon = passage["infons"]
             pmcid = infon.get("article-id_pmc")
             if pmcid is not None:
