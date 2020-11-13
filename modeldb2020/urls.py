@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, re_path, include
-from . import views, urls_api_v1
+from . import views, urls_api_v1, pipeline_urls
 
 urlpatterns = [
     path("", views.index, name="index"),
@@ -137,4 +137,5 @@ urlpatterns = [
     # path('admin/', admin.site.urls),
     re_path(r"^api/v1/", include(urls_api_v1)),
     path("<slug:model_id>", views.showmodel_redirect, name="showmodel_redirect"),
+    re_path(r"^pipeline/", include(pipeline_urls))
 ]
