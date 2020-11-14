@@ -137,5 +137,7 @@ urlpatterns = [
     # path('admin/', admin.site.urls),
     re_path(r"^api/v1/", include(urls_api_v1)),
     path("<slug:model_id>", views.showmodel_redirect, name="showmodel_redirect"),
-    re_path(r"^pipeline/", include(pipeline_urls))
+    re_path(r"^pipeline/", include(pipeline_urls)),
+    path("change-password", views.change_password),
+    path("admin/", admin.site.urls),
 ]
