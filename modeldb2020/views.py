@@ -62,7 +62,7 @@ def change_password(request):
                 return redirect(next_url)
         else:
             form = PasswordChangeForm(request.user)
-        context = dict(base_context)
+        context = {} #dict(base_context)
         context["form"] = form
         context["next"] = request.GET.get("next")
         return render(request, "change_password.html", context)
@@ -533,7 +533,7 @@ def my_login(request):
     else:
         next_url = request.GET.get("next", "/")
     context = {"next": next_url}
-    context.update(base_context)
+    #context.update(base_context)
     return render(request, "login.html", context)
 
 
