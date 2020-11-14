@@ -140,7 +140,7 @@
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="padding:15px">
                         <a class="dropdown-item" href="/change-password?next={{request.get_full_path | urlencode}}">Change password</a>
                         {% if request.user.is_staff %}
-                          <a class="dropdown-item" href="/admin">Administer users and groups</a>
+                          <a class="dropdown-item" href="/admin/">Administer users and groups</a>
                         {% endif %}
                         <a href="#" class="dropdown-item disabled">My models</a>
                         <a class="dropdown-item" href="/private-models">All private models</a>
