@@ -11,11 +11,15 @@ import bcrypt
 from pymongo import MongoClient, ReturnDocument
 from django.db import models
 from . import settings
+import pandas as pd
 
 mongodb = MongoClient()
 sdb = mongodb[settings.security["db_name"]]
 sdb.authenticate(settings.security["mongodb_user"], settings.security["mongodb_pw"])
 
+network_models_pd = pd.read_csv(settings.security["network_info"]).to_dict("records")
+network_models = {model["model"]: {key: value for key, value in model.items() if not pd.isna(value)} for model in network_models_pd}
+del network_models_pd
 
 def clean_rwac_collection():
     """delete any rwac reset info that is over an hour old"""
@@ -761,6 +765,20 @@ class Model:
     def __getattr__(self, key):
         if key in self._model:
             return self._model[key]
+        elif self._model['id'] in network_models and key in network_models[self._model['id']]:
+            result = network_models[self._model['id']][key]
+            if pd.isna(result):
+                result = None
+            return result
+        elif self._model['id'] in network_models and key.startswith("short_") and key[6:] in network_models[self._model['id']]:
+            result = network_models[self._model['id']][key[6:]]
+            if isinstance(result, str):
+                result = result.split(";")[0].strip()
+                if result == "partial":
+                    result = "yes"
+            if pd.isna(result):
+                result = None
+            return result
         else:
             return {}
 

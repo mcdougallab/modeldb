@@ -14,6 +14,217 @@
     font-size: smaller;
 }
 </style>
+{% if datatype == 3536 %}
+<style>
+    .filtertable .row {padding-bottom: 0.5em}
+    .filter {
+        border: 2px solid black;
+        margin-bottom: 1em; 
+        padding: 1em
+    }
+</style>
+<script>
+    $(() => {
+      $(".filtertable input").change(update_filter);
+      $(".filtertable select").change(update_filter);
+      console.log("setup update_filter");
+    });
+    function update_filter() {
+        console.log("update_filter_event");
+        let has_biophysics = $("#filter_biophysics").val();
+        let has_network_diagrams = $("#filter_network_diagrams").val();
+        let has_detailed_morphologies = $("#filter_detailed_morphologies").val();
+        let has_result_raster_diagrams = $("#filter_result_raster_diagrams").val();
+        let has_result_functional_readout = $("#filter_result_functional_readout").val();
+        let has_result_role_of_connectivity = $("#filter_result_role_of_connectivity").val();
+        let min_cell_types = parseInt($("#filter_num_cell_types").val());
+        let has_result_spike_count = $("#filter_result_spike_count").val();
+        let has_result_firing_rate = $("#filter_result_firing_rate").val();
+        let has_result_cross_correlation = $("#filter_result_cross_correlation").val();
+        let has_result_lfp = $("#filter_result_lfp").val();
+        let has_result_activity_regimes = $("#filter_result_activity_regimes").val();
+        let has_result_synchronization = $("#filter_result_synchronization").val();
+        let has_result_freq_analysis = $("#filter_result_freq_analysis").val();
+        let has_spatial_aspects = $("#filter_spatial_aspects").val();
+        let has_result_synaptic_weight_sensitivity = $("#filter_result_synaptic_weight_sensitivity").val();
+        let has_heterogeneous_weights = $("#filter_heterogeneous_weights").val();
+        let has_heterogeneous_parameters = $("#filter_heterogeneous_parameters").val();
+        let has_varied_weights = $("#filter_varied_weights").val();
+        let has_varied_size = $("#filter_varied_size").val();
+        let has_varied_connectivity = $("#filter_varied_connectivity").val();
+        let has_has_gap_junctions = $("#filter_has_gap_junctions").val();
+        let has_has_plasticity = $("#filter_has_plasticity").val();
+        $(".modellist li").css("display", "list-item");
+        $(".modellist li").each(
+            (i, item) => {
+                //model,num_cell_types,detailed_morphologies,has_biophysics,network_diagrams_in_paper,result_raster_diagrams,result_role_of_connectivity,result_functional_readout,result_spike_count,result_firing_rate,result_cross_correlation,result_lfp,result_freq_analysis,result_activity_regimes,result_synchronization,result_synaptic_weight_sensitivity,spatial_aspects,heterogeneous_weights,heterogeneous_parameters,varied_weights,varied_size,varied_connectivity,number_synapses,synapse_types,has_gap_junctions,has_plasticity,default_size,notes
+                let my_item = $(item);
+                let my_biophysics = my_item.attr("data-has_biophysics");
+                let my_heterogeneous_parameters = my_item.attr("data-heterogeneous_parameters");
+                let my_result_spike_count = my_item.attr("data-result_spike_count");
+                let my_result_activity_regimes = my_item.attr("data-result_activity_regimes");
+                let my_result_freq_analysis = my_item.attr("data-result_freq_analysis");
+                let my_result_synchronization = my_item.attr("data-result_synchronization");
+                let my_result_lfp = my_item.attr("data-result_lfp");
+                let my_result_synaptic_weight_sensitivity = my_item.attr("data-result_synaptic_weight_sensitivity");
+                let my_result_cross_correlation = my_item.attr("data-result_cross_correlation");
+                let my_result_functional_readout = my_item.attr("data-result_functional_readout");
+                let my_detailed_morphologies = my_item.attr("data-detailed_morphologies");
+                let my_result_role_of_connectivity = my_item.attr("data-result_role_of_connectivity");
+                let my_network_diagrams = my_item.attr("data-network_diagrams_in_paper");
+                let my_result_raster_diagrams = my_item.attr("data-result_raster_diagrams");
+                let my_spatial_aspects = my_item.attr("data-spatial_aspects");
+                let my_result_firing_rate = my_item.attr("data-result_firing_rate");
+                let my_num_cell_types = parseInt(my_item.attr("data-num_cell_types"));
+                let my_heterogeneous_weights = my_item.attr("data-heterogeneous_weights");
+                let my_varied_weights = my_item.attr("data-varied_weights");
+                let my_varied_size = my_item.attr("data-varied_size");
+                let my_varied_connectivity = my_item.attr("data-varied_connectivity");
+                let my_has_gap_junctions = my_item.attr("data-has_gap_junctions");
+                let my_has_plasticity = my_item.attr("data-has_plasticity");
+                if (isNaN(my_num_cell_types) && min_cell_types > 0) {
+                    my_item.css("display", "none");
+                } else if (my_num_cell_types < min_cell_types) {
+                    my_item.css("display", "none");
+                } else if (my_network_diagrams == "yes" && (has_network_diagrams == "no" || has_network_diagrams == "uno")) {
+                    my_item.css("display", "none");
+                } else if (my_network_diagrams == "no" && (has_network_diagrams == "yes" || has_network_diagrams == "uyes")) {
+                    my_item.css("display", "none");
+                } else if (my_network_diagrams == undefined && (has_network_diagrams == "no" || has_network_diagrams == "yes")) {
+                    my_item.css("display", "none");
+                } else if (my_biophysics == "yes" && (has_biophysics == "no" || has_biophysics == "uno")) {
+                    my_item.css("display", "none");
+                } else if (my_biophysics == "no" && (has_biophysics == "yes" || has_biophysics == "uyes")) {
+                    my_item.css("display", "none");
+                } else if (my_biophysics == undefined && (has_biophysics == "no" || has_biophysics == "yes")) {
+                    my_item.css("display", "none");
+                } else if (my_detailed_morphologies == "yes" && (has_detailed_morphologies == "no" || has_detailed_morphologies == "uno")) {
+                    my_item.css("display", "none");
+                } else if (my_detailed_morphologies == "no" && (has_detailed_morphologies == "yes" || has_detailed_morphologies == "uyes")) {
+                    my_item.css("display", "none");
+                } else if (my_detailed_morphologies == undefined && (has_detailed_morphologies == "no" || has_detailed_morphologies == "yes")) {
+                    my_item.css("display", "none");
+                } else if (my_result_raster_diagrams == "yes" && (has_result_raster_diagrams == "no" || has_result_raster_diagrams == "uno")) {
+                    my_item.css("display", "none");
+                } else if (my_result_raster_diagrams == "no" && (has_result_raster_diagrams == "yes" || has_result_raster_diagrams == "uyes")) {
+                    my_item.css("display", "none");
+                } else if (my_result_raster_diagrams == undefined && (has_result_raster_diagrams == "no" || has_result_raster_diagrams == "yes")) {
+                    my_item.css("display", "none");
+                } else if (my_result_role_of_connectivity == "yes" && (has_result_role_of_connectivity == "no" || has_result_role_of_connectivity == "uno")) {
+                    my_item.css("display", "none");
+                } else if (my_result_role_of_connectivity == "no" && (has_result_role_of_connectivity == "yes" || has_result_role_of_connectivity == "uyes")) {
+                    my_item.css("display", "none");
+                } else if (my_result_role_of_connectivity == undefined && (has_result_role_of_connectivity == "no" || has_result_role_of_connectivity == "yes")) {
+                    my_item.css("display", "none");
+                } else if (my_result_functional_readout == "yes" && (has_result_functional_readout == "no" || has_result_functional_readout == "uno")) {
+                    my_item.css("display", "none");
+                } else if (my_result_functional_readout == "no" && (has_result_functional_readout == "yes" || has_result_functional_readout == "uyes")) {
+                    my_item.css("display", "none");
+                } else if (my_result_functional_readout == undefined && (has_result_functional_readout == "no" || has_result_functional_readout == "yes")) {
+                    my_item.css("display", "none");
+                } else if (my_result_spike_count == "yes" && (has_result_spike_count == "no" || has_result_spike_count == "uno")) {
+                    my_item.css("display", "none");
+                } else if (my_result_spike_count == "no" && (has_result_spike_count == "yes" || has_result_spike_count == "uyes")) {
+                    my_item.css("display", "none");
+                } else if (my_result_spike_count == undefined && (has_result_spike_count == "no" || has_result_spike_count == "yes")) {
+                    my_item.css("display", "none");
+                } else if (my_result_firing_rate == "yes" && (has_result_firing_rate == "no" || has_result_firing_rate == "uno")) {
+                    my_item.css("display", "none");
+                } else if (my_result_firing_rate == "no" && (has_result_firing_rate == "yes" || has_result_firing_rate == "uyes")) {
+                    my_item.css("display", "none");
+                } else if (my_result_firing_rate == undefined && (has_result_firing_rate == "no" || has_result_firing_rate == "yes")) {
+                    my_item.css("display", "none");
+                } else if (my_result_cross_correlation == "yes" && (has_result_cross_correlation == "no" || has_result_cross_correlation == "uno")) {
+                    my_item.css("display", "none");
+                } else if (my_result_cross_correlation == "no" && (has_result_cross_correlation == "yes" || has_result_cross_correlation == "uyes")) {
+                    my_item.css("display", "none");
+                } else if (my_result_cross_correlation == undefined && (has_result_cross_correlation == "no" || has_result_cross_correlation == "yes")) {
+                    my_item.css("display", "none");
+                } else if (my_result_lfp == "yes" && (has_result_lfp == "no" || has_result_lfp == "uno")) {
+                    my_item.css("display", "none");
+                } else if (my_result_lfp == "no" && (has_result_lfp == "yes" || has_result_lfp == "uyes")) {
+                    my_item.css("display", "none");
+                } else if (my_result_lfp == undefined && (has_result_lfp == "no" || has_result_lfp == "yes")) {
+                    my_item.css("display", "none");
+                } else if (my_result_freq_analysis == "yes" && (has_result_freq_analysis == "no" || has_result_freq_analysis == "uno")) {
+                    my_item.css("display", "none");
+                } else if (my_result_freq_analysis == "no" && (has_result_freq_analysis == "yes" || has_result_freq_analysis == "uyes")) {
+                    my_item.css("display", "none");
+                } else if (my_result_freq_analysis == undefined && (has_result_freq_analysis == "no" || has_result_freq_analysis == "yes")) {
+                    my_item.css("display", "none");
+                } else if (my_result_activity_regimes == "yes" && (has_result_activity_regimes == "no" || has_result_activity_regimes == "uno")) {
+                    my_item.css("display", "none");
+                } else if (my_result_activity_regimes == "no" && (has_result_activity_regimes == "yes" || has_result_activity_regimes == "uyes")) {
+                    my_item.css("display", "none");
+                } else if (my_result_activity_regimes == undefined && (has_result_activity_regimes == "no" || has_result_activity_regimes == "yes")) {
+                    my_item.css("display", "none");
+                } else if (my_result_synchronization == "yes" && (has_result_synchronization == "no" || has_result_synchronization == "uno")) {
+                    my_item.css("display", "none");
+                } else if (my_result_synchronization == "no" && (has_result_synchronization == "yes" || has_result_synchronization == "uyes")) {
+                    my_item.css("display", "none");
+                } else if (my_result_synchronization == undefined && (has_result_synchronization == "no" || has_result_synchronization == "yes")) {
+                    my_item.css("display", "none");
+                } else if (my_result_synaptic_weight_sensitivity == "yes" && (has_result_synaptic_weight_sensitivity == "no" || has_result_synaptic_weight_sensitivity == "uno")) {
+                    my_item.css("display", "none");
+                } else if (my_result_synaptic_weight_sensitivity == "no" && (has_result_synaptic_weight_sensitivity == "yes" || has_result_synaptic_weight_sensitivity == "uyes")) {
+                    my_item.css("display", "none");
+                } else if (my_result_synaptic_weight_sensitivity == undefined && (has_result_synaptic_weight_sensitivity == "no" || has_result_synaptic_weight_sensitivity == "yes")) {
+                    my_item.css("display", "none");
+                } else if (my_spatial_aspects == "yes" && (has_spatial_aspects == "no" || has_spatial_aspects == "uno")) {
+                    my_item.css("display", "none");
+                } else if (my_spatial_aspects == "no" && (has_spatial_aspects == "yes" || has_spatial_aspects == "uyes")) {
+                    my_item.css("display", "none");
+                } else if (my_spatial_aspects == undefined && (has_spatial_aspects == "no" || has_spatial_aspects == "yes")) {
+                    my_item.css("display", "none");
+                } else if (my_heterogeneous_weights == "yes" && (has_heterogeneous_weights == "no" || has_heterogeneous_weights == "uno")) {
+                    my_item.css("display", "none");
+                } else if (my_heterogeneous_weights == "no" && (has_heterogeneous_weights == "yes" || has_heterogeneous_weights == "uyes")) {
+                    my_item.css("display", "none");
+                } else if (my_heterogeneous_weights == undefined && (has_heterogeneous_weights == "no" || has_heterogeneous_weights == "yes")) {
+                    my_item.css("display", "none");
+                } else if (my_heterogeneous_parameters == "yes" && (has_heterogeneous_parameters == "no" || has_heterogeneous_parameters == "uno")) {
+                    my_item.css("display", "none");
+                } else if (my_heterogeneous_parameters == "no" && (has_heterogeneous_parameters == "yes" || has_heterogeneous_parameters == "uyes")) {
+                    my_item.css("display", "none");
+                } else if (my_heterogeneous_parameters == undefined && (has_heterogeneous_parameters == "no" || has_heterogeneous_parameters == "yes")) {
+                    my_item.css("display", "none");
+                } else if (my_varied_weights == "yes" && (has_varied_weights == "no" || has_varied_weights == "uno")) {
+                    my_item.css("display", "none");
+                } else if (my_varied_weights == "no" && (has_varied_weights == "yes" || has_varied_weights == "uyes")) {
+                    my_item.css("display", "none");
+                } else if (my_varied_weights == undefined && (has_varied_weights == "no" || has_varied_weights == "yes")) {
+                    my_item.css("display", "none");
+                } else if (my_varied_size == "yes" && (has_varied_size == "no" || has_varied_size == "uno")) {
+                    my_item.css("display", "none");
+                } else if (my_varied_size == "no" && (has_varied_size == "yes" || has_varied_size == "uyes")) {
+                    my_item.css("display", "none");
+                } else if (my_varied_size == undefined && (has_varied_size == "no" || has_varied_size == "yes")) {
+                    my_item.css("display", "none");
+                } else if (my_varied_connectivity == "yes" && (has_varied_connectivity == "no" || has_varied_connectivity == "uno")) {
+                    my_item.css("display", "none");
+                } else if (my_varied_connectivity == "no" && (has_varied_connectivity == "yes" || has_varied_connectivity == "uyes")) {
+                    my_item.css("display", "none");
+                } else if (my_varied_connectivity == undefined && (has_varied_connectivity == "no" || has_varied_connectivity == "yes")) {
+                    my_item.css("display", "none");
+                } else if (my_has_gap_junctions == "yes" && (has_has_gap_junctions == "no" || has_has_gap_junctions == "uno")) {
+                    my_item.css("display", "none");
+                } else if (my_has_gap_junctions == "no" && (has_has_gap_junctions == "yes" || has_has_gap_junctions == "uyes")) {
+                    my_item.css("display", "none");
+                } else if (my_has_gap_junctions == undefined && (has_has_gap_junctions == "no" || has_has_gap_junctions == "yes")) {
+                    my_item.css("display", "none");
+                } else if (my_has_plasticity == "yes" && (has_has_plasticity == "no" || has_has_plasticity == "uno")) {
+                    my_item.css("display", "none");
+                } else if (my_has_plasticity == "no" && (has_has_plasticity == "yes" || has_has_plasticity == "uyes")) {
+                    my_item.css("display", "none");
+                } else if (my_has_plasticity == undefined && (has_has_plasticity == "no" || has_has_plasticity == "yes")) {
+                    my_item.css("display", "none");
+                }
+            }
+        );
+
+    }
+</script>
+{% endif %}
 {% endblock %}
 
 {% block header %}
@@ -41,7 +252,78 @@
 
 <ol class="modellist">
     {% for model in models %}
-        <li><a href="/showmodel?model={{model.id}}">{{model.name}}</a></li>
+        <li {% if datatype == 3536 %}
+            {% if model.num_cell_types %}
+                data-num_cell_types="{{model.num_cell_types}}"
+            {% endif %}
+            {% if model.detailed_morphologies %}
+                data-detailed_morphologies="{{model.short_detailed_morphologies}}"
+            {% endif %}
+            {% if model.has_biophysics %}
+                data-has_biophysics="{{model.short_has_biophysics}}"
+            {% endif %}
+            {% if model.network_diagrams_in_paper %}
+                data-network_diagrams_in_paper="{{model.short_network_diagrams_in_paper}}"
+            {% endif %}
+            {% if model.result_raster_diagrams %}
+                data-result_raster_diagrams="{{model.short_result_raster_diagrams}}"
+            {% endif %}
+            {% if model.result_role_of_connectivity %}
+                data-result_role_of_connectivity="{{model.short_result_role_of_connectivity}}"
+            {% endif %}
+            {% if model.result_functional_readout %}
+                data-result_functional_readout="{{model.short_result_functional_readout}}"
+            {% endif %}
+            {% if model.result_spike_count %}
+                data-result_spike_count="{{model.short_result_spike_count}}"
+            {% endif %}
+            {% if model.result_firing_rate %}
+                data-result_firing_rate="{{model.short_result_firing_rate}}"
+            {% endif %}
+            {% if model.result_cross_correlation %}
+                data-result_cross_correlation="{{model.short_result_cross_correlation}}"
+            {% endif %}
+            {% if model.result_lfp %}
+                data-result_lfp="{{model.short_result_lfp}}"
+            {% endif %}
+            {% if model.result_freq_analysis %}
+                data-result_freq_analysis="{{model.short_result_freq_analysis}}"
+            {% endif %}
+            {% if model.result_activity_regimes %}
+                data-result_activity_regimes="{{model.short_result_activity_regimes}}"
+            {% endif %}
+            {% if model.result_synchronization %}
+                data-result_synchronization="{{model.short_result_synchronization}}"
+            {% endif %}
+            {% if model.result_synaptic_weight_sensitivity %}
+                data-result_synaptic_weight_sensitivity="{{model.short_result_synaptic_weight_sensitivity}}"
+            {% endif %}
+            {% if model.spatial_aspects %}
+                data-spatial_aspects="{{model.short_spatial_aspects}}"
+            {% endif %}
+            {% if model.heterogeneous_weights %}
+                data-heterogeneous_weights="{{model.short_heterogeneous_weights}}"
+            {% endif %}
+            {% if model.heterogeneous_parameters %}
+                data-heterogeneous_parameters="{{model.short_heterogeneous_parameters}}"
+            {% endif %}
+            {% if model.varied_weights %}
+                data-varied_weights="{{model.short_varied_weights}}"
+            {% endif %}
+            {% if model.varied_size %}
+                data-varied_size="{{model.short_varied_size}}"
+            {% endif %}
+            {% if model.varied_connectivity %}
+                data-varied_connectivity="{{model.short_varied_connectivity}}"
+            {% endif %}
+            {% if model.has_gap_junctions %}
+                data-has_gap_junctions="{{model.short_has_gap_junctions}}"
+            {% endif %}
+            {% if model.has_plasticity %}
+                data-has_plasticity="{{model.short_has_plasticity}}"
+            {% endif %}
+        {% endif %}
+        ><a href="/showmodel?model={{model.id}}">{{model.name}}</a></li>
     {% endfor %}
 </ol>
 </div>
@@ -49,6 +331,289 @@
 {% endblock %}
 
 {% block sidecolumn %}
+    {% if datatype == 3536 %}
+        <div class="well filter">
+            <b>Filter</b><br><br>
+            <div class="filtertable">
+                <div class="row">
+                    <div class="col-lg-5 col-xl-6">
+                        Min # cell types:
+                    </div>
+                    <div class="col-lg-7 col-xl-6">
+                        <input type="number" id="filter_num_cell_types" style="width:4em" value="0"></td>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-5 col-xl-6">
+                        Has biophysics?
+                    </div>
+                    <div class="col-lg-7 col-xl-6">
+                        <select id="filter_biophysics">
+                            <option value="any">Any</option>
+                            <option value="yes">Yes</option>
+                            <option value="uyes">Yes or unknown</option>
+                            <option value="no">No</option>
+                            <option value="uno">No or unknown</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-5 col-xl-6">
+                        Network diagrams in paper?
+                    </div>
+                    <div class="col-lg-7 col-xl-6">
+                        <select id="filter_network_diagrams">
+                            <option value="any">Any</option>
+                            <option value="yes">Yes</option>
+                            <option value="uyes">Yes or unknown</option>
+                            <option value="no">No</option>
+                            <option value="uno">No or unknown</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-5 col-xl-6">
+                        Detailed morphologies?
+                    </div>
+                    <div class="col-lg-7 col-xl-6">
+                        <select id="filter_detailed_morphologies">
+                            <option value="any">Any</option>
+                            <option value="yes">Yes</option>
+                            <option value="uyes">Yes or unknown</option>
+                            <option value="no">No</option>
+                            <option value="uno">No or unknown</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-5 col-xl-6">
+                        Raster diagrams?
+                    </div>
+                    <div class="col-lg-7 col-xl-6">
+                        <select id="filter_result_raster_diagrams">
+                            <option value="any">Any</option>
+                            <option value="yes">Yes</option>
+                            <option value="uyes">Yes or unknown</option>
+                            <option value="no">No</option>
+                            <option value="uno">No or unknown</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-5 col-xl-6">
+                        Role of connectivity?
+                    </div>
+                    <div class="col-lg-7 col-xl-6">
+                        <select id="filter_result_role_of_connectivity">
+                            <option value="any">Any</option>
+                            <option value="yes">Yes</option>
+                            <option value="uyes">Yes or unknown</option>
+                            <option value="no">No</option>
+                            <option value="uno">No or unknown</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-5 col-xl-6">
+                        Functional readouts?
+                    </div>
+                    <div class="col-lg-7 col-xl-6">
+                        <select id="filter_result_functional_readout">
+                            <option value="any">Any</option>
+                            <option value="yes">Yes</option>
+                            <option value="uyes">Yes or unknown</option>
+                            <option value="no">No</option>
+                            <option value="uno">No or unknown</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-5 col-xl-6">
+                        Spike counts?
+                    </div>
+                    <div class="col-lg-7 col-xl-6">
+                        <select id="filter_result_spike_count">
+                            <option value="any">Any</option>
+                            <option value="yes">Yes</option>
+                            <option value="uyes">Yes or unknown</option>
+                            <option value="no">No</option>
+                            <option value="uno">No or unknown</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-5 col-xl-6">
+                        Firing rates?
+                    </div>
+                    <div class="col-lg-7 col-xl-6">
+                        <select id="filter_result_firing_rate">
+                            <option value="any">Any</option>
+                            <option value="yes">Yes</option>
+                            <option value="uyes">Yes or unknown</option>
+                            <option value="no">No</option>
+                            <option value="uno">No or unknown</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-5 col-xl-6">
+                        Cross-correlations?
+                    </div>
+                    <div class="col-lg-7 col-xl-6">
+                        <select id="filter_result_cross_correlation">
+                            <option value="any">Any</option>
+                            <option value="yes">Yes</option>
+                            <option value="uyes">Yes or unknown</option>
+                            <option value="no">No</option>
+                            <option value="uno">No or unknown</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-5 col-xl-6">
+                        LFP?
+                    </div>
+                    <div class="col-lg-7 col-xl-6">
+                        <select id="filter_result_lfp">
+                            <option value="any">Any</option>
+                            <option value="yes">Yes</option>
+                            <option value="uyes">Yes or unknown</option>
+                            <option value="no">No</option>
+                            <option value="uno">No or unknown</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-5 col-xl-6">
+                        Frequency analysis?
+                    </div>
+                    <div class="col-lg-7 col-xl-6">
+                        <select id="filter_result_freq_analysis">
+                            <option value="any">Any</option>
+                            <option value="yes">Yes</option>
+                            <option value="uyes">Yes or unknown</option>
+                            <option value="no">No</option>
+                            <option value="uno">No or unknown</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-5 col-xl-6">
+                        Activity regimes?
+                    </div>
+                    <div class="col-lg-7 col-xl-6">
+                        <select id="filter_result_activity_regimes">
+                            <option value="any">Any</option>
+                            <option value="yes">Yes</option>
+                            <option value="uyes">Yes or unknown</option>
+                            <option value="no">No</option>
+                            <option value="uno">No or unknown</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-5 col-xl-6">
+                        Synchronization?
+                    </div>
+                    <div class="col-lg-7 col-xl-6">
+                        <select id="filter_result_synchronization">
+                            <option value="any">Any</option>
+                            <option value="yes">Yes</option>
+                            <option value="uyes">Yes or unknown</option>
+                            <option value="no">No</option>
+                            <option value="uno">No or unknown</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-5 col-xl-6">
+                        Synaptic weight sensitivity?
+                    </div>
+                    <div class="col-lg-7 col-xl-6">
+                        <select id="filter_result_synaptic_weight_sensitivity">
+                            <option value="any">Any</option>
+                            <option value="yes">Yes</option>
+                            <option value="uyes">Yes or unknown</option>
+                            <option value="no">No</option>
+                            <option value="uno">No or unknown</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-5 col-xl-6">
+                        Spatial aspects?
+                    </div>
+                    <div class="col-lg-7 col-xl-6">
+                        <select id="filter_spatial_aspects">
+                            <option value="any">Any</option>
+                            <option value="yes">Yes</option>
+                            <option value="uyes">Yes or unknown</option>
+                            <option value="no">No</option>
+                            <option value="uno">No or unknown</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-5 col-xl-6">
+                        Heterogeneous weights?
+                    </div>
+                    <div class="col-lg-7 col-xl-6">
+                        <select id="filter_heterogeneous_weights">
+                            <option value="any">Any</option>
+                            <option value="yes">Yes</option>
+                            <option value="uyes">Yes or unknown</option>
+                            <option value="no">No</option>
+                            <option value="uno">No or unknown</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-5 col-xl-6">
+                        Heterogeneous parameters?
+                    </div>
+                    <div class="col-lg-7 col-xl-6">
+                        <select id="filter_heterogeneous_parameters">
+                            <option value="any">Any</option>
+                            <option value="yes">Yes</option>
+                            <option value="uyes">Yes or unknown</option>
+                            <option value="no">No</option>
+                            <option value="uno">No or unknown</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-5 col-xl-6">
+                        Varied weights?
+                    </div>
+                    <div class="col-lg-7 col-xl-6">
+                        <select id="filter_varied_weights">
+                            <option value="any">Any</option>
+                            <option value="yes">Yes</option>
+                            <option value="uyes">Yes or unknown</option>
+                            <option value="no">No</option>
+                            <option value="uno">No or unknown</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-5 col-xl-6">
+                        Varied size?
+                    </div>
+                    <div class="col-lg-7 col-xl-6">
+                        <select id="filter_varied_size">
+                            <option value="any">Any</option>
+                            <option value="yes">Yes</option>
+                            <option value="uyes">Yes or unknown</option>
+                            <option value="no">No</option>
+                            <option value="uno">No or unknown</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-5 col-xl-6">
+                        Varied connectivity?
+                    </div>
+                    <div class="col-lg-7 col-xl-6">
+                        <select id="filter_varied_connectivity">
+                            <option value="any">Any</option>
+                            <option value="yes">Yes</option>
+                            <option value="uyes">Yes or unknown</option>
+                            <option value="no">No</option>
+                            <option value="uno">No or unknown</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-5 col-xl-6">
+                        Gap junctions?
+                    </div>
+                    <div class="col-lg-7 col-xl-6">
+                        <select id="filter_has_gap_junctions">
+                            <option value="any">Any</option>
+                            <option value="yes">Yes</option>
+                            <option value="uyes">Yes or unknown</option>
+                            <option value="no">No</option>
+                            <option value="uno">No or unknown</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-5 col-xl-6">
+                        Plasticity?
+                    </div>
+                    <div class="col-lg-7 col-xl-6">
+                        <select id="filter_has_plasticity">
+                            <option value="any">Any</option>
+                            <option value="yes">Yes</option>
+                            <option value="uyes">Yes or unknown</option>
+                            <option value="no">No</option>
+                            <option value="uno">No or unknown</option>
+                        </select>
+                    </div>                    
+                </div>
+            </div>
+        </div>
+    {% endif %}
     {% if obj.class_id == 18 %}
         {% if obj.picture is not None %}
             <div>

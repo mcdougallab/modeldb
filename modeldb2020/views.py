@@ -473,6 +473,7 @@ def modellist(request):
         "top_refs": top_refs,
         "all_simu": all_simu,
         "models": my_models,
+        "datatype": int(object_id),
     }
     return render(request, "modellist.html", context)
 
