@@ -1080,7 +1080,7 @@ def findbyreceptor(request):
     context = {
         "title": "ModelDB: Browse by receptor",
         "content": _render_tree(receptors, "/ModelList"),
-        "header": "Find models that contain a particular ionic current",
+        "header": "Find models that contain a particular receptor",
         "subhead": "Click on a receptor to show a list of models that contain or implement that receptor.<br/>",
     }
     return render(request, "treepage.html", context)
