@@ -60,9 +60,10 @@ This repository is currently intended to be bootstrapped from the classic EAV/CR
 - You will also want to use django admin to create a user with admin permissions from within the
   shell you get via `python3 manage.py shell`.
   Example from: https://docs.djangoproject.com/en/3.0/topics/auth/default/#creating-users
-  ```
+  ```python
   from django.contrib.auth.models import User
-  user = User.objects.create_user('john', 'lennon@thebeatles.com', 'johnpassword')```
+  user = User.objects.create_user('john', 'lennon@thebeatles.com', 'johnpassword')
+  ```
 - You can run a development server via, e.g. `python3 manage.py runserver 8888`
   - This will make the website available on port 8888 (you can then access it from your host system via port-forwarding.
   - This is separate from apache, which is also running and can later be connected to your django system.
