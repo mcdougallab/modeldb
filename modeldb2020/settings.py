@@ -53,9 +53,9 @@ for button in app_settings.get("pipeline_review_buttons", []):
 SECRET_KEY = security["secret_key"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['52.90.37.175', 'modeldb.science', 'www.modeldb.science']
+ALLOWED_HOSTS = ['52.90.37.175', 'modeldb.science', 'www.modeldb.science', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -79,12 +79,12 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "Project.urls"
+ROOT_URLCONF = "modeldb2020.urls"
 
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": ["/home/bitnami/apps/django/django_projects/Project/Project/templates"],
+        "DIRS": ["/home/bitnami/modeldb/modeldb2020/templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -97,7 +97,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "Project.wsgi.application"
+WSGI_APPLICATION = "modeldb2020.wsgi.application"
 
 
 # Database
@@ -142,8 +142,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = "/static/"
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-
+#STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+#STATIC_ROOT = "/home/bitnami/modeldb/static"
 STATICFILES_DIRS = [
     os.path.join("/home/bitnami/modeldb/static"),  # your static/ files folder
 ]
