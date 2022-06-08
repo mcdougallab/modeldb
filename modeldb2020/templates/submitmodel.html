@@ -11,8 +11,16 @@
         {% for meta_item in metadata %}
             $("#{{meta_item.1}}").select2({width: "100%",
                 placeholder: "Select {{meta_item.0.lower}}",
-            });
+            });           
         {% endfor %}
+        $("select").on("select2:select", function (evt) {
+            var element = evt.params.data.element;
+            var $element = $(element);
+
+            $element.detach();
+            $(this).append($element);
+            $(this).trigger("change");
+        });
     });
 </script>
 <style>

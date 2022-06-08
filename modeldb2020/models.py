@@ -136,7 +136,7 @@ def refresh():
     icg = {item["id"]: item["data"] for item in sdb.icg.find()}
     models_by_paper = {}
     for model_id, model_data in modeldb.items():
-        for item in model_data["model_paper"]["value"]:
+        for item in model_data.get("model_paper", {"value": []})["value"]:
             models_by_paper.setdefault(item["object_id"], [])
             models_by_paper[item["object_id"]].append(model_id)
 
@@ -147,7 +147,7 @@ def refresh():
 
     missing_papers = []
     for model in modeldb.values():
-        for paper in model["model_paper"]["value"]:
+        for paper in model.get("model_paper", {"value": []})["value"]:
             paper_id = str(paper["object_id"])
             if paper_id not in papers:
                 missing_papers.append(paper_id)
