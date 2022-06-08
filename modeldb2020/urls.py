@@ -20,7 +20,7 @@ try:
     from . import pipeline_urls
     pipeline_re_path = [re_path(r"^pipeline/", include(pipeline_urls))]
 
-except:
+except ImportError:
     pipeline_re_path = []
 
 urlpatterns = [
