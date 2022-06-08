@@ -15,7 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, re_path, include
-from . import views, urls_api_v1, pipeline_urls
+from . import views, urls_api_v1
+try:
+    from . import pipeline_urls
+    pipeline_re_path = [re_path(r"^pipeline/", include(pipeline_urls))]
+
+except ImportError:
+    pipeline_re_path = []
 
 urlpatterns = [
     path("", views.index, name="index"),
@@ -135,8 +141,7 @@ urlpatterns = [
         name="modelauthor",
     ),
     # path('admin/', admin.site.urls),
-    re_path(r"^api/v1/", include(urls_api_v1)),
-    re_path(r"^pipeline/", include(pipeline_urls)),
+    re_path(r"^api/v1/", include(urls_api_v1))] + pipeline_re_path + [
     path("change-password", views.change_password),
     path("admin/", admin.site.urls),
     path("<slug:model_id>", views.showmodel_redirect, name="showmodel_redirect"),
