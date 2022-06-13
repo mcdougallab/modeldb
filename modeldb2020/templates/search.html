@@ -7,72 +7,104 @@
 		width: 15em;
 		text-align: right
 	}
-	input {
+
+	select,input {
 		width: 20em;
 	}
-  .ui-autocomplete {
-    max-height: 200px;
-    overflow-y: auto;
-    /* prevent horizontal scrollbar */
-    overflow-x: hidden;
+
+  .select2-selection__choice {
+    font-size: small;
   }
+
+  .ui-widget {
+    padding-bottom: 1em;
+  }
+
 </style>
 <!-- using jQuery UI for autocomplete -->
 <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 
 <script type="text/javascript">
-$(function() {
-    function split( val ) {
-      return val.split( /;\s*/ );
+  const my_modeltypes = {{modeltype_tags | safe}};
+  const my_receptors = {{receptors_tags | safe}};
+  const my_genes = {{genes_tags | safe}};
+  const my_simenvironment = {{simenvironment_tags | safe}};
+  const my_transmitters = {{transmitters_tags | safe}};
+  const my_modelconcepts = {{modelconcepts_tags | safe}};
+  const my_celltypes = {{celltypes_tags | safe}};
+  const my_brainregions = {{brainregions_tags | safe}};
+  const my_channels = {{channels_tags | safe}};
+
+  $(() => {
+    for (let item of my_modeltypes) {
+      $("#modeltype").append('<option value="' + item + '">' + item + "</option>");
     }
-    function extractLast( term ) {
-      return split( term ).pop();
+    for (let item of my_receptors) {
+      $("#receptors").append('<option value="' + item + '">' + item + "</option>");
     }
-    function setup_autocomplete(id, taglist) {
-     $( "#" + id)
-      // don't navigate away from the field on tab when selecting an item
-      .bind( "keydown", function( event ) {
-        if ( event.keyCode === $.ui.keyCode.TAB &&
-            $( this ).autocomplete( "instance" ).menu.active ) {
-          event.preventDefault();
-        }
-      })
-      .autocomplete({
-        minLength: 0,
-        source: function( request, response ) {
-          // delegate back to autocomplete, but extract the last term
-          response( $.ui.autocomplete.filter(
-            taglist, extractLast( request.term ) ) );
-        },
-        focus: function() {
-          // prevent value inserted on focus
-          return false;
-        },
-        select: function( event, ui ) {
-          var terms = split( this.value );
-          // remove the current input
-          terms.pop();
-          // add the selected item
-          terms.push( ui.item.value );
-          // add placeholder to get the comma-and-space at the end
-          terms.push( "" );
-          this.value = terms.join( "; " );
-          return false;
-        }
-      });
+    for (let item of my_genes) {
+      $("#genes").append('<option value="' + item + '">' + item + "</option>");
     }
-    setup_autocomplete('modeltype', {{modeltype_tags | safe}});
-    setup_autocomplete('receptors', {{receptors_tags | safe}});
-    setup_autocomplete('genes', {{genes_tags | safe}});
-    setup_autocomplete('simenvironment', {{simenvironment_tags | safe}});
-    setup_autocomplete('transmitters', {{transmitters_tags | safe}});
-    setup_autocomplete('modelconcepts', {{modelconcepts_tags | safe}});
-    setup_autocomplete('celltypes', {{celltypes_tags | safe}});
-    setup_autocomplete('brainregions', {{brainregions_tags | safe}});
-    setup_autocomplete('channels', {{channels_tags | safe}});
+    for (let item of my_simenvironment) {
+      $("#simenvironment").append('<option value="' + item + '">' + item + "</option>");
+    }
+    for (let item of my_transmitters) {
+      $("#transmitters").append('<option value="' + item + '">' + item + "</option>");
+    }
+    for (let item of my_modelconcepts) {
+      $("#modelconcepts").append('<option value="' + item + '">' + item + "</option>");
+    }
+    for (let item of my_celltypes) {
+      $("#celltypes").append('<option value="' + item + '">' + item + "</option>");
+    }
+    for (let item of my_brainregions) {
+      $("#brainregions").append('<option value="' + item + '">' + item + "</option>");
+    }
+    for (let item of my_channels) {
+      $("#channels").append('<option value="' + item + '">' + item + "</option>");
+    }
+    
+    $("#modeltype").select2({
+        placeholder: "Select Model type(s)"
+    });
+    $("#receptors").select2({
+        placeholder: "Select Receptor(s)"
+    });
+    $("#genes").select2({
+        placeholder: "Select Gene(s)"
+    });
+    $("#simenvironment").select2({
+        placeholder: "Select Simulation environment(s)"
+    });
+    $("#transmitters").select2({
+        placeholder: "Select Transmitter(s)"
+    });
+    $("#modelconcepts").select2({
+        placeholder: "Select Model concept(s)"
+    });
+    $("#celltypes").select2({
+        placeholder: "Select Cell type(s)"
+    });
+    $("#brainregions").select2({
+        placeholder: "Select Brain region(s)"
+    });
+    $("#channels").select2({
+        placeholder: "Select Current(s)"
+    });
+    $("select").on("select2:select", function (evt) {
+            var element = evt.params.data.element;
+            var $element = $(element);
+
+            $element.detach();
+            $(this).append($element);
+            $(this).trigger("change");
+        });
   });
-  </script>
+
+</script>
 {% endblock %}
 {% block content %}
 
@@ -83,39 +115,39 @@ $(function() {
 
 		<div class="ui-widget">
 			<label for="modeltype">Model Type: </label>
-			<input type="text" name="modeltype" id="modeltype" />
+			<select id="modeltype" name="modeltype" class="searchfield" multiple></select>
 		</div>
 		<div class="ui-widget">
 			<label for="brainregions">Brain Region/Organism: </label>
-			<input type="text" name="brainregions" id="brainregions" />
+			<select id="brainregions" name="brainregions" class="searchfield" multiple></select>
 		</div>
 		<div class="ui-widget">
 			<label for="celltypes">Cell Types: </label>
-			<input type="text" name="celltypes" id="celltypes" />
+			<select id="celltypes" name="celltypes" class="searchfield" multiple></select>
 		</div>
     <div class="ui-widget">
-      <label for="celltypes">Currents: </label>
-      <input type="text" name="channels" id="channels" />
+      <label for="channels">Currents: </label>
+      <select id="channels" name="channels" class="searchfield" multiple></select>
     </div>
 		<div class="ui-widget">
 			<label for="receptors">Receptors: </label>
-			<input type="text" name="receptors" id="receptors" />
+			<select id="receptors" name="receptors" class="searchfield" multiple></select>
 		</div>
 		<div class="ui-widget">
 			<label for="genes">Genes: </label>
-			<input type="text" name="genes" id="genes" />
+			<select id="genes" name="genes" class="searchfield" multiple></select>
 		</div>
 		<div class="ui-widget">
 			<label for="transmitters">Transmitters: </label>
-			<input type="text" name="transmitters" id="transmitters" />
+			<select id="transmitters" name="transmitters" class="searchfield" multiple></select>
 		</div>
 		<div class="ui-widget">
 			<label for="simenvironment">Simulation Environment: </label>
-			<input type="text" name="simenvironment" id="simenvironment" />
+			<select id="simenvironment" name="simenvironment" class="searchfield" multiple></select>
 		</div>
 		<div class="ui-widget">
 			<label for="modelconcepts">Model Concepts: </label>
-			<input type="text" name="modelconcepts" id="modelconcepts" />
+			<select id="modelconcepts" name="modelconcepts" class="searchfield" multiple></select>
 		</div>
 		<br/>
     <br/>
@@ -129,9 +161,9 @@ $(function() {
     </div> -->
     <br/>
 
-		<center>
+		  <center>
 		    <input type="submit" value="Search" class="btn-primary" />
-		</center>
+		  </center>
 		</div>
 		</center>
 	</form>
