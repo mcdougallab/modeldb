@@ -15,6 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, re_path, include
+from django.views.generic.base import RedirectView
+from django.contrib.staticfiles.storage import staticfiles_storage
 from . import views, urls_api_v1
 try:
     from . import pipeline_urls
@@ -25,6 +27,10 @@ except ImportError:
 
 urlpatterns = [
     path("", views.index, name="index"),
+    path(
+        "favicon.ico",
+        RedirectView.as_view(url=staticfiles_storage.url("favicon.ico")),
+    ),
     re_path("^(?:modeldb/)?login$(?i)", views.my_login, name="login"),
     re_path(
         r"^(?:modeldb/)?processmodelsubmit?(?:\.(?:cs)?html)?$(?i)",
