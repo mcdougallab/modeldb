@@ -1207,15 +1207,15 @@ def top_papers(request):
 
 
 def search(request):
-    my_transmitters = request.GET.get("transmitters")
-    my_receptors = request.GET.get("receptors")
-    my_genes = request.GET.get("genes")
-    my_simenvironment = request.GET.get("simenvironment")
-    my_modelconcepts = request.GET.get("modelconcepts")
-    my_celltypes = request.GET.get("celltypes")
-    my_modeltype = request.GET.get("modeltype")
-    my_brainregions = request.GET.get("brainregions")
-    my_channels = request.GET.get("channels")
+    my_transmitters = ";".join(request.GET.getlist("transmitters"))
+    my_receptors = ";".join(request.GET.getlist("receptors"))
+    my_genes = ";".join(request.GET.getlist("genes"))
+    my_simenvironment = ";".join(request.GET.getlist("simenvironment"))
+    my_modelconcepts = ";".join(request.GET.getlist("modelconcepts"))
+    my_celltypes = ";".join(request.GET.getlist("celltypes"))
+    my_modeltype = ";".join(request.GET.getlist("modeltype"))
+    my_brainregions = ";".join(request.GET.getlist("brainregions"))
+    my_channels = ";".join(request.GET.getlist("channels"))
     my_authors = None
     my_title = request.GET.get("title")
     my_q = request.GET.get("q")
