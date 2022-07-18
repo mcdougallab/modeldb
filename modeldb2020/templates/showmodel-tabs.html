@@ -1,4 +1,5 @@
-<h1 style="text-align:center">{{Model.name}} 
+<h1 style="text-align:center">
+<input name = "edit_model_name" id = "edit_model_name" style="text-align:center" placeholder="{{Model.name}}" value="{{Model.name}}">
   {% if access == 'rw' %}
     <sup><button id="edit_model_name" title="Edit model name"><i class="fas fa-edit" aria-hidden="true"></i></button></sup>
   {% endif %}
@@ -6,6 +7,7 @@
   {% if access == 'rw' %}
     <button id="edit_model_zip" title="Upload new zip"><i class="fas fa-upload" aria-hidden="true"></i></button>
   {% endif %}
+</input>
 </h1>
 <br/>
 
