@@ -355,6 +355,7 @@ def static(request, page="", title=""):
 
 def modellist(request):
     object_id = request.GET.get("id")
+    tab_id = request.GET.get("tab", 1)
     all_simu = request.GET.get("all_simu", "")
     if object_id is None:
         return listbymodelname(request)
@@ -459,6 +460,25 @@ def modellist(request):
     # logos do not work well on the page; remove
     logo = None
 
+    health, about = models.get_health_about(object_id)
+    # if int(object_id) == 65417:
+    #     about = "Parkinson's disease (PD) is a neurodegenerative disorder that affects predominately dopamine-producing (“dopaminergic”) neurons in a specific area of the brain called substantia nigra. More information about Parkinson's at: <a href='https://www.parkinson.org/'>Parkinson's Foundation</a>"
+    #     health = [
+    #             {"title": "Movement Symptoms", "content" : "Parkinson's usually causes movement disorder including bradykinesia, tremor and rigidity etc. It usually causes unusual oscillations in the tremor frequency range. Learn more about the dynamics of the network model at: <br> <a href='http://modeldb.science/showmodel?model=261882'>Network model of movement disorders</a>"},
+    #             {"title": "Medication Treatments", "content" : "Prescription medication is the a popular method to treat Parkinson's, Levodopa is one of the 'first choice' to patients. Levodopa could help brain release dopamine and improve brain performance since Parkinson's could cause a lack of dopamine. In neuroscience, we often talk about the relationship between Levodopa concentration and its effect. Learn more about the parameter changes and estimation at: <br> <a href='http://modeldb.science/showmodel?model=261624'>Basal Ganglia and Levodopa Pharmacodynamics model for parameter estimation in PD</a>"},
+    #             {"title": "Deep Brain Stimulation in Parkinson's", "content" : "Deep brain stimulation (DBS) is a neurosurgical procedure that treat movement disorders like Parkinson's disease, essential tremor and other neurological conditions. Neuro scientist often describes the methods in network model:"}      
+    #     ] 
+    # elif int(object_id) == 112854:
+    #     about = "some stuff"
+    #     health = [
+    #         {"title": "Bananas", "content": "potassium"},
+    #         {"title": "Humans", "content": "meat"}
+    #     ]
+    # else:
+    #     about = None
+    #     health = None
+    
+
     context = {
         "title": f"ModelDB: Models that contain {obj.name}",
         "obj": obj,
@@ -474,6 +494,10 @@ def modellist(request):
         "all_simu": all_simu,
         "models": my_models,
         "datatype": int(object_id),
+        "tab": int(tab_id),
+        "about": about,
+        "health": health
+       
     }
     return render(request, "modellist.html", context)
 
