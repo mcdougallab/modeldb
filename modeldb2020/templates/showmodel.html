@@ -77,11 +77,11 @@
                 for (let ms of $('.multiselect')) {
                     dict[ms.name] = $(ms).select2('val')
                 }
-                dict['#edit_model_name'] = document.getElementById("edit_model_name").value  
-                dict['#model_notes'] = document.getElementById("model_notes").value  
-                dict['#expmotivation'] = document.getElementById("expmotivation").value
-                dict['#modelimplementers'] = document.getElementById("modelimplementers").value
-                dict['#modelcitation'] = document.getElementById("modelcitation").value 
+                dict['edit_model_name'] = document.getElementById("edit_model_name").value  
+                dict['model_notes'] = document.getElementById("model_notes").value  
+                dict['expmotivation'] = document.getElementById("expmotivation").value
+                dict['modelimplementers'] = document.getElementById("modelimplementers").value
+                dict['modelcitation'] = document.getElementById("modelcitation").value 
             
                 return dict;
             }

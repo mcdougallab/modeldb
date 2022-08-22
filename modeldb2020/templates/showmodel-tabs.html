@@ -1,11 +1,18 @@
-<h1 style="text-align:center">{{Model.name}} 
-  {% if access == 'rw' %}
-    <sup><button id="edit_model_name" title="Edit model name"><i class="fas fa-edit" aria-hidden="true"></i></button></sup>
-  {% endif %}
-  <a href="/eavBinDown?o={{Model.id}}"><i title="Download zip" class="fas fa-download"></i></a>
-  {% if access == 'rw' %}
-    <button id="edit_model_zip" title="Upload new zip"><i class="fas fa-upload" aria-hidden="true"></i></button>
-  {% endif %}
+<h1 style="text-align:center">
+{% if access == 'rw' %}
+  <input name = "edit_model_name" id = "edit_model_name" style="text-align:center" placeholder="{{Model.name}}" value="{{Model.name}}">
+{% else %}
+  {{Model.name}}
+{% endif %}
+    {% if access == 'rw' %}
+      <sup><button id="edit_model_name" title="Edit model name"><i class="fas fa-edit" aria-hidden="true"></i></button></sup>
+    {% endif %}
+    <a href="/eavBinDown?o={{Model.id}}"><i title="Download zip" class="fas fa-download"></i></a>
+    {% if access == 'rw' %}
+      <button id="edit_model_zip" title="Upload new zip"><i class="fas fa-upload" aria-hidden="true"></i></button>
+    {% endif %}
+  </input>
+
 </h1>
 <br/>
 
