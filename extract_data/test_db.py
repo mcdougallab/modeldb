@@ -16,6 +16,7 @@ mongodb = MongoClient()
 sdb = mongodb[security["db_name"]]
 sdb.authenticate(security["mongodb_user"], security["mongodb_pw"])
 
-pipeline = mongodb[pipeline_settings["db_name"]]
-pipeline.authenticate(pipeline_settings["mongodb_user"], pipeline_settings["mongodb_pw"])
+
+# pipeline = mongodb[pipeline_settings["db_name"]]
+# pipeline.authenticate(pipeline_settings["mongodb_user"], pipeline_settings["mongodb_pw"])
 

@@ -58,6 +58,12 @@ def new_rwac_reset(model_id):
     sdb.rwac_reset.insert_one({"model": model_id, "time": now, "code": code})
     return code
 
+def get_health_about(object_id):
+    concept = sdb.modelconcepts.find_one({"id": int(object_id)})
+    if concept:
+        return concept.get("health"), concept.get("general_info")
+    else:
+        return None, None
 
 def new_object_id():
     """returns a new object id"""
