@@ -758,9 +758,12 @@ class Model:
 
     @property
     def papers(self):
-        return [
-            Paper(item["object_id"]) for item in self._model["model_paper"]["value"]
-        ]
+        if "model_paper" in self._model:
+            return [
+                Paper(item["object_id"]) for item in self._model["model_paper"]["value"]
+            ]
+        else:
+            return []
 
     def __getattr__(self, key):
         if key in self._model:
