@@ -1043,7 +1043,7 @@ def model_sort_rule(item):
 
 def findbyregionlist(request):
     context = {
-        "title": "ModelDB: Browse by current",
+        "title": "ModelDB: Browse by neuron",
         "content": _render_tree(celltypes, "/ModelList"),
         "header": "Find models of a particular neuron",
         "subhead": "Click on a neuron/cell to show a list of models of that type.",
