@@ -55,6 +55,8 @@ This repository is currently intended to be bootstrapped from the classic EAV/CR
   - `get_icg_mapping.py`
   - `get_file_hashes.py`
     - this generates the file reuse detection data
+  - `sync_neuron_dict.py`
+    - this updates the neurons included in celltypes
 - Apply the django migrations
   `python3 manage.py migrate`
 - You will also want to use django admin to create a user with admin permissions from within the
