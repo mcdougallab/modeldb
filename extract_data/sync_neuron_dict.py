@@ -21,7 +21,7 @@ def have_cell_id(my_id):
     return sdb.celltypes.find_one({"id": my_id}) is not None
 
 def sync_neuron_dict():
-
+    
     for model in sdb.models.find():
         if 'neurons' in model:
             for neuron in model['neurons']['value']:
