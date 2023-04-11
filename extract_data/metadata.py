@@ -12,6 +12,7 @@ import re
 import xml
 import functools
 import unicodedata
+from datetime import datetime
 
 SETTINGS_PATH = "/home/bitnami/modeldb-settings.json"
 
@@ -21,6 +22,7 @@ with open(SETTINGS_PATH) as f:
 mongodb = MongoClient()
 sdb = mongodb[security["db_name"]]
 sdb.authenticate(security["mongodb_user"], security["mongodb_pw"])
+
 
 invalid_doi = set() # for Error: Invalid response from Entrez PubMed API
 @functools.lru_cache()
@@ -48,7 +50,6 @@ def lookup_pmid_from_doi(doi):
                 invalid_doi.add(doi)
                 return None
     else:
-
         invalid_doi.add(doi)
 
 
@@ -57,6 +58,7 @@ def new_object_id():
     return sdb.meta.find_one_and_update(
         {}, {"$inc": {"id_count": 1}}, return_document=ReturnDocument.AFTER
     )["id_count"]
+
 
 # strip_accents from https://stackoverflow.com/questions/517923/what-is-the-best-way-to-remove-accents-normalize-in-a-python-unicode-string
 def strip_accents(s):
@@ -88,11 +90,12 @@ def get_pmid_from_paper(paper):
     pmid = None
     paper_id = True
     if paper.get("pubmed_id") is None:
-        if paper.get("doi") is None:
+        if paper.get("doi") is None or paper.get("doi.value") is None:
             no_pmid_or_doi.add(paper['id'])
             paper_id = False
             print(paper['id'], "has no ids")
         else:
+            #print(paper, "\n", paper["doi"]["value"])
             paper["pubmed_id"] = {"value": lookup_pmid_from_doi(paper["doi"]["value"])}
     if paper_id:
         if paper["pubmed_id"]:
@@ -103,22 +106,55 @@ def get_pmid_from_paper(paper):
     return pmid, paper["id"]
 
 
-# check database for authors not in author collection
+# creates paper "name" for papers collection metadata
+def paper_name(paper_metadata, paper = None):
+    name = ''
+    num_of_authors = len(paper_metadata["authors"]["value"])
+
+    if num_of_authors <= 5:
+        for author in paper_metadata["authors"]["value"]:
+            name += str(author["object_name"])
+            num_of_authors -= 1
+            if num_of_authors > 0:
+                name += ", "
+            else:
+                name += " "
+                
+        if "year" in paper_metadata:
+            name += "(" + paper_metadata["year"]["value"] + ")"
+        elif "year" in paper:
+            name += "(" + paper["year"]["value"] + ")"
+
+    else:
+        if "year" in paper_metadata:
+            name = str(paper_metadata["authors"]["value"][0]["object_name"]) + " et al. (" + paper_metadata["year"]["value"] + ")"
+        elif "year" in paper:
+            name = str(paper_metadata["authors"]["value"][0]["object_name"]) + " et al. (" + paper["year"]["value"] + ")"
+        else:
+            name = str(paper_metadata["authors"]["value"][0]["object_name"]) + " et al."
+
+    return name
+
+
+# Run this function to sync authors in papers collection and authors collection
 def check_authors():
     pmids_to_process = []
     papers = []
     for paper in sdb.papers.find({}, no_cursor_timeout=True):
         pmid, paper_id = get_pmid_from_paper(paper)
+        if int(paper_id) < 250000: continue
         if pmid is not None:
             pmids_to_process.append(pmid)
             papers.append(paper)
             if len(pmids_to_process) >= 99:
                 get_author_info(pmids_to_process, papers)
-                pmids_to_process = []
+                pmids_to_process = []  
                 papers = []
     get_author_info(pmids_to_process, papers)
 
 
+# this is for getting metadata from pubmed
+# and using it to update the papers collection
 def get_author_info(pmids_to_process, papers):
     metadata = get_metadata(pmids_to_process)
     # this assumes things are in the same order. If they're not, uh oh
@@ -127,55 +163,38 @@ def get_author_info(pmids_to_process, papers):
             paper["authors"] = {}
         paper["authors"]["value"] = my_metadata["authors"]["value"]
         print(paper["id"], paper["authors"]["value"])
-        sdb.papers.update_one({"id": paper["id"]}, 
-            {"$set": {
-                "authors.value": paper["authors"]["value"],
-                "doi": my_metadata["doi"],
-                "journal": my_metadata["journal"], 
-                "year": my_metadata["year"],
-                "month": my_metadata["month"],
-                "day": my_metadata["day"],
-                }
-            }
         
+        updated_paper_name = paper_name(my_metadata, paper)
+        current_date = datetime.now().isoformat()
+
+        new_values = {
+            "name": updated_paper_name,
+            "authors.value": paper["authors"]["value"],
+            "ver_date" : current_date,
+            "ver_number": paper["ver_number"] + 1,
+            "doi": my_metadata["doi"],
+            "journal": my_metadata["journal"], 
+            "pubmed_id": my_metadata["pubmed_id"],
+        }
+        
+        if "volume" in my_metadata:
+            new_values["volume"] = my_metadata["volume"]
+        
+        if "year" in my_metadata:
+            new_values["year"] = my_metadata["year"]
+        
+        if "month" in my_metadata:
+            new_values["month"] = my_metadata["month"]
+
+        if "day" in my_metadata:
+            new_values["day"] = my_metadata["day"]
+
+        sdb.papers.update_one({"id": paper["id"]}, 
+            {"$set": new_values}
         )
 
 
-
-# to delete
-author_repeats = {}
-def check_authors_old(): 
-    for paper in sdb.papers.find({}, no_cursor_timeout=True): 
-        if "authors" in paper:
-            called_get_metadata = False
-            paper_id = True
-            for author in paper["authors"]['value']:
-                if new_author_check(author["object_name"]): #can change to checking object id maybe
-                    if paper.get("pubmed_id") is None:
-                        if paper.get("doi") is None:
-                            no_pmid_or_doi.add(paper['id'])
-                            paper_id = False
-                            print(paper['id'], "has no ids")
-                        else:
-                            paper["pubmed_id"] = {"value": lookup_pmid_from_doi(paper["doi"]["value"])}
-                    if paper_id:
-                        if paper["pubmed_id"]:
-                            pmid = paper["pubmed_id"]["value"] 
-                            if pmid is None:
-                                print(f"paper {paper['id']} has no pubmed_id, but you can probably get the authors from crossref")
-                                papers_to_lookup_on_crossref.add(paper['id'])
-                                continue
-                            print(pmid, paper["id"])
-                            if called_get_metadata:
-                                print(f"    papers metadata for authors doesn't match pubmed; hadn't found {author['object_name']}")
-                                author_repeats[pmid] = author['object_name']
-                            else:
-                                called_get_metadata = True
-                                get_metadata(
-                                    pmid
-                                )  
-
-
+# adds new authors to authors collection
 def add_new_author_to_collection(object_name, lastname, firstname, initials, orcid): 
     stripped_object_name = object_name.strip()
 
@@ -216,15 +235,106 @@ def get_articles(pmids):
     return r
 
 
-"""
-def get_title_metadata(article): 
-def get_author_metadata(article):
-def get_journal_metadata(article):
-def get_doi_metadata(article):
-def get_date_metadata(article):
-"""
+def update_orcid(author_name, orcid):
+    author = sdb.authors.find_one({"object_name": {"$regex": re.compile(f"^{author_name}$", re.IGNORECASE)}})
+    collection_orcid = {"ORCID": orcid}
+    if author:
+        sdb.authors.update_one(
+            {"object_name": {"$regex": re.compile(f"^{author_name}$", re.IGNORECASE)}},
+            {"$set": collection_orcid}
+        )
+    if not author:
+        author = sdb.authors.find_one({"object_name": {"$regex": re.compile(f"^{strip_accents(author_name)}$", re.IGNORECASE)}})
+        if author:
+            sdb.authors.update_one(
+                {"object_name": {"$regex": re.compile(f"^{strip_accents(author_name)}$", re.IGNORECASE)}},
+                {"$set": collection_orcid}
+            )
+    if author is None:
+        invalid_author_db.add(author_name)
 
 
+# gets author data from xml
+def get_author_metadata(article, pmid):
+    all_authors = []
+    authors = article.getElementsByTagName("Author")
+    try:
+        authors.length >= 1
+    except:
+        all_authors.append("No Author")
+    else:
+        for author in authors:
+            author_dict = {}
+
+            if author.getElementsByTagName("LastName"):
+                author_last_name = author.getElementsByTagName("LastName")[0].firstChild.nodeValue
+            else:
+                author_last_name = None
+                author_name_issues[pmid] = author_last_name
+
+            if author.getElementsByTagName("ForeName"):
+                author_first_name = author.getElementsByTagName("ForeName")[0].firstChild.nodeValue
+            else:
+                author_first_name = None
+                author_name_issues[pmid] = author_last_name
+
+            if author.getElementsByTagName("Initials"):
+                author_initials = author.getElementsByTagName("Initials")[0].firstChild.nodeValue
+            else:
+                author_initials = None
+                author_name_issues[pmid] = author_last_name                
+                
+            # creates object_name
+            if author_last_name and author_initials:
+                author_object_name = (
+                    author_last_name
+                    + " "
+                    + author_initials
+                )
+            elif author_last_name:
+                author_object_name = author_last_name
+            elif author.getElementsByTagName("CollectiveName"):
+                author_object_name = author.getElementsByTagName("CollectiveName")[0].firstChild.nodeValue
+            else:
+                author_object_name = None
+                print(f"no author object_name:{pmid}")
+                no_last_name.append(pmid)
+                
+
+            author_orcid = None
+            if author.getElementsByTagName("Identifier"):
+                if (
+                    "ORCID"
+                    == author.getElementsByTagName("Identifier")[0]
+                    .getAttributeNode("Source")
+                    .nodeValue
+                ):
+                    author_orcid = author.getElementsByTagName("Identifier")[0].firstChild.nodeValue
+            
+            # add author to author collection if not already there
+            if new_author_check(author_object_name):
+                print(pmid)
+                author_object_id = add_new_author_to_collection(
+                    author_object_name,
+                    author_last_name,
+                    author_first_name,
+                    author_initials,
+                    author_orcid,
+                )    
+            else:
+                author_object_id = retrieve_author_object_id(author_object_name)
+                if author_orcid is not None:
+                    update_orcid(author_object_name, author_orcid)
+
+            author_dict["object_id"] = author_object_id
+            author_dict["object_name"] = author_object_name
+            all_authors.append(author_dict)
+            
+    return all_authors
+
+
+# recursively retrievings article title
+#   -- necessary due to use of HTML tags in title e.g. <i>, <sub>
 def get_text_content(node):
     content = ""
     for child_node in node.childNodes:
@@ -235,6 +345,7 @@ def get_text_content(node):
     return content
 
 
+# Run this function to get metadata from a pubmed article
 no_last_name = []
 author_name_issues = {}
 def get_metadata(pmids):
@@ -248,7 +359,7 @@ def get_metadata(pmids):
         except xml.parsers.expat.ExpatError:
             print("uh oh")
             print(r.text)
-            print(f"attenpt {i} failed")
+            print(f"attempt {i} failed")
     else:
         print(f"I give up on {pmids}")
         raise Exception()
@@ -258,15 +369,14 @@ def get_metadata(pmids):
     for article in articles:
         metadata = {}
 
-        # pmid
+    # pmid
         pmid = int(article.getElementsByTagName("PMID")[0].firstChild.nodeValue)
-        pmid_dict = {}
-        pmid_dict["value"] = pmid
-        pmid_dict["attr_id"] = 153
-        metadata["pubmed_id"] = pmid_dict
+        pmid_dict = {
+            "value": pmid,
+            "attr_id": 153
+        }
 
-        # title
-        # full_title = get_title_metadata(article)
+    # title
         full_title = ''
         titles = article.getElementsByTagName("ArticleTitle")
 
@@ -279,161 +389,92 @@ def get_metadata(pmids):
                 full_title = get_text_content(book_title)
         assert full_title is not None
 
-        title_dict = {}
-        title_dict["value"] = full_title
-        title_dict["attr_id"] = 139
+        title_dict = {
+            "value": full_title,
+            "attr_id": 139
+        }
         metadata["title"] = title_dict
 
-        # authors
-        # get_author_metadata(article)
-        all_authors = []
-        authors = article.getElementsByTagName("Author")
-        try:
-            authors.length >= 1
-        except:
-            all_authors.append("No Author")
-        else:
-            for author in authors:
-                author_dict = {}
-
-                
-                if author.getElementsByTagName("LastName"):
-                    author_last_name = author.getElementsByTagName("LastName")[0].firstChild.nodeValue
-                else:
-                    author_last_name = None
-                    author_name_issues[pmid] = author_last_name
-
-                if author.getElementsByTagName("ForeName"):
-                    author_first_name = author.getElementsByTagName("ForeName")[0].firstChild.nodeValue
-                else:
-                    author_first_name = None
-                    author_name_issues[pmid] = author_last_name
-
-                if author.getElementsByTagName("Initials"):
-                    author_initials = author.getElementsByTagName("Initials")[0].firstChild.nodeValue
-                else:
-                    author_initials = None
-                    author_name_issues[pmid] = author_last_name                
-                    
-
-                if author_last_name and author_initials:
-                    author_object_name = (
-                        author_last_name
-                        + " "
-                        + author_initials
-                    )
-                elif author_last_name:
-                    author_object_name = author_last_name
-                elif author.getElementsByTagName("CollectiveName"):
-                    author_object_name = author.getElementsByTagName("CollectiveName")[0].firstChild.nodeValue
-                else:
-                    #raise Exception(f"no last name?: {pmid}")
-                    author_object_name = None
-                    print(f"no author object_name:{pmid}")
-                    no_last_name.append(pmid)
-                    
-
-                if author.getElementsByTagName("Identifier"):
-                    if (
-                        "ORCID"
-                        == author.getElementsByTagName("Identifier")[0]
-                        .getAttributeNode("Source")
-                        .nodeValue
-                    ):
-                        author_orcid = author.getElementsByTagName("Identifier")[0].firstChild.nodeValue
-                else:
-                    author_orcid = None
-
-
-                if new_author_check(author_object_name):
-                    author_object_id = add_new_author_to_collection(
-                        author_object_name,
-                        author_last_name,
-                        author_first_name,
-                        author_initials,
-                        author_orcid,
-                    )
-                else:
-                    author_object_id = retrieve_author_object_id(author_object_name)
-
-                author_dict["object_id"] = author_object_id
-                author_dict["object_name"] = author_object_name
-                all_authors.append(author_dict)  # list of dictionaries
-
-        authors_dict = {}
-        authors_dict["value"] = all_authors
-        authors_dict["attr_id"] = 148
+    # authors
+        all_authors = get_author_metadata(article, pmid)
+        authors_dict = {
+            "value": all_authors,
+            "attr_id": 148
+        }
         metadata["authors"] = authors_dict
 
-        # journal
-        # get_journal_metadata(journal)
-        journal_title = article.getElementsByTagName("Title")[0].firstChild.nodeValue
-        journal_dict = {}
-        journal_dict["value"] = journal_title
-        journal_dict["attr_id"] = 158
-        metadata["journal"] = journal_dict
+    # journal volume
+        try:
+            volume = article.getElementsByTagName("Volume")[0].firstChild.nodeValue
+            volume_dict = {
+                "value": volume,
+                "attr_id": 149
+            }
+            metadata["volume"] = volume_dict
+        except:
+            print(f"no volume for pmid {pmid}")
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        #add journal volume
-
-
-
-
-
-
-
-
-
-
-        # doi
-        #def get_doi_metadata(article):
+    # doi
+        doi = None
         if article.getElementsByTagName("ELocationID") and (
             "doi"
             == article.getElementsByTagName("ELocationID")[0]
             .getAttributeNode("EIdType")
             .nodeValue
-        ):  # needs else statement, may not cover everything
+        ): 
             doi = article.getElementsByTagName("ELocationID")[0].firstChild.nodeValue
         else:
-            doi = None
-        doi_dict = {}
-        doi_dict["value"] = doi
-        doi_dict["attr_id"] = 339
+            idlist = doc.getElementsByTagName("ArticleIdList")
+            i = idlist[0]
+            for article_id in i.getElementsByTagName("ArticleId"):
+                if "doi" == article_id.getAttribute('IdType'):
+                    doi = article_id.childNodes[0].nodeValue
+                    break
+
+        doi_dict = {
+            "value": doi,
+            "attr_id": 339
+        }
         metadata["doi"] = doi_dict
 
-        # date completed
-        # def get_date_metadata(article):
-        year = article.getElementsByTagName("Year")[0].firstChild.nodeValue 
-        month = article.getElementsByTagName("Month")[0].firstChild.nodeValue
-        day = article.getElementsByTagName("Day")[0].firstChild.nodeValue
-        year_dict = {}
-        year_dict["value"] = year
-        year_dict["attr_id"] = 154
-        metadata["year"] = year_dict
+        # pmid insert is here for dict formatting
+        metadata["pubmed_id"] = pmid_dict
 
-        month_dict = {}
-        month_dict["value"] = month
-        month_dict["attr_id"] = 156
-        metadata["month"] = month_dict
+    # Published date
+        pubdate = article.getElementsByTagName("PubDate")[0]
+        if pubdate.getElementsByTagName("Year"):
+            year = pubdate.getElementsByTagName("Year")[0].childNodes[0].nodeValue 
+            year_dict = {
+                "value": year,
+                "attr_id": 154
+            }
+            metadata["year"] = year_dict
 
-        day_dict = {}
-        day_dict["value"] = day
-        day_dict["attr_id"] = 157
-        metadata["day"] = day_dict
+        if pubdate.getElementsByTagName("Month"):
+            month = pubdate.getElementsByTagName("Month")[0].childNodes[0].nodeValue
+            month_dict = {
+                "value": month,
+                "attr_id": 156
+            }
+            metadata["month"] = month_dict
 
+        if pubdate.getElementsByTagName("Day"): 
+            day = pubdate.getElementsByTagName("Day")[0].childNodes[0].nodeValue
+            day_dict = {
+                "value": day,
+                "attr_id": 157
+            }
+            metadata["day"] = day_dict
+
+    # journal
+        journal_title = article.getElementsByTagName("Title")[0].firstChild.nodeValue
+        journal_dict = {
+            "value": journal_title,
+            "attr_id": 158
+        }
+        metadata["journal"] = journal_dict
+
+    # combine metadata for all searched pmids
         metadata_w_pmid[pmid] = metadata
 
     return metadata_w_pmid
@@ -454,27 +495,77 @@ def get_reference_pmids(pmid):
         elif "doi" == i.getElementsByTagName("ArticleId")[0].getAttribute("IdType"):
             y = i.getElementsByTagName("ArticleId")[0].childNodes[0].nodeValue
             dois_list.append(y)
-        # check_references_in_papers(x, y)
 
-    if int(pmids_list[0]) = pmid:
+    if int(pmids_list[0]) == pmid:
         pmids = ",".join(pmids_list[1:])
     else:
         pmids = ",".join(pmids_list)
-    dois = ",".join(dois_list)
 
-    return pmids, dois
-
-#check the references in the papers collection, add to papers collection or attach previous object id
-#to be used in get_reference_pmids()
-#def check_references_in_papers(pmid, doi):
- #   if sdb.papers.find_one("pubmed_id": pmid) is None:
-  #  if sdb.papers.find_one("doi": doi) is None:
+    return pmids, dois_list
 
 
-def get_reference_metadata(pmid):
+# check if reference is in the papers collection
+# True -- new, False -- exists
+def check_new_reference(pmid, doi): 
+    if doi is None:
+        return sdb.papers.find_one({"pubmed_id.value": str(pmid)}) is None
+    else:
+        return sdb.papers.find_one({"doi.value": doi}) is None
+
+
+def insert_new_paper(metadata_dict):
+    new_info_dict = {}
+
+    id_ = new_object_id
+    new_info_dict["id"] = id_
+    new_paper_name = paper_name(metadata_dict)
+
+    new_info_dict["name"] = new_paper_name
+    new_info_dict['created'] = datetime.now().isoformat()
+    new_info_dict["ver_number"] = 1
+
+    new_paper_dict = new_info_dict | metadata_dict
+
+    sdb.papers.insert_one({new_paper_dict}) 
+
+    return id_
+
+
+def retrieve_paper(pmid):
+    paper = sdb.papers.find_one({"pubmed_id.value": str(pmid)})
+    return paper
+
+
+def get_reference_metadata(pmid): #check
     reference_pmids, reference_dois = get_reference_pmids(pmid)
     reference_metadata_dict = get_metadata(reference_pmids)
-    #loop through reference_dois list // lookup_pmid_from_doi(reference_dois), reference_metadata_dict[pmid] = return 
+    missing_references = []
+
+    for pmid in reference_metadata_dict:
+        if check_new_reference(pmid, None):
+            new_paper_id = insert_new_paper(reference_metadata_dict[pmid])
+            reference_metadata_dict[pmid]["id"] = new_paper_id
+        else: 
+            paper = retrieve_paper(pmid)
+            reference_metadata_dict[pmid] = paper
+
+    for doi in reference_dois: 
+        reference_doi_to_pmid = lookup_pmid_from_doi(doi)
+        if reference_doi_to_pmid is not None:
+            if check_new_reference(reference_doi_to_pmid, None):
+                doi_metadata = get_metadata(reference_doi_to_pmid)
+                reference_metadata_dict[reference_doi_to_pmid] = doi_metadata
+                new_paper_id = insert_new_paper(doi_metadata)
+                reference_metadata_dict[reference_doi_to_pmid]["id"] = new_paper_id 
+            else: 
+                paper = retrieve_paper(reference_doi_to_pmid) 
+                reference_metadata_dict[reference_doi_to_pmid] = paper
+        elif reference_doi_to_pmid is None:
+            missing_references.append(reference_doi_to_pmid)
+
+    if len(missing_references) != 0:
+        reference_metadata_dict["missing_references"]["value"] = missing_references
+        reference_metadata_dict["missing_references"]["attr_id"] = 211
 
     return reference_metadata_dict
 
