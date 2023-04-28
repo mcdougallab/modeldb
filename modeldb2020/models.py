@@ -12,6 +12,7 @@ from pymongo import MongoClient, ReturnDocument
 from django.db import models
 from . import settings
 import pandas as pd
+import itertools
 
 mongodb = MongoClient()
 sdb = mongodb[settings.security["db_name"]]
@@ -121,12 +122,22 @@ def load_collection(name):
             new_collection[item["parent"]]["children"].append(str(item["id"]))
     return new_collection
 
+# strip_accents from https://stackoverflow.com/questions/517923/what-is-the-best-way-to-remove-accents-normalize-in-a-python-unicode-string
+def strip_accents(s):
+   return ''.join(c for c in unicodedata.normalize('NFD', s)
+                  if unicodedata.category(c) != 'Mn')
+
+def has_accents(name):
+    if strip_accents(name) == name:
+        return False
+    else:
+        return True
 
 def refresh():
     global modeldb, currents, genes, regions, receptors
     global transmitters, simenvironments, modelconcepts
     global modeltypes, celltypes, papers, cites_paper_unsorted
-    global all_authors, first_authors, icg, models_by_paper, ptrm
+    global all_authors, all_author_accent_mapping, first_authors, icg, models_by_paper, ptrm
 
     modeldb = load_collection("models")
     currents = load_collection("currents")
@@ -184,6 +195,13 @@ def refresh():
         )
     all_authors = {name: list(set(models)) for name, models in all_authors.items()}
     first_authors = {name: list(set(models)) for name, models in first_authors.items()}
+
+    # all_author_accent_mapping = {accentless_name: [accented_name1, accented_name2, ..]}
+    all_author_accent_mapping = {}
+    for author in all_authors:
+        if has_accents(author):
+            unaccented_name = strip_accents(author).lower()
+            all_author_accent_mapping.setdefault(unaccented_name, []).append(author)
 
     # Prepare dictionary used to provide the "references that cite a paper" on citation display pages
 
@@ -277,7 +295,14 @@ def find_papers_by_doi(doi):
 def find_authors(author):
     """finds model authors but not paper authors"""
     author_q = author.strip().lower()
-    return [author for author in all_authors if author_q in author.lower()]
+    author_q_no_accents = strip_accents(author_q)
+
+    author_possibilities = list(itertools.chain.from_iterable(
+        [accented_authors for author, accented_authors in all_author_accent_mapping.items() if author_q_no_accents in author]
+    ))
+   
+    return list(set([author for author in all_authors if author_q in author.lower() or author_q_no_accents in author.lower()] + author_possibilities))
+    #return [author for author in all_authors if author_q in author.lower()]
 
 
 def find_papers_by_author(author):
