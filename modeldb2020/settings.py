@@ -53,7 +53,7 @@ for button in app_settings.get("pipeline_review_buttons", []):
 SECRET_KEY = security["secret_key"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['52.90.37.175', 'modeldb.science', 'www.modeldb.science']
 
