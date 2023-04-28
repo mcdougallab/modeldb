@@ -122,13 +122,13 @@ def paper_name(paper_metadata, paper = None):
                 
         if "year" in paper_metadata:
             name += "(" + paper_metadata["year"]["value"] + ")"
-        elif "year" in paper:
+        elif paper and "year" in paper:
             name += "(" + paper["year"]["value"] + ")"
 
     else:
         if "year" in paper_metadata:
             name = str(paper_metadata["authors"]["value"][0]["object_name"]) + " et al. (" + paper_metadata["year"]["value"] + ")"
-        elif "year" in paper:
+        elif paper and "year" in paper:
             name = str(paper_metadata["authors"]["value"][0]["object_name"]) + " et al. (" + paper["year"]["value"] + ")"
         else:
             name = str(paper_metadata["authors"]["value"][0]["object_name"]) + " et al."
@@ -424,7 +424,7 @@ def get_metadata(pmids):
         ): 
             doi = article.getElementsByTagName("ELocationID")[0].firstChild.nodeValue
         else:
-            idlist = doc.getElementsByTagName("ArticleIdList")
+            idlist = article.getElementsByTagName("ArticleIdList")
             i = idlist[0]
             for article_id in i.getElementsByTagName("ArticleId"):
                 if "doi" == article_id.getAttribute('IdType'):
@@ -487,21 +487,25 @@ def get_reference_pmids(pmid):
         f"https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id={pmid}&retmode=xml"
     )
     doc = m.parseString(r.text)
-    ids = doc.getElementsByTagName("ArticleIdList")
-    for i in ids:
-        if "pubmed" == i.getElementsByTagName("ArticleId")[0].getAttribute("IdType"):
-            x = i.getElementsByTagName("ArticleId")[0].childNodes[0].nodeValue
-            pmids_list.append(x)
-        elif "doi" == i.getElementsByTagName("ArticleId")[0].getAttribute("IdType"):
-            y = i.getElementsByTagName("ArticleId")[0].childNodes[0].nodeValue
-            dois_list.append(y)
+    reference_list = doc.getElementsByTagName("ReferenceList")[0]
+    ids = reference_list.getElementsByTagName("ArticleIdList")
+    pubmed = True
 
-    if int(pmids_list[0]) == pmid:
-        pmids = ",".join(pmids_list[1:])
-    else:
-        pmids = ",".join(pmids_list)
+    for article_id in ids:
+        pubmed is False
+        for i in article_id.getElementsByTagName("ArticleId"):
+            if "pubmed" == i.getAttributeNode("IdType").childNodes[0].nodeValue:
+                articleid_pmid = i.childNodes[0].nodeValue
+                pmids_list.append(articleid_pmid)
+                pubmed is True
+        if pubmed is False:
+            for i in article_id.getElementsByTagName("ArticleId"):
+                if "doi" == i.getAttributeNode("IdType").childNodes[0].nodeValue:
+                    articleid_doi = i.childNodes[0].nodeValue
+                    dois_list.append(articleid_doi)
 
-    return pmids, dois_list
+    pmids_string = ",".join(pmids_list)
+    return pmids_string, dois_list
 
 
 # check if reference is in the papers collection
@@ -536,7 +540,7 @@ def retrieve_paper(pmid):
     return paper
 
 
-def get_reference_metadata(pmid): #check
+def get_reference_metadata(pmid):
     reference_pmids, reference_dois = get_reference_pmids(pmid)
     reference_metadata_dict = get_metadata(reference_pmids)
     missing_references = []
@@ -553,15 +557,16 @@ def get_reference_metadata(pmid): #check
         reference_doi_to_pmid = lookup_pmid_from_doi(doi)
         if reference_doi_to_pmid is not None:
             if check_new_reference(reference_doi_to_pmid, None):
+                time.sleep(1)
                 doi_metadata = get_metadata(reference_doi_to_pmid)
-                reference_metadata_dict[reference_doi_to_pmid] = doi_metadata
-                new_paper_id = insert_new_paper(doi_metadata)
-                reference_metadata_dict[reference_doi_to_pmid]["id"] = new_paper_id 
+                reference_metadata_dict = reference_metadata_dict | doi_metadata
+                new_paper_id = insert_new_paper(reference_metadata_dict[int(reference_doi_to_pmid)])
+                reference_metadata_dict[int(reference_doi_to_pmid)]["id"] = new_paper_id 
             else: 
                 paper = retrieve_paper(reference_doi_to_pmid) 
-                reference_metadata_dict[reference_doi_to_pmid] = paper
+                reference_metadata_dict[int(reference_doi_to_pmid)] = paper
         elif reference_doi_to_pmid is None:
-            missing_references.append(reference_doi_to_pmid)
+            missing_references.append(doi)
 
     if len(missing_references) != 0:
         reference_metadata_dict["missing_references"]["value"] = missing_references
