@@ -743,6 +743,7 @@ def showmodel(request):
             "tab": tab_id,
             "citation_data": citation_data,
             "showtabs": True,
+            "all_authors": models.all_authors,
         }
         return render(request, "showmodel7.html", context)
     elif tab_id == 4:
@@ -866,6 +867,7 @@ def mdbcitations(request):
         "Model": None,
         "citation_data": citation_data,
         "showtabs": False,
+        "all_authors": models.all_authors,
     }
     return render(request, "showmodel7.html", context)
 
