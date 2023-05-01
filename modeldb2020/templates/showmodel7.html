@@ -54,7 +54,11 @@
             {% if forloop.counter0 > 0 %}
                 &middot;
             {% endif %}
-            <a href="/modelauthor/{{author}}">{{author}}</a>
+            {% if author not in all_authors %}
+                {{author}}
+            {% else %}
+                <a href="/modelauthor/{{author}}">{{author}}</a>
+            {% endif %}
         {% endfor %}
         <br><br>
         <!--/div -->

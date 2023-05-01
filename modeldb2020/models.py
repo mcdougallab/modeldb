@@ -13,6 +13,8 @@ from django.db import models
 from . import settings
 import pandas as pd
 import itertools
+import unicodedata
+import re
 
 mongodb = MongoClient()
 sdb = mongodb[settings.security["db_name"]]
@@ -124,8 +126,10 @@ def load_collection(name):
 
 # strip_accents from https://stackoverflow.com/questions/517923/what-is-the-best-way-to-remove-accents-normalize-in-a-python-unicode-string
 def strip_accents(s):
-   return ''.join(c for c in unicodedata.normalize('NFD', s)
-                  if unicodedata.category(c) != 'Mn')
+    s = unicodedata.normalize('NFD', s)
+    s = s.replace('ü', 'u')
+    s = re.sub(r'[\u0300-\u036f\u1dc0-\u1dff\u20d0-\u20ff\ufe20-\ufe2f]', '', s)
+    return ''.join(c for c in s if unicodedata.category(c) != 'Mn')
 
 def has_accents(name):
     if strip_accents(name) == name:
@@ -220,7 +224,7 @@ def refresh():
 
     # lowercase hack (TODO: should be in DB?)
     for paper in papers.values():
-        if "doi" in paper:
+        if "doi" in paper and paper["doi"]["value"] is not None:
             paper["doi"]["value_lower"] = paper["doi"]["value"].lower().strip()
 
     # find papers that reference ModelDB (too expensive to be done as a search everytime)
@@ -286,7 +290,7 @@ def find_papers_by_doi(doi):
     result = []
     if doi:
         for paper in papers.values():
-            if "doi" in paper:
+            if "doi" in paper and paper["doi"]["value"] is not None:
                 if paper["doi"]["value_lower"] == doi:
                     result.append(Paper(paper["id"]))
     return result
@@ -295,7 +299,7 @@ def find_papers_by_doi(doi):
 def find_authors(author):
     """finds model authors but not paper authors"""
     author_q = author.strip().lower()
-    author_q_no_accents = strip_accents(author_q)
+    author_q_no_accents = strip_accents(author_q) 
 
     author_possibilities = list(itertools.chain.from_iterable(
         [accented_authors for author, accented_authors in all_author_accent_mapping.items() if author_q_no_accents in author]
@@ -305,7 +309,7 @@ def find_authors(author):
     #return [author for author in all_authors if author_q in author.lower()]
 
 
-def find_papers_by_author(author):
+def find_papers_by_author(author): # add accent stripping to this
     # TODO: this should probably just query the DB, but need a lowercase solution
     author = author.strip().lower()
     result = []
