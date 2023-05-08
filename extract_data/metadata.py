@@ -45,7 +45,7 @@ def lookup_pmid_from_doi(doi):
                 print(doi)
                 assert(len(id_list) == 1)
                 pmid = id_list[0]
-                return pmid
+                return str(pmid)
             else:
                 invalid_doi.add(doi)
                 return None
@@ -142,7 +142,7 @@ def check_authors():
     papers = []
     for paper in sdb.papers.find({}, no_cursor_timeout=True):
         pmid, paper_id = get_pmid_from_paper(paper)
-        if int(paper_id) < 250000: continue
+        #if int(paper_id) < 36000: continue
         if pmid is not None:
             pmids_to_process.append(pmid)
             papers.append(paper)
@@ -159,6 +159,10 @@ def get_author_info(pmids_to_process, papers):
     metadata = get_metadata(pmids_to_process)
     # this assumes things are in the same order. If they're not, uh oh
     for paper, (pmid, my_metadata) in zip(papers, metadata.items()):
+        if not(my_metadata["pubmed_id"]["value"] == pmid and paper["pubmed_id"]["value"] == pmid): # to delete
+            print("papers don't line up!?!")
+            breakpoint()
+    
         if "authors" not in paper:
             paper["authors"] = {}
         paper["authors"]["value"] = my_metadata["authors"]["value"]
@@ -172,11 +176,13 @@ def get_author_info(pmids_to_process, papers):
             "authors.value": paper["authors"]["value"],
             "ver_date" : current_date,
             "ver_number": paper["ver_number"] + 1,
-            "doi": my_metadata["doi"],
             "journal": my_metadata["journal"], 
             "pubmed_id": my_metadata["pubmed_id"],
         }
-        
+
+        if "doi" in my_metadata:
+            new_values["doi"] = my_metadata["doi"]
+
         if "volume" in my_metadata:
             new_values["volume"] = my_metadata["volume"]
         
@@ -370,7 +376,7 @@ def get_metadata(pmids):
         metadata = {}
 
     # pmid
-        pmid = int(article.getElementsByTagName("PMID")[0].firstChild.nodeValue)
+        pmid = str(article.getElementsByTagName("PMID")[0].firstChild.nodeValue)
         pmid_dict = {
             "value": pmid,
             "attr_id": 153
@@ -431,11 +437,12 @@ def get_metadata(pmids):
                     doi = article_id.childNodes[0].nodeValue
                     break
 
-        doi_dict = {
-            "value": doi,
-            "attr_id": 339
-        }
-        metadata["doi"] = doi_dict
+        if doi:
+            doi_dict = {
+                "value": doi,
+                "attr_id": 339
+            }
+            metadata["doi"] = doi_dict
 
         # pmid insert is here for dict formatting
         metadata["pubmed_id"] = pmid_dict
