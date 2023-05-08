@@ -1022,7 +1022,11 @@ class Paper:
                 pubmed
             )
 
-        base_info = ", ".join(self.authors) + f". ({self.year})."
+        if len(self.authors) <= 5:
+            base_info = ", ".join(self.authors) + f". ({self.year})."
+        else:
+            base_info = f"{self.authors[0]} et al. ({self.year})."
+
         base_info = f'<a href="/citations?id={self._id}">{base_info}</a>'
         return (
             base_info
