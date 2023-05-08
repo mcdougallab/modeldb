@@ -142,9 +142,9 @@ def check_authors():
     papers = []
     paper_ids = [paper["id"] for paper in sdb.papers.find()]
     for paper_id in paper_ids:
+        #if int(paper_id) < 114000: continue
         paper = sdb.papers.find_one({"id": paper_id})
         pmid = get_pmid_from_paper(paper)
-        if int(paper_id) < 36000: continue
         if pmid is not None:
             pmids_to_process.append(pmid)
             papers.append(paper)
@@ -158,11 +158,17 @@ def check_authors():
 # this is for getting metadata from pubmed
 # and using it to update the papers collection
 def get_author_info(pmids_to_process, papers):
-    metadata_dict, metadata = get_metadata(pmids_to_process)
+    metadata_dict = get_metadata(pmids_to_process)
     # this assumes things are in the same order. If they're not, uh oh
     #for paper, (pmid, my_metadata) in zip(papers, metadata.items()):
-    for paper, my_metadata in zip(papers, metadata):
-        pmid = my_metadata["pubmed_id"]["value"]
+    for paper in papers:
+        pmid = paper["pubmed_id"]["value"]
+        try:
+            my_metadata = metadata_dict[pmid]
+        except:
+            breakpoint()
+#    for paper, my_metadata in zip(papers, metadata):
+#        pmid = my_metadata["pubmed_id"]["value"]
         if not(my_metadata["pubmed_id"]["value"] == pmid and paper["pubmed_id"]["value"] == pmid): # to delete
             print("papers don't line up!?!")
             breakpoint()
@@ -489,7 +495,7 @@ def get_metadata(pmids):
         metadata_w_pmid[pmid] = metadata
         metadata_list.append(metadata)
 
-    return metadata_w_pmid, metadata_list
+    return metadata_w_pmid
 
 
 def get_reference_pmids(pmid):
@@ -554,7 +560,7 @@ def retrieve_paper(pmid):
 
 def get_reference_metadata(pmid):
     reference_pmids, reference_dois = get_reference_pmids(pmid)
-    reference_metadata_dict, dontcare_list = get_metadata(reference_pmids)
+    reference_metadata_dict = get_metadata(reference_pmids)
     missing_references = []
 
     for pmid in reference_metadata_dict:
