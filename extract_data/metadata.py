@@ -103,7 +103,7 @@ def get_pmid_from_paper(paper):
             if pmid is None:
                 print(f"paper {paper['id']} has no pubmed_id, but you can probably get the authors from crossref")
                 papers_to_lookup_on_crossref.add(paper['id'])
-    return pmid, paper["id"]
+    return pmid
 
 
 # creates paper "name" for papers collection metadata
@@ -140,9 +140,11 @@ def paper_name(paper_metadata, paper = None):
 def check_authors():
     pmids_to_process = []
     papers = []
-    for paper in sdb.papers.find({}, no_cursor_timeout=True):
-        pmid, paper_id = get_pmid_from_paper(paper)
-        #if int(paper_id) < 36000: continue
+    paper_ids = [paper["id"] for paper in sdb.papers.find()]
+    for paper_id in paper_ids:
+        paper = sdb.papers.find_one({"id": paper_id})
+        pmid = get_pmid_from_paper(paper)
+        if int(paper_id) < 36000: continue
         if pmid is not None:
             pmids_to_process.append(pmid)
             papers.append(paper)
@@ -156,9 +158,11 @@ def check_authors():
 # this is for getting metadata from pubmed
 # and using it to update the papers collection
 def get_author_info(pmids_to_process, papers):
-    metadata = get_metadata(pmids_to_process)
+    metadata_dict, metadata = get_metadata(pmids_to_process)
     # this assumes things are in the same order. If they're not, uh oh
-    for paper, (pmid, my_metadata) in zip(papers, metadata.items()):
+    #for paper, (pmid, my_metadata) in zip(papers, metadata.items()):
+    for paper, my_metadata in zip(papers, metadata):
+        pmid = my_metadata["pubmed_id"]["value"]
         if not(my_metadata["pubmed_id"]["value"] == pmid and paper["pubmed_id"]["value"] == pmid): # to delete
             print("papers don't line up!?!")
             breakpoint()
@@ -319,7 +323,6 @@ def get_author_metadata(article, pmid):
             
             # add author to author collection if not already there
             if new_author_check(author_object_name):
-                print(pmid)
                 author_object_id = add_new_author_to_collection(
                     author_object_name,
                     author_last_name,
@@ -356,6 +359,7 @@ no_last_name = []
 author_name_issues = {}
 def get_metadata(pmids):
     metadata_w_pmid = {}
+    metadata_list = []
 
     for i in range(3):
         try:
@@ -483,8 +487,9 @@ def get_metadata(pmids):
 
     # combine metadata for all searched pmids
         metadata_w_pmid[pmid] = metadata
+        metadata_list.append(metadata)
 
-    return metadata_w_pmid
+    return metadata_w_pmid, metadata_list
 
 
 def get_reference_pmids(pmid):
@@ -549,7 +554,7 @@ def retrieve_paper(pmid):
 
 def get_reference_metadata(pmid):
     reference_pmids, reference_dois = get_reference_pmids(pmid)
-    reference_metadata_dict = get_metadata(reference_pmids)
+    reference_metadata_dict, dontcare_list = get_metadata(reference_pmids)
     missing_references = []
 
     for pmid in reference_metadata_dict:
@@ -567,15 +572,16 @@ def get_reference_metadata(pmid):
                 time.sleep(1)
                 doi_metadata = get_metadata(reference_doi_to_pmid)
                 reference_metadata_dict = reference_metadata_dict | doi_metadata
-                new_paper_id = insert_new_paper(reference_metadata_dict[int(reference_doi_to_pmid)])
-                reference_metadata_dict[int(reference_doi_to_pmid)]["id"] = new_paper_id 
+                new_paper_id = insert_new_paper(reference_metadata_dict[reference_doi_to_pmid])
+                reference_metadata_dict[reference_doi_to_pmid]["id"] = new_paper_id 
             else: 
                 paper = retrieve_paper(reference_doi_to_pmid) 
-                reference_metadata_dict[int(reference_doi_to_pmid)] = paper
+                reference_metadata_dict[reference_doi_to_pmid] = paper
         elif reference_doi_to_pmid is None:
             missing_references.append(doi)
 
     if len(missing_references) != 0:
+        reference_metadata_dict.setdefault("missing_references", {})["value"] = []
         reference_metadata_dict["missing_references"]["value"] = missing_references
         reference_metadata_dict["missing_references"]["attr_id"] = 211
 
