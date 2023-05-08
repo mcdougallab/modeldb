@@ -284,16 +284,21 @@ def find_regions_by_name(name):
 
 
 def find_papers_by_doi(doi):
-    # TODO: this should probably just query the DB, but need a lowercase solution
-    doi = doi.strip().lower()
-    result = []
+    doi = doi.strip()
+    if doi:
+        result = sdb.papers.distinct('id', {'doi.value': re.compile(re.escape(doi), re.IGNORECASE)})
+    else:
+        result = []
+    return [Paper(id) for id in result]
+
+    '''
     if doi:
         for paper in papers.values():
             if "doi" in paper and paper["doi"]["value"] is not None:
                 if paper["doi"]["value_lower"] == doi:
-                    result.append(Paper(paper["id"]))
+                    result.append(Paper(paper["id"]))                
     return result
-
+    '''
 
 def find_authors(author):
     """finds model authors but not paper authors"""
@@ -332,7 +337,8 @@ def find_papers_by_author(author):
 
 
 def find_papers_by_title(text):
-    # TODO: this should probably just query the DB, but need a lowercase solution
+    # TODO: this should probably just query the DB with a lowercase solution instead of looping thru papers
+    # TODO: integrate accent stripping from title search ?
     text = text.strip().lower()
     result = []
     for paper in papers.values():
