@@ -127,7 +127,6 @@ def load_collection(name):
 # strip_accents from https://stackoverflow.com/questions/517923/what-is-the-best-way-to-remove-accents-normalize-in-a-python-unicode-string
 def strip_accents(s):
     s = unicodedata.normalize('NFD', s)
-    s = s.replace('ü', 'u')
     s = re.sub(r'[\u0300-\u036f\u1dc0-\u1dff\u20d0-\u20ff\ufe20-\ufe2f]', '', s)
     return ''.join(c for c in s if unicodedata.category(c) != 'Mn')
 
@@ -306,26 +305,27 @@ def find_authors(author):
     ))
    
     return list(set([author for author in all_authors if author_q in author.lower() or author_q_no_accents in author.lower()] + author_possibilities))
-    #return [author for author in all_authors if author_q in author.lower()]
 
 
-def find_papers_by_author(author): # add accent stripping to this
-    # TODO: this should probably just query the DB, but need a lowercase solution
+def find_papers_by_author(author):
+    # TODO: this should probably just query the DB with a lowercase solution instead of looping thru papers
     author = author.strip().lower()
+    no_accent_author = strip_accents(author)
     result = []
-    if " " in author:
+    if " " in no_accent_author:
         for paper in papers.values():
             if "authors" in paper:
-                if author in (
-                    item["object_name"].lower() for item in paper["authors"]["value"]
-                ):
+                if any(name.startswith(no_accent_author) for name in (
+                    strip_accents(item["object_name"].lower()) for item in paper["authors"]["value"]
+                )):
                     result.append(Paper(paper["id"]))
-    elif author:
+
+    elif no_accent_author:
         for paper in papers.values():
             if "authors" in paper:
                 for item in paper["authors"]["value"]:
-                    name = item["object_name"].split()
-                    if name and author == name[0].lower():
+                    name = strip_accents(item["object_name"]).split()
+                    if name and no_accent_author == name[0].lower():
                         result.append(Paper(paper["id"]))
                         break
     return result

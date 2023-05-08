@@ -226,10 +226,11 @@ def models_with_uncurated_references(request):
 
 def process_model_submit(request):
     from email.utils import parseaddr
-
+    
     # TODO: probably some of this should move into models?
     the_file = request.FILES["zipfile"]
     filename = the_file.name
+
     if not filename.lower().endswith(".zip"):
         return HttpResponse(
             "403 Forbidden: non-zip upload; hit back and try again", status=403
