@@ -1033,6 +1033,11 @@ def download(request):
                     "cs",
                 ):
                     contents = f'<link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/styles/vs.min.css" rel="stylesheet" /><script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/highlight.min.js"></script><script>hljs.initHighlightingOnLoad();</script><pre><code class="{extension}">{html.escape(contents.decode("utf-8"))}</code></pre>'
+                elif extension in (
+                    "eps",
+                    "ps",
+                ):
+                    contents = "Download to view this file."
                 else:
                     contents = f'<pre>{html.escape(contents.decode("utf-8"))}</pre>'
             except:
@@ -1040,7 +1045,13 @@ def download(request):
             contents = f"<html><body>{contents}</body></html>"
     else:
         response = HttpResponse(content_type="application/octet-stream")
-        response["Content-Disposition"] = f"attachment; filename={filename}"
+        if request.GET.get("download") != 'false':
+            response["Content-Disposition"] = f"attachment; filename={filename}"
+        else:
+            # TODO: check the extension to only send the right MIME type
+            #       for now this works because only asking for not downloading
+            #       when the image is an svg
+            response = HttpResponse(content_type="image/svg+xml")
     response.write(contents)
     return response
 
