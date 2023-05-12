@@ -142,7 +142,7 @@ def check_authors():
     papers = []
     paper_ids = [paper["id"] for paper in sdb.papers.find()]
     for paper_id in paper_ids:
-        #if int(paper_id) < 114000: continue
+        if int(paper_id) < 234000: continue
         paper = sdb.papers.find_one({"id": paper_id})
         pmid = get_pmid_from_paper(paper)
         if pmid is not None:
@@ -159,55 +159,50 @@ def check_authors():
 # and using it to update the papers collection
 def get_author_info(pmids_to_process, papers):
     metadata_dict = get_metadata(pmids_to_process)
-    # this assumes things are in the same order. If they're not, uh oh
-    #for paper, (pmid, my_metadata) in zip(papers, metadata.items()):
     for paper in papers:
         pmid = paper["pubmed_id"]["value"]
-        try:
+        if metadata_dict.get(pmid):
             my_metadata = metadata_dict[pmid]
-        except:
-            breakpoint()
-#    for paper, my_metadata in zip(papers, metadata):
-#        pmid = my_metadata["pubmed_id"]["value"]
-        if not(my_metadata["pubmed_id"]["value"] == pmid and paper["pubmed_id"]["value"] == pmid): # to delete
-            print("papers don't line up!?!")
-            breakpoint()
-    
-        if "authors" not in paper:
-            paper["authors"] = {}
-        paper["authors"]["value"] = my_metadata["authors"]["value"]
-        print(paper["id"], paper["authors"]["value"])
+
+            if not(my_metadata["pubmed_id"]["value"] == pmid and paper["pubmed_id"]["value"] == pmid):
+                print("papers don't line up!?!")
+                breakpoint()
         
-        updated_paper_name = paper_name(my_metadata, paper)
-        current_date = datetime.now().isoformat()
+            if "authors" not in paper:
+                paper["authors"] = {}
+            paper["authors"]["value"] = my_metadata["authors"]["value"]
+            print(paper["id"], paper["authors"]["value"])
+            
+            updated_paper_name = paper_name(my_metadata, paper)
+            current_date = datetime.now().isoformat()
 
-        new_values = {
-            "name": updated_paper_name,
-            "authors.value": paper["authors"]["value"],
-            "ver_date" : current_date,
-            "ver_number": paper["ver_number"] + 1,
-            "journal": my_metadata["journal"], 
-            "pubmed_id": my_metadata["pubmed_id"],
-        }
+            new_values = {
+                "name": updated_paper_name,
+                "authors.value": paper["authors"]["value"],
+                "ver_date" : current_date,
+                "ver_number": paper["ver_number"] + 1,
+                "journal": my_metadata["journal"], 
+                "pubmed_id": my_metadata["pubmed_id"],
+            }
 
-        if "doi" in my_metadata:
-            new_values["doi"] = my_metadata["doi"]
+            if "doi" in my_metadata:
+                new_values["doi"] = my_metadata["doi"]
 
-        if "volume" in my_metadata:
-            new_values["volume"] = my_metadata["volume"]
-        
-        if "year" in my_metadata:
-            new_values["year"] = my_metadata["year"]
-        
-        if "month" in my_metadata:
-            new_values["month"] = my_metadata["month"]
+            if "volume" in my_metadata:
+                new_values["volume"] = my_metadata["volume"]
+            
+            if "year" in my_metadata:
+                new_values["year"] = my_metadata["year"]
+            
+            if "month" in my_metadata:
+                new_values["month"] = my_metadata["month"]
 
-        if "day" in my_metadata:
-            new_values["day"] = my_metadata["day"]
+            if "day" in my_metadata:
+                new_values["day"] = my_metadata["day"]
 
-        sdb.papers.update_one({"id": paper["id"]}, 
-            {"$set": new_values}
-        )
+            sdb.papers.update_one({"id": paper["id"]}, 
+                {"$set": new_values}
+            )
 
 
 # adds new authors to authors collection
