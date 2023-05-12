@@ -384,6 +384,18 @@ def modellist(request):
                     for model in models.SimEnvironment(sim_env_id).models()
                     if model["id"] not in prior_ids
                 ]
+    # SPECIAL CASE: BRIAN web link to model, web link to method
+    # TODO: recurate and eliminate this distinction
+    elif object_id in ("237342", "137990"):
+        my_models = [
+            models.Model(model["id"], files_needed=False) for model in ModelDB.object_by_id("237342").models()
+        ]
+        prior_ids = set([model.id for model in my_models])
+        my_models += [
+            models.Model(model["id"], files_needed=False) for model in ModelDB.object_by_id("137990").models()
+            if model["id"] not in prior_ids
+        ]
+
     else:
         my_models = [
             models.Model(model["id"], files_needed=False) for model in obj.models()
