@@ -744,11 +744,14 @@ def find_ode_files(file_hierarchy):
 def get_ode_params(ode_contents):
     "extract parameter, value pairs from an ode file"
     result = []
-    ode_contents = ode_contents.decode("utf8")
+    try:
+        ode_contents = ode_contents.decode("utf8")
+    except:
+        return []
     lines = ode_contents.split("\n")
     for line in lines:
         cleaned_line = line.strip()
-        if cleaned_line.startswith("p ") or cleaned_line.startswith("par "):
+        if cleaned_line.lower().startswith(('p ', 'pa ', 'par ', 'para ', 'param ', 'parame ', 'paramet ', 'paramete ', 'parameter ', 'parameters ')):
             for param in ("".join(line.split()[1:])).split(","):
                 try:
                     name, value = param.split("=")

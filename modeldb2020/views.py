@@ -689,6 +689,17 @@ def _showmodel_edit_context(full_collection, present):
     }
 
 
+def update_context_based_on_modeling_application(model_app, context):
+    if not model_app:
+        context["show_tab_2"] = True
+
+    for modelapp in model_app:
+        name_lower = modelapp['object_name'].lower()
+        if "(web link" not in name_lower:
+            context["show_tab_2"] = True
+        if "xpp" in name_lower and "web link" not in name_lower:
+            context["is_xpp"] = True
+
 @ensure_csrf_cookie
 def showmodel(request):
     model_id = request.GET.get("model", -1)
@@ -756,8 +767,12 @@ def showmodel(request):
             "tab": tab_id,
             "citation_data": citation_data,
             "showtabs": True,
+            "show_tab_2": False,
+            "is_xpp": False,
             "all_authors": models.all_authors,
         }
+
+        update_context_based_on_modeling_application(model.modeling_application['value'], context)
         return render(request, "showmodel7.html", context)
     elif tab_id == 4:
         params = model.modelview("parameters")
@@ -768,9 +783,18 @@ def showmodel(request):
             "Model": model,
             "tab": tab_id,
             "showtabs": True,
+            "show_tab_2": False,
+            "is_xpp": False,
             "data": params,
         }
-        return render(request, "showmodel4.html", context)
+        
+        update_context_based_on_modeling_application(model.modeling_application['value'], context)
+
+        if context["is_xpp"] is True:    
+            return render(request, "showmodel4.html", context)
+        elif context["is_xpp"] is False:
+            return HttpResponse("404 not found", status=404)
+
     else:
         if tab_id != 2:
             filename = model.readme_file
@@ -786,14 +810,6 @@ def showmodel(request):
         original_filename = filename
         filename = filename.split("/")
         breadcrumbs = []
-
-'''
-        for modelapp in model.modeling_application['value']:
-            if "(web link" in modelapp['object_name']:
-                print(modelapp['object_name'])
-
-'''
-
 
         for i, name in enumerate(filename):
             link = (
@@ -819,10 +835,15 @@ def showmodel(request):
             "is_folder": is_folder,
             "content": content,
             "filename": original_filename,
+            "show_tab_2": False,
+            "is_xpp": False,
             "tab": tab_id,
             "access": access,
             "extension": original_filename.split(".")[-1].lower(),
         }
+
+        update_context_based_on_modeling_application(model.modeling_application['value'], context)
+
         if access == "rw":
             context["neurons"] = _showmodel_edit_context(celltypes, model.neurons)
             context["currents"] = _showmodel_edit_context(currents, model.currents)
@@ -841,7 +862,8 @@ def showmodel(request):
             context["modeling_application"] = _showmodel_edit_context(
                 simenvironments, model.modeling_application
             )
-        if tab_id == 2:
+
+        if tab_id == 2 and context["show_tab_2"] is True:
             if not is_folder:
                 file_contents = model.file(original_filename)
                 duplicate_files = [
@@ -871,9 +893,11 @@ def showmodel(request):
                     icg_data = None
                 context["icg_data"] = icg_data
             return render(request, "showmodel2.html", context)
+        elif tab_id == 2 and context["show_tab_2"] is False:
+            return HttpResponse("404 not found", status=404)
         else:
-            #print('modeling application', model.modeling_application)
-            #print('filename', filename)
+            print('modeling application', model.modeling_application)
+            print('filename', filename)
 
             return render(request, "showmodel.html", context)
 
