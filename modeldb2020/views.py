@@ -786,6 +786,15 @@ def showmodel(request):
         original_filename = filename
         filename = filename.split("/")
         breadcrumbs = []
+
+'''
+        for modelapp in model.modeling_application['value']:
+            if "(web link" in modelapp['object_name']:
+                print(modelapp['object_name'])
+
+'''
+
+
         for i, name in enumerate(filename):
             link = (
                 f'/showmodel?tab=2&model={model_id}&file={"/".join(filename[0: i + 1])}'
@@ -863,6 +872,9 @@ def showmodel(request):
                 context["icg_data"] = icg_data
             return render(request, "showmodel2.html", context)
         else:
+            #print('modeling application', model.modeling_application)
+            #print('filename', filename)
+
             return render(request, "showmodel.html", context)
 
 
@@ -1041,7 +1053,7 @@ def download(request):
                 else:
                     contents = f'<pre>{html.escape(contents.decode("utf-8"))}</pre>'
             except:
-                contents = "This file is not encoded as UTF-8. Download it to view."
+                contents = f"This file is not encoded as UTF-8. <a href='/getModelFile?model={model_id}&file={model.readme_file}'>Download it</a> to view."
             contents = f"<html><body>{contents}</body></html>"
     else:
         response = HttpResponse(content_type="application/octet-stream")
