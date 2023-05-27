@@ -1010,13 +1010,14 @@ def download(request):
     if not model.has_path(filename):
         return HttpResponse("Forbidden", status=403)
     embed = request.GET.get("embed", "").lower() == "true"
-    contents = model.file(filename)
+    original_filename = filename
     # discard path information; only keep filename
     filename = filename.replace("\\", "/")
     short_filename = filename.split("/")[-1]
     base_filename = filename[: -len(short_filename)]
     filename = short_filename
     if embed:
+        contents = model.file(original_filename)
         response = HttpResponse()
         extension = filename.split(".")[-1].lower()
         if extension in ("html", "htm"):
@@ -1079,17 +1080,19 @@ def download(request):
             except:
                 contents = f"This file is not encoded as UTF-8. <a href='/getModelFile?model={model_id}&file={model.readme_file}'>Download it</a> to view."
             contents = f"<html><body>{contents}</body></html>"
+        response.write(contents)
+        return response
     else:
-        response = HttpResponse(content_type="application/octet-stream")
-        if request.GET.get("download") != 'false':
-            response["Content-Disposition"] = f"attachment; filename={filename}"
-        else:
-            # TODO: check the extension to only send the right MIME type
-            #       for now this works because only asking for not downloading
-            #       when the image is an svg
-            response = HttpResponse(content_type="image/svg+xml")
-    response.write(contents)
-    return response
+        with model.zip().open(original_filename) as contents:
+            if request.GET.get("download") != 'false':
+                response = HttpResponse(contents, content_type="application/octet-stream")
+                response["Content-Disposition"] = f"attachment; filename={filename}"
+            else:
+                # TODO: check the extension to only send the right MIME type
+                #       for now this works because only asking for not downloading
+                #       when the image is an svg
+                response = HttpResponse(contents, content_type="image/svg+xml")
+            return response
 
 
 def paper_sort_rule(item):
