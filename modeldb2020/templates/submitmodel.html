@@ -22,6 +22,15 @@
             $(this).trigger("change");
         });
     });
+
+    function set_metadata_items(list_of_ids) {
+        {% for field in metadata %}
+            for (item of list_of_ids) {
+                $(`#{{field.1}} option[value=${item}]`).prop("selected", true);
+                $("#{{field.1}}").trigger("change");
+            }
+        {% endfor %}
+    }
 </script>
 <style>
     .multiselect {
