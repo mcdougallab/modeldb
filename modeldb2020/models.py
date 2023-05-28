@@ -77,7 +77,9 @@ def predict_metadata(text, check_new_match=True, check_fulltext_first=True):
             elif an_item_matches(processed_text, pattern):
                 if "$" not in pattern or an_item_matches(n_grams, pattern):
                     result = result_if_matched
-    return list(result)
+    return sorted(
+        [[item, _object_by_id(item).name] for item in result], key=lambda x: x[1]
+    )
 
 
 def clean_rwac_collection():
