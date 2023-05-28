@@ -14,26 +14,19 @@ mongodb = MongoClient()
 sdb = mongodb[security["db_name"]]
 sdb.authenticate(security["mongodb_user"], security["mongodb_pw"])
 
-icg_by_modeldbid = {}
-for kind in range(1, 6):
-    data = requests.get(f"https://icg.neurotheory.ox.ac.uk/channels/{kind}").text
+data = requests.get("https://icg.neurotheory.ox.ac.uk/api/app/families/").json()
+families = [item["id"] for item in data]
 
-    for line in data.split("\n"):
-        matches = re.findall(f'/channels/([0-9]+)/([0-9]+)">(.+)-(.+)</a>', line)
-        if matches:
-            assert len(matches) == 1
-            my_kind, icg_id, modeldb_id, modeldb_mech = matches[0]
-            modeldb_id = int(modeldb_id)
-            icg_id = int(icg_id)
-            my_kind = int(my_kind)
-            icg_by_modeldbid.setdefault(modeldb_id, {})
-            icg_by_modeldbid[modeldb_id][modeldb_mech] = {
-                "icg_id": icg_id,
-                "kind": my_kind,
-            }
+icg = {}
+for family in families:
+    print(f"Processing family {family}")
+    chans = requests.get(f"https://icg.neurotheory.ox.ac.uk/api/app/families/{family}/").json()["chans"]
+    for channel in chans:
+        icg_id = f"{family}/{channel['id']}"
+        modeldb_id = channel["id_moddb"]
+        icg.setdefault(modeldb_id, {})[channel["name"]] = icg_id
 
 sdb.drop_collection("icg")
 sdb.icg.insert_many(
-    [{"id": key, "data": value} for key, value in icg_by_modeldbid.items()]
+    [{"id": key, "data": value} for key, value in icg.items()]
 )
-print(icg_by_modeldbid)
