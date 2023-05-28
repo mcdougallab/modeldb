@@ -49,6 +49,7 @@ def _id_and_name(data):
         [(item["id"], item["name"]) for item in data.values()], key=lambda item: item[1]
     )
 
+
 def change_password(request):
     if request.user.is_authenticated:
         if request.method == "POST":
@@ -62,12 +63,13 @@ def change_password(request):
                 return redirect(next_url)
         else:
             form = PasswordChangeForm(request.user)
-        context = {} #dict(base_context)
+        context = {}  # dict(base_context)
         context["form"] = form
         context["next"] = request.GET.get("next")
         return render(request, "change_password.html", context)
     else:
         return login_redirect(request)
+
 
 def sendmail(
     to, subject, msg, msg_html=None, sent_by="ModelDB Curator <curator@modeldb.science>"
@@ -104,7 +106,9 @@ def private_models(request):
         context = {
             "title": "ModelDB: Private Models",
             "request": request,
-            "obj": {"classname": "Private Models",},
+            "obj": {
+                "classname": "Private Models",
+            },
             "models": ModelDB.find_private_models(),
             "hide_header": True,
         }
@@ -226,7 +230,7 @@ def models_with_uncurated_references(request):
 
 def process_model_submit(request):
     from email.utils import parseaddr
-    
+
     # TODO: probably some of this should move into models?
     the_file = request.FILES["zipfile"]
     filename = the_file.name
@@ -264,7 +268,10 @@ def process_model_submit(request):
         "notes": {"value": request.POST.get("notes"), "attr_id": 24},
         "license": request.POST.get("license"),
         "expmotivation": request.POST.get("expmotivation"),
-        "public_submitter_email": {"value": modeler_email, "attr_id": 309,},
+        "public_submitter_email": {
+            "value": modeler_email,
+            "attr_id": 309,
+        },
         "data_to_curate": {
             "rwac": models.get_salted_code(request.POST["rwac"]),
             "othertags": request.POST.get("othertags"),
@@ -337,8 +344,9 @@ def metadata_predictor(request):
     abstract = request.POST.get("abstract")
     if abstract is None:
         return HttpResponse("Forbidden", status=403)
-    return HttpResponse(json.dumps(models.predict_metadata(abstract)), content_type="application/json")
-
+    return HttpResponse(
+        json.dumps(models.predict_metadata(abstract)), content_type="application/json"
+    )
 
 
 @ensure_csrf_cookie
@@ -397,11 +405,13 @@ def modellist(request):
     # TODO: recurate and eliminate this distinction
     elif object_id in ("237342", "137990"):
         my_models = [
-            models.Model(model["id"], files_needed=False) for model in ModelDB.object_by_id("237342").models()
+            models.Model(model["id"], files_needed=False)
+            for model in ModelDB.object_by_id("237342").models()
         ]
         prior_ids = set([model.id for model in my_models])
         my_models += [
-            models.Model(model["id"], files_needed=False) for model in ModelDB.object_by_id("137990").models()
+            models.Model(model["id"], files_needed=False)
+            for model in ModelDB.object_by_id("137990").models()
             if model["id"] not in prior_ids
         ]
 
@@ -488,8 +498,8 @@ def modellist(request):
     #     health = [
     #             {"title": "Movement Symptoms", "content" : "Parkinson's usually causes movement disorder including bradykinesia, tremor and rigidity etc. It usually causes unusual oscillations in the tremor frequency range. Learn more about the dynamics of the network model at: <br> <a href='http://modeldb.science/showmodel?model=261882'>Network model of movement disorders</a>"},
     #             {"title": "Medication Treatments", "content" : "Prescription medication is the a popular method to treat Parkinson's, Levodopa is one of the 'first choice' to patients. Levodopa could help brain release dopamine and improve brain performance since Parkinson's could cause a lack of dopamine. In neuroscience, we often talk about the relationship between Levodopa concentration and its effect. Learn more about the parameter changes and estimation at: <br> <a href='http://modeldb.science/showmodel?model=261624'>Basal Ganglia and Levodopa Pharmacodynamics model for parameter estimation in PD</a>"},
-    #             {"title": "Deep Brain Stimulation in Parkinson's", "content" : "Deep brain stimulation (DBS) is a neurosurgical procedure that treat movement disorders like Parkinson's disease, essential tremor and other neurological conditions. Neuro scientist often describes the methods in network model:"}      
-    #     ] 
+    #             {"title": "Deep Brain Stimulation in Parkinson's", "content" : "Deep brain stimulation (DBS) is a neurosurgical procedure that treat movement disorders like Parkinson's disease, essential tremor and other neurological conditions. Neuro scientist often describes the methods in network model:"}
+    #     ]
     # elif int(object_id) == 112854:
     #     about = "some stuff"
     #     health = [
@@ -499,7 +509,6 @@ def modellist(request):
     # else:
     #     about = None
     #     health = None
-    
 
     context = {
         "title": f"ModelDB: Models that contain {obj.name}",
@@ -518,8 +527,7 @@ def modellist(request):
         "datatype": int(object_id),
         "tab": int(tab_id),
         "about": about,
-        "health": health
-       
+        "health": health,
     }
     return render(request, "modellist.html", context)
 
@@ -580,7 +588,7 @@ def my_login(request):
     else:
         next_url = request.GET.get("next", "/")
     context = {"next": next_url}
-    #context.update(base_context)
+    # context.update(base_context)
     return render(request, "login.html", context)
 
 
@@ -703,11 +711,12 @@ def update_context_based_on_modeling_application(model_app, context):
         context["show_tab_2"] = True
 
     for modelapp in model_app:
-        name_lower = modelapp['object_name'].lower()
+        name_lower = modelapp["object_name"].lower()
         if "(web link" not in name_lower:
             context["show_tab_2"] = True
         if "xpp" in name_lower and "web link" not in name_lower:
             context["is_xpp"] = True
+
 
 @ensure_csrf_cookie
 def showmodel(request):
@@ -781,7 +790,9 @@ def showmodel(request):
             "all_authors": models.all_authors,
         }
 
-        update_context_based_on_modeling_application(model.modeling_application['value'], context)
+        update_context_based_on_modeling_application(
+            model.modeling_application["value"], context
+        )
         return render(request, "showmodel7.html", context)
     elif tab_id == 4:
         params = model.modelview("parameters")
@@ -796,10 +807,12 @@ def showmodel(request):
             "is_xpp": False,
             "data": params,
         }
-        
-        update_context_based_on_modeling_application(model.modeling_application['value'], context)
 
-        if context["is_xpp"] is True:    
+        update_context_based_on_modeling_application(
+            model.modeling_application["value"], context
+        )
+
+        if context["is_xpp"] is True:
             return render(request, "showmodel4.html", context)
         elif context["is_xpp"] is False:
             return HttpResponse("404 not found", status=404)
@@ -851,7 +864,9 @@ def showmodel(request):
             "extension": original_filename.split(".")[-1].lower(),
         }
 
-        update_context_based_on_modeling_application(model.modeling_application['value'], context)
+        update_context_based_on_modeling_application(
+            model.modeling_application["value"], context
+        )
 
         if access == "rw":
             context["neurons"] = _showmodel_edit_context(celltypes, model.neurons)
@@ -905,8 +920,8 @@ def showmodel(request):
         elif tab_id == 2 and context["show_tab_2"] is False:
             return HttpResponse("404 not found", status=404)
         else:
-            print('modeling application', model.modeling_application)
-            print('filename', filename)
+            print("modeling application", model.modeling_application)
+            print("filename", filename)
 
             return render(request, "showmodel.html", context)
 
@@ -1093,8 +1108,10 @@ def download(request):
         return response
     else:
         with model.zip().open(original_filename) as contents:
-            if request.GET.get("download") != 'false':
-                response = HttpResponse(contents, content_type="application/octet-stream")
+            if request.GET.get("download") != "false":
+                response = HttpResponse(
+                    contents, content_type="application/octet-stream"
+                )
                 response["Content-Disposition"] = f"attachment; filename={filename}"
             else:
                 # TODO: check the extension to only send the right MIME type
@@ -1389,7 +1406,6 @@ def search(request):
         }
         return render(request, "searchq.html", context)
     else:
-
         context = {
             "title": "ModelDB: search",
             "modeltype_tags": _get_names(modeltypes),

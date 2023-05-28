@@ -19,7 +19,10 @@ class Model:
     def __init__(self, model_id):
         self._model_id = model_id
         self._zip = zipfile.ZipFile(
-            os.path.join(security["modeldb_zip_dir"], f"{model_id}.zip",)
+            os.path.join(
+                security["modeldb_zip_dir"],
+                f"{model_id}.zip",
+            )
         )
 
     def __getitem__(self, path):

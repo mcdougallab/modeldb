@@ -21,25 +21,34 @@ sdb = mongodb[settings.security["db_name"]]
 sdb.authenticate(settings.security["mongodb_user"], settings.security["mongodb_pw"])
 
 network_models_pd = pd.read_csv(settings.security["network_info"]).to_dict("records")
-network_models = {model["model"]: {key: value for key, value in model.items() if not pd.isna(value)} for model in network_models_pd}
+network_models = {
+    model["model"]: {key: value for key, value in model.items() if not pd.isna(value)}
+    for model in network_models_pd
+}
 del network_models_pd
 
 with open(settings.security["metadata-predictor-rules"], "r") as f:
     metadata_predictor_rules = json.load(f)
 
 # metadata prediction code based on McDougal et al., 2019
-token = re.compile('[a-zA-Z0-9]+')
+token = re.compile("[a-zA-Z0-9]+")
+
 
 def tokenize(text):
     """not doing stop word removal"""
     return [word for word in token.findall(text)]
 
+
 def get_n_grams_with_spaces(tokens, n):
     """return the n-grams comprised of consecutive tokens"""
-    return [' %s ' % ' '.join(tokens[i : n + i]) for i in range(len(tokens) - n + 1)]
+    return [" %s " % " ".join(tokens[i : n + i]) for i in range(len(tokens) - n + 1)]
+
 
 def an_item_matches(items, original_pattern):
-    patterns = [('(?i) (%s) ' if pattern.islower() else ' (%s) ') % pattern for pattern in original_pattern.split('$')]
+    patterns = [
+        ("(?i) (%s) " if pattern.islower() else " (%s) ") % pattern
+        for pattern in original_pattern.split("$")
+    ]
     for item in items:
         for pattern in patterns:
             if not re.search(pattern, item):
@@ -54,7 +63,7 @@ def predict_metadata(text, check_new_match=True, check_fulltext_first=True):
     dont_check_new_match = not check_new_match
     dont_check_fulltext_first = not check_fulltext_first
     tokens = tokenize(text)
-    processed_text = [' %s ' % ' '.join(tokens)]
+    processed_text = [" %s " % " ".join(tokens)]
     n_grams = get_n_grams_with_spaces(tokens, 5)
     result = set([])
     for pattern, rule in metadata_predictor_rules.items():
@@ -66,10 +75,9 @@ def predict_metadata(text, check_new_match=True, check_fulltext_first=True):
                 if an_item_matches(n_grams, pattern):
                     result = result_if_matched
             elif an_item_matches(processed_text, pattern):
-                if '$' not in pattern or an_item_matches(n_grams, pattern):
+                if "$" not in pattern or an_item_matches(n_grams, pattern):
                     result = result_if_matched
     return list(result)
-
 
 
 def clean_rwac_collection():
@@ -95,7 +103,7 @@ def get_salted_code(code):
 
 def rwac_reset_model(code):
     """returns either the rwac reset info corresponding to code, or None if no such info.
-    
+
     Note: this invalidates the code."""
     clean_rwac_collection()
     return sdb.rwac_reset.find_one({"code": code})
@@ -109,12 +117,14 @@ def new_rwac_reset(model_id):
     sdb.rwac_reset.insert_one({"model": model_id, "time": now, "code": code})
     return code
 
+
 def get_health_about(object_id):
     concept = sdb.modelconcepts.find_one({"id": int(object_id)})
     if concept:
         return concept.get("health"), concept.get("general_info")
     else:
         return None, None
+
 
 def new_object_id():
     """returns a new object id"""
@@ -172,17 +182,20 @@ def load_collection(name):
             new_collection[item["parent"]]["children"].append(str(item["id"]))
     return new_collection
 
+
 # strip_accents from https://stackoverflow.com/questions/517923/what-is-the-best-way-to-remove-accents-normalize-in-a-python-unicode-string
 def strip_accents(s):
-    s = unicodedata.normalize('NFD', s)
-    s = re.sub(r'[\u0300-\u036f\u1dc0-\u1dff\u20d0-\u20ff\ufe20-\ufe2f]', '', s)
-    return ''.join(c for c in s if unicodedata.category(c) != 'Mn')
+    s = unicodedata.normalize("NFD", s)
+    s = re.sub(r"[\u0300-\u036f\u1dc0-\u1dff\u20d0-\u20ff\ufe20-\ufe2f]", "", s)
+    return "".join(c for c in s if unicodedata.category(c) != "Mn")
+
 
 def has_accents(name):
     if strip_accents(name) == name:
         return False
     else:
         return True
+
 
 def refresh():
     global modeldb, currents, genes, regions, receptors
@@ -334,30 +347,48 @@ def find_regions_by_name(name):
 def find_papers_by_doi(doi):
     doi = doi.strip()
     if doi:
-        result = sdb.papers.distinct('id', {'doi.value': re.compile(re.escape(doi), re.IGNORECASE)})
+        result = sdb.papers.distinct(
+            "id", {"doi.value": re.compile(re.escape(doi), re.IGNORECASE)}
+        )
     else:
         result = []
     return [Paper(id) for id in result]
 
-    '''
+    """
     if doi:
         for paper in papers.values():
             if "doi" in paper and paper["doi"]["value"] is not None:
                 if paper["doi"]["value_lower"] == doi:
                     result.append(Paper(paper["id"]))                
     return result
-    '''
+    """
+
 
 def find_authors(author):
     """finds model authors but not paper authors"""
     author_q = author.strip().lower()
-    author_q_no_accents = strip_accents(author_q) 
+    author_q_no_accents = strip_accents(author_q)
 
-    author_possibilities = list(itertools.chain.from_iterable(
-        [accented_authors for author, accented_authors in all_author_accent_mapping.items() if author_q_no_accents in author]
-    ))
-   
-    return list(set([author for author in all_authors if author_q in author.lower() or author_q_no_accents in author.lower()] + author_possibilities))
+    author_possibilities = list(
+        itertools.chain.from_iterable(
+            [
+                accented_authors
+                for author, accented_authors in all_author_accent_mapping.items()
+                if author_q_no_accents in author
+            ]
+        )
+    )
+
+    return list(
+        set(
+            [
+                author
+                for author in all_authors
+                if author_q in author.lower() or author_q_no_accents in author.lower()
+            ]
+            + author_possibilities
+        )
+    )
 
 
 def find_papers_by_author(author):
@@ -368,9 +399,13 @@ def find_papers_by_author(author):
     if " " in no_accent_author:
         for paper in papers.values():
             if "authors" in paper:
-                if any(name.startswith(no_accent_author) for name in (
-                    strip_accents(item["object_name"].lower()) for item in paper["authors"]["value"]
-                )):
+                if any(
+                    name.startswith(no_accent_author)
+                    for name in (
+                        strip_accents(item["object_name"].lower())
+                        for item in paper["authors"]["value"]
+                    )
+                ):
                     result.append(Paper(paper["id"]))
 
     elif no_accent_author:
@@ -450,7 +485,6 @@ class ModelDB(models.Model):
     ):
         result = []
         for model in modeldb.values():
-
             if (
                 hasany(model.get("transmitters"), transmitters)
                 and hasany(model.get("receptors"), receptors)
@@ -757,7 +791,7 @@ class CellType(SenseLabClass):
             return None
 
     def links(self):
-        #print('self._data["links"]', self._data["links"])
+        # print('self._data["links"]', self._data["links"])
         return self._data.get("links", {})
         # {item: self._data[item] for item in ['neuromorpho', 'neuroelectro', 'neurolex'] if item in self._data}
 
@@ -799,7 +833,20 @@ def get_ode_params(ode_contents):
     lines = ode_contents.split("\n")
     for line in lines:
         cleaned_line = line.strip()
-        if cleaned_line.lower().startswith(('p ', 'pa ', 'par ', 'para ', 'param ', 'parame ', 'paramet ', 'paramete ', 'parameter ', 'parameters ')):
+        if cleaned_line.lower().startswith(
+            (
+                "p ",
+                "pa ",
+                "par ",
+                "para ",
+                "param ",
+                "parame ",
+                "paramet ",
+                "paramete ",
+                "parameter ",
+                "parameters ",
+            )
+        ):
             for param in ("".join(line.split()[1:])).split(","):
                 try:
                     name, value = param.split("=")
@@ -843,7 +890,7 @@ class Model:
         print(f"Model {self._model['id']} update (not implemented)")
         print("Current data:")
         _model = dict(self._model)
-        del _model['_id']
+        del _model["_id"]
         print(json.dumps(_model, indent=4))
         print("New data:")
         print(json.dumps(data, indent=4))
@@ -860,13 +907,20 @@ class Model:
     def __getattr__(self, key):
         if key in self._model:
             return self._model[key]
-        elif self._model['id'] in network_models and key in network_models[self._model['id']]:
-            result = network_models[self._model['id']][key]
+        elif (
+            self._model["id"] in network_models
+            and key in network_models[self._model["id"]]
+        ):
+            result = network_models[self._model["id"]][key]
             if pd.isna(result):
                 result = None
             return result
-        elif self._model['id'] in network_models and key.startswith("short_") and key[6:] in network_models[self._model['id']]:
-            result = network_models[self._model['id']][key[6:]]
+        elif (
+            self._model["id"] in network_models
+            and key.startswith("short_")
+            and key[6:] in network_models[self._model["id"]]
+        ):
+            result = network_models[self._model["id"]][key[6:]]
             if isinstance(result, str):
                 result = result.split(";")[0].strip()
                 if result == "partial":
@@ -881,7 +935,8 @@ class Model:
         if self._zip is None:
             self._zip = zipfile.ZipFile(
                 os.path.join(
-                    settings.security["modeldb_zip_dir"], f"{self._model['id']}.zip",
+                    settings.security["modeldb_zip_dir"],
+                    f"{self._model['id']}.zip",
                 )
             )
         return self._zip
@@ -948,8 +1003,16 @@ class Model:
                 if not first_file and os.path.split(subfilename)[1]:
                     first_file = subfilename
                 if (
-#                   ("readme" in subfilename.lower() and not self.zip().getinfo(subfilename).is_dir())
-                    subfilename.lower().split("/")[-1] in ("index.html", "index.htm", "readme.txt", "readme.html", "readme.htm", "readme.md")
+                    #                   ("readme" in subfilename.lower() and not self.zip().getinfo(subfilename).is_dir())
+                    subfilename.lower().split("/")[-1]
+                    in (
+                        "index.html",
+                        "index.htm",
+                        "readme.txt",
+                        "readme.html",
+                        "readme.htm",
+                        "readme.md",
+                    )
                 ) and readme_file is None:
                     readme_file = subfilename
                 path = subfilename.split("/")

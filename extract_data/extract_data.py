@@ -108,7 +108,6 @@ for class_name, class_id in [
     ["modeltypes", 38],
     ["celltypes", 18],
 ]:
-
     objects = requests.get(
         "https://senselab.med.yale.edu/_site/webapi/object.json/?cl={}".format(class_id)
     ).json()["objects"]

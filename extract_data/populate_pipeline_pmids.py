@@ -7,8 +7,8 @@ import requests
 import functools
 import time
 
-PMID_FILE = '/home/bitnami/pipeline-pmids.txt'
-STATUS = 'evantriage'
+PMID_FILE = "/home/bitnami/pipeline-pmids.txt"
+STATUS = "evantriage"
 
 try:
     import tqdm
@@ -35,9 +35,10 @@ def paced_request(url):
     last_time = time.time()
     return result
 
+
 @functools.lru_cache()
 def get_pubtator_data(pmid):
-    pubtator = 'https://www.ncbi.nlm.nih.gov/research/pubtator-api/publications/export/biocjson?pmids='
+    pubtator = "https://www.ncbi.nlm.nih.gov/research/pubtator-api/publications/export/biocjson?pmids="
 
     article = json.loads(paced_request(f"{pubtator}{pmid}").text)
     title = None
@@ -70,14 +71,14 @@ def get_pubtator_data(pmid):
                 break
     return result
 
+
 mongodb = MongoClient()
 db = mongodb[app_settings["db_name"]]
-db.authenticate(
-    app_settings["mongodb_user"], app_settings["mongodb_pw"]
-)
+db.authenticate(app_settings["mongodb_user"], app_settings["mongodb_pw"])
 
 # and prepare to start building it again
 collection = getattr(db, app_settings["collection_name"])
+
 
 def get_pubmed_data(article):
     try:
@@ -138,11 +139,13 @@ def get_pubmed_data(article):
     except AttributeError:
         return {}
 
+
 def tree_text(tree, item):
     try:
         return tree.find(item).text
     except AttributeError:
         return None
+
 
 def insert(pmids):
     initial_length = len(pmids)
@@ -156,7 +159,7 @@ def insert(pmids):
         my_ids = ""
         while pmids:
             my_pmid = int(pmids.pop())
-            if not collection.find_one({'pmid': my_pmid}):
+            if not collection.find_one({"pmid": my_pmid}):
                 my_ids += f"{my_pmid},"
                 # limited to 2048 characters, 100 queries at a time
                 if len(my_ids) > 1900 or count > 90:
@@ -181,17 +184,34 @@ def insert(pmids):
                     "doi": processed_article["doi"],
                 }
                 data = get_pubtator_data(processed_article["pmid"])
-                data["pubtator"] = list(set([item['text'] for item in data['pubtator']['abstract_annotations']]))
+                data["pubtator"] = list(
+                    set(
+                        [
+                            item["text"]
+                            for item in data["pubtator"]["abstract_annotations"]
+                        ]
+                    )
+                )
                 data["status"] = STATUS
-                data["field_order"] = ["authors", "journal", "year", "mesh", "pubtator", "abstract"]
+                data["field_order"] = [
+                    "authors",
+                    "journal",
+                    "year",
+                    "mesh",
+                    "pubtator",
+                    "abstract",
+                ]
                 if data["pmcid"]:
-                    data["url"] = f"https://www.ncbi.nlm.nih.gov/pmc/articles/{data['pmcid']}/"
+                    data[
+                        "url"
+                    ] = f"https://www.ncbi.nlm.nih.gov/pmc/articles/{data['pmcid']}/"
                 else:
                     data["url"] = f"https://pubmed.gov/{data['pmid']}"
                 data["notes"] = ""
 
                 pubmed_data.update(data)
                 collection.insert(pubmed_data)
+
 
 if __name__ == "__main__":
     with open(PMID_FILE) as f:

@@ -20,12 +20,15 @@ families = [item["id"] for item in data]
 icg = {}
 for family in families:
     print(f"Processing family {family}")
-    chans = requests.get(f"https://icg.neurotheory.ox.ac.uk/api/app/families/{family}/").json()["chans"]
+    chans = requests.get(
+        f"https://icg.neurotheory.ox.ac.uk/api/app/families/{family}/"
+    ).json()["chans"]
     for channel in chans:
         modeldb_id = channel["id_moddb"]
-        icg.setdefault(modeldb_id, {})[channel["name"]] = {"icg_id": channel['id'], "kind": family}
+        icg.setdefault(modeldb_id, {})[channel["name"]] = {
+            "icg_id": channel["id"],
+            "kind": family,
+        }
 
 sdb.drop_collection("icg")
-sdb.icg.insert_many(
-    [{"id": key, "data": value} for key, value in icg.items()]
-)
+sdb.icg.insert_many([{"id": key, "data": value} for key, value in icg.items()])
