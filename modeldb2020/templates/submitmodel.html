@@ -7,20 +7,57 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 
 <script>
-    $(function() {
-        {% for meta_item in metadata %}
-            $("#{{meta_item.1}}").select2({width: "100%",
+        $(function () {
+            {% for meta_item in metadata %}
+            $("#{{meta_item.1}}").select2({
+                width: "100%",
                 placeholder: "Select {{meta_item.0.lower}}",
-            });           
-        {% endfor %}
-        $("select").on("select2:select", function (evt) {
-            var element = evt.params.data.element;
-            var $element = $(element);
+            });
+            {% endfor %}
+            $("select").on("select2:select", function (evt) {
+                var element = evt.params.data.element;
+                var $element = $(element);
 
-            $element.detach();
-            $(this).append($element);
-            $(this).trigger("change");
-        });
+                $element.detach();
+                $(this).append($element);
+                $(this).trigger("change");
+            });
+            $('#guessattributes').click(function (ev) {
+                $('#myModal').modal('show');
+                setTimeout(function () {
+                    $("#abstracttext").focus();
+                }, 500);
+
+            });
+            $('#submitabstract').click(function () {
+                $('#myModal').modal('hide');
+                $.post(
+                    "/metadata-predictor",
+                    { 'abstract': $('#abstracttext').val() },
+                    function (data) {
+                        console.log('received', data);
+                        $("#metadata_results").html("");
+                        $.each(data, function (i, value) {
+                            $('#metadata_results').append('<label><input type="checkbox" checked> ' + value + '</label><br/>');
+                        });
+                        $('#metadata_results label').css('width', '100%').css('float', 'none');
+                        $('#myModal2').modal('show');
+
+                    },
+                    "json"
+                );
+            });
+
+            $('#greatthanks').click(function () {
+                var v = $("#metadata_results :checked").parent();
+                var datatags = [];
+                $.each(v, function (i, val) {
+                    var tag = val.innerText.trim();
+                    datatags.push(tag);
+                });
+                console.log(datatags);
+                set_metadata_items(datatags);
+            });
     });
 
     function set_metadata_items(list_of_ids) {
@@ -30,7 +67,7 @@
                 $("#{{field.1}}").trigger("change");
             }
         {% endfor %}
-    }
+    }    
 </script>
 <style>
     .multiselect {
@@ -201,6 +238,55 @@
                     selections. 
                 </p>
 
+            </div>
+        </div>
+        <div class="row entryrow">
+            <div class="col-12">
+                <center><button id="guessattributes" type="button" class="btn btn-primary">Let us find ModelDB keywords for
+                        you!</button></center><br />
+                <i class="explain">Click the button to automatically find, approve, and populate model entry keywords based on
+                    your
+                    paper abstract.</i>
+                <div id="myModal" class="modal fade">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                <h4 class="modal-title">Automatic keyword identifier</h4>
+                            </div>
+                            <div class="modal-body">
+                                <p>Please paste your paper abstract here.</p>
+                                <textarea id="abstracttext" class="form-control" style="min-width: 90%"></textarea>
+                            </div>
+                            <div class="modal-footer">
+                                <button id="cancelbutton" type="button" class="btn btn-default"
+                                    data-dismiss="modal">Cancel</button>
+                                <button id="submitabstract" type="button" class="btn btn-primary">Submit</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        
+                <div id="myModal2" class="modal fade">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                <h4 class="modal-title">Automatic keyword identifier: results</h4>
+                            </div>
+                            <div class="modal-body">
+                                <p>Deselect keywords that do not describe the model, then press the button to accept the rest.
+                                </p>
+                                <div id="metadata_results">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button id="greatthanks" type="button" class="btn btn-default btn-primary" data-dismiss="modal">Accept
+                                    selected keywords</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         {% for meta_item in metadata %}
