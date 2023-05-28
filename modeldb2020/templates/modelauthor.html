@@ -1,4 +1,11 @@
 {% extends "bigleftcol.html" %}
+{% block head %}
+<style>
+    .modellist>li {
+        padding-top: 1em;
+    }
+</style>
+{% endblock %}
 {% block header %}
     {% if kind == "model" %}
         <h1>Models based on a paper by {{author}}</h1>
@@ -7,9 +14,11 @@
     {% endif %}
 {% endblock %}
 {% block leftcol %}
-    {% for model in models %}
-        <p><a href="/{{model.id}}">{{model.name}}</a></p>
-    {% endfor %}
+    <ol class="modellist">
+        {% for model in models %}
+            <li><a href="/{{model.id}}">{{model.name}}</a></li>
+        {% endfor %}
+    </ol>
 {% endblock %}
 {% block sidecolumn %}
     <!--
