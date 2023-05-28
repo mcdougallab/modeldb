@@ -647,25 +647,8 @@
     </center>
 </div>
 {% endif %}
-{% if obj.links %}
-<div class="well">
-    <b>External resources:</b><br><br>
-    {% for data in obj.links.items %}
-    {% if data.0 == 'neuroelectro' %}
-    <a href="https://neuroelectro.org/neuron/{{data.1}}/">NeuroElectro</a><br>
-    {% endif %}
-    {% if data.0 == 'neuromorpho' %}
-    <a href='http://neuromorpho.org/MetaDataResult.jsp?summary={{data.1|safe}}'>NeuroMorpho.Org</a><br>
-    {% endif %}
-    {% if data.0 == 'neurolex' %}
-    <a href="http://uri.neuinfo.org/nif/nifstd/{{data.1}}">NeuroLex/Interlex</a><br>
-    {% endif %}
-    {% endfor %}
-</div>
-<br>
 {% endif %}
-{% endif %}
-{% if moreinfo or homepage or logo %}
+{% if moreinfo or homepage or logo or obj.links %}
 <div class="well">
     {% if logo %}
     <center>
@@ -674,12 +657,26 @@
     {% endif %}
     {% if homepage %}
     <center>
-        <a href="{{homepage}}">{{homepage}}</a>
+        <a href="{{homepage}}">{{homepage}} <sup><i class="fas fa-external-link-alt"></i></sup></a>
     </center>
     <br>
     {% endif %}
     {{moreinfo}}
-    <br><br>
+    {% if obj.links %}
+        External resources:<br>
+        <ul>
+            {% if obj.links.interlex %}
+                <li><a href="https://scicrunch.org/scicrunch/interlex/view/{{obj.links.interlex.value}}">InterLex/SciCrunch <sup><i class="fas fa-external-link-alt"></i></sup></a></li>
+            {% endif %}
+            {% if obj.links.neuroelectro %}
+                <li><a href="https://neuroelectro.org/neuron/{{obj.links.neuroelectro.value}}">NeuroElectro <sup><i class="fas fa-external-link-alt"></i></sup></a></li>
+            {% endif %}
+            {% if obj.links.neuromorpho_url %}
+                <li><a href="{{obj.links.neuromorpho_url.value}}">NeuroMorpho.Org <sup><i class="fas fa-external-link-alt"></i></sup></a></li>
+            {% endif %}
+        </ul>
+    {% endif %}
+    <br>
 </div>
 {% endif %}
 {% if authors %}

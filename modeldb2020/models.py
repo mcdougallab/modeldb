@@ -793,9 +793,7 @@ class CellType(SenseLabClass):
             return None
 
     def links(self):
-        # print('self._data["links"]', self._data["links"])
-        return self._data.get("links", {})
-        # {item: self._data[item] for item in ['neuromorpho', 'neuroelectro', 'neurolex'] if item in self._data}
+        return {item: self._data[item] for item in ['interlex', 'neuromorpho_url', 'neuroelectro'] if item in self._data}
 
 
 def models_with_uncurated_papers():
