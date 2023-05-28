@@ -1,0 +1,3833 @@
+{
+    "a type k": [
+        247
+    ],
+    "acetylcholine": [
+        209
+    ],
+    "action potential (generation|initiation|(is|was) initiated)": [
+        3541
+    ],
+    "active dendrit(e|es|ic)": [
+        3639
+    ],
+    "alzheimers?": [
+        112047
+    ],
+    "an a type": [
+        247
+    ],
+    "arteriol(ar|e|es)": [
+        52411
+    ],
+    "atrial": [
+        52422,
+        52423
+    ],
+    "atrial fibrillation": [
+        52407
+    ],
+    "auditory brainstem": [
+        143145
+    ],
+    "auditory cortex": [
+        144485
+    ],
+    "auditory nerves?": [
+        52419
+    ],
+    "axon hillock": [
+        3649,
+        3541
+    ],
+    "axon initial segment": [
+        3649,
+        3541
+    ],
+    "back ?propagat(e|ed|ing|ion)": [
+        3629,
+        3639
+    ],
+    "basal ganglia": [
+        115952
+    ],
+    "basket cells?$ca1": [
+        190461
+    ],
+    "basket cells?$ca3": [
+        154093
+    ],
+    "basket cells?$dentate gyrus": [
+        52417
+    ],
+    "basket cells?$neocort(ex|ical)": [],
+    "brainstem (motor?)neurone?s?": [
+        185139,
+        183076
+    ],
+    "brainstem|spinal cord$lamprey": [
+        151437,
+        183076
+    ],
+    "branch point": [
+        3641,
+        3640
+    ],
+    "brownian motion": [
+        183016
+    ],
+    "burst(s?|ing)": [
+        3630
+    ],
+    "ca na and k currents?": [
+        2395,
+        2405,
+        2396
+    ],
+    "ca k and na currents?": [
+        2395,
+        2405,
+        2396
+    ],
+    "(ca2?|calcium) (activated|activation of|dependent) (k|potassium)": [
+        253,
+        2405
+    ],
+    "(ca2?|calcium) (channels?|conductances?|currents?)": [
+        2396
+    ],
+    "(ca2?|calcium) l": [
+        2396,
+        243
+    ],
+    "(ca2?|calcium) n": [
+        2396,
+        244
+    ],
+    "(ca2?|calcium) dynamics": [
+        98012
+    ],
+    "(ca2?|calcium) (nernst|equilibrium|reversal) potential": [
+        2396
+    ],
+    "(ca2?|calcium) hypothesis": [
+        98012
+    ],
+    "ca1$pyramidal": [
+        258
+    ],
+    "calyx of held": [
+        233
+    ],
+    "cardiac": [
+        52423
+    ],
+    "(central pattern generator|cpg)s?": [
+        3543,
+        3633,
+        3634
+    ],
+    "cerebell(ar|um)": [
+        115953
+    ],
+    "(chloride|cl) (nernst|equilibrium|reversal) potential": [
+        240
+    ],
+    "circadian": [
+        3543,
+        3633,
+        3634,
+        145886
+    ],
+    "clonazepam": [
+        213,
+        202
+    ],
+    "cochlear?$hair cell": [
+        1965
+    ],
+    "cochlear nucleus$bushy (cells?|neurons?)": [
+        273
+    ],
+    "ventral cochlear nucleus$(stellate|chopper) (cells?neurons?)": [
+        88115
+    ],
+    "cochlear nucleus$(pyramidal|fusiform) (cells?|neurons?)": [
+        274
+    ],
+    "coincidence detect(ion|or|ors)": [
+        3632
+    ],
+    "(multi)?compartmental models?": [
+        3641
+    ],
+    "(cortico)?thalamic": [
+        115951
+    ],
+    "(channel|current|conductance)s? ia": [
+        2405,
+        247
+    ],
+    "(channel|current|conductance)s? ih": [
+        251
+    ],
+    "d type (k|potassium)": [
+        143445,
+        2405
+    ],
+    "d2 (dopamine )?receptor": [
+        197,
+        224,
+        122829
+    ],
+    "delayed rectifier": [
+        2405,
+        248
+    ],
+    "demyelinated?": [
+        52406
+    ],
+    "dendritic action potentials?": [
+        3641,
+        3639,
+        3629
+    ],
+    "dendritic active properties": [
+        3639
+    ],
+    "dendritic geometr(ies|y)": [
+        3640
+    ],
+    "dendritic morpholog(ies|y)": [
+        3640
+    ],
+    "dendritic tree": [
+        3641
+    ],
+    "dendritically initiated action potentials": [
+        3629
+    ],
+    "dendrodendritic": [
+        115950
+    ],
+    "dendrotoxin": [
+        2405
+    ],
+    "dentate gyrus": [
+        115947
+    ],
+    "dentate gyrus granule": [
+        257
+    ],
+    "depression of synaptic": [
+        22012
+    ],
+    "desynchronized": [
+        3635
+    ],
+    "detailed (biophysical |compartmental )?models?": [
+        3641
+    ],
+    "detailed conductance based": [
+        3641
+    ],
+    "development(al)?": [
+        128875
+    ],
+    "different dendritic morphologies": [
+        3640
+    ],
+    "diffus(e|ion)": [
+        183016
+    ],
+    "discharge pattern?": [
+        3543
+    ],
+    "dlpfc": [
+        147188
+    ],
+    "dopamine(rgic)?": [
+        224
+    ],
+    "dopamine(rgic)? receptor": [
+        223
+    ],
+    "during development": [
+        128875
+    ],
+    "electroton(ic|us)": [
+        64175
+    ],
+    "epileptogenesis": [
+        52405
+    ],
+    "ephaptic (coupling|interactions?)": [
+        183995
+    ],
+    "facilitation of transmi(ssion|tter)": [
+        22010
+    ],
+    "firing patterns?": [
+        3543
+    ],
+    "fitting (a |the )?model": [
+        3637
+    ],
+    "functional anatomy": [
+        3640
+    ],
+    "gaba(ergic)?": [
+        213
+    ],
+    "gaba ?a": [
+        202
+    ],
+    "gaba ?b": [
+        203
+    ],
+    "gamma aminobutyric acid": [
+        213
+    ],
+    "gamma aminobutyric acid a": [
+        202,
+        1361
+    ],
+    "gamma aminobutyric acid b": [
+        203
+    ],
+    "gamma (band|frequency)": [
+        3543,
+        3633
+    ],
+    "gap junctions": [
+        114107
+    ],
+    "genesis simulator": [
+        1883
+    ],
+    "geniculate nucleus$interneurone?s?": [
+        140252
+    ],
+    "gk": [
+        2405
+    ],
+    "gk ca": [
+        2405,
+        253
+    ],
+    "g ?na": [
+        2395
+    ],
+    "glutamate(rgic)?": [
+        233
+    ],
+    "golgi cells?": [
+        115953
+    ],
+    "h (channel|current|conductance)s?": [
+        251
+    ],
+    "hippocamp(al|us)": [
+        115946
+    ],
+    "i ?a": [
+        247,
+        2405
+    ],
+    "iberiotoxin": [
+        2405
+    ],
+    "ibtx": [
+        2405
+    ],
+    "i ?ca": [
+        2396
+    ],
+    "i ?dk": [
+        2405
+    ],
+    "i ?dr": [
+        2405
+    ],
+    "i ?kd": [
+        2405,
+        143445
+    ],
+    "i ?kx": [
+        2405
+    ],
+    "i ?na": [
+        2395
+    ],
+    "i ?k ?a": [
+        2405,
+        247
+    ],
+    "ik ?ca": [
+        2405,
+        253
+    ],
+    "inferior colliculus": [
+        144513
+    ],
+    "initial segments?": [
+        3645
+    ],
+    "initiation sites?": [
+        3541
+    ],
+    "intrathalamic": [
+        115951
+    ],
+    "integrate and fire": [
+        154740
+    ],
+    "intracellular (ca2?|calcium)": [
+        2396
+    ],
+    "(k|potassium) (channel|current|conductance)s?": [
+        2405
+    ],
+    "(k|potassium) (nernst|equilibrium|reversal) potential": [
+        2405
+    ],
+    "k na and ca currents?": [
+        2395,
+        2405,
+        2396
+    ],
+    "k ca and na currents?": [
+        2395,
+        2405,
+        2396
+    ],
+    "ka": [
+        247,
+        2405
+    ],
+    "kahp": [
+        127083,
+        2405
+    ],
+    "kca": [
+        253,
+        2405
+    ],
+    "kdr": [
+        2405,
+        248
+    ],
+    "km (channel|current|conductance)s?": [
+        250,
+        2405
+    ],
+    "l (channel|current|conductance)s?": [
+        243
+    ],
+    "l type": [
+        243
+    ],
+    "l(5|6)(a|b)? (neocort(ex|ical) )?pyramidal": [],
+    "lacunosum moleculare": [
+        115946
+    ],
+    "large scale simulations?": [
+        112634
+    ],
+    "lateral geniculate nucleus|lgn": [
+        115951
+    ],
+    "(lateral geniculate nucleus|lgn) neuro(n|nes|ns|ne)": [
+        262
+    ],
+    "layer (2|3|2 3|ii|iii|ii iii) pyramidal": [],
+    "layer (5|6|5 6|v|vi|v vi) (neocortical )?pyramidal": [],
+    "leech sensory neuro(ns|ne|nes)": [
+        114297
+    ],
+    "local ((de|hyper)polarization|(membrane )?potential)": [
+        3640
+    ],
+    "long term depression": [
+        22012,
+        3647,
+        3643
+    ],
+    "long term potentiation": [
+        3647,
+        3643
+    ],
+    "long term (synaptic )?plasticity": [
+        3643,
+        3647
+    ],
+    "low threshold (ca2?|calcium)": [
+        245,
+        2396
+    ],
+    "low threshold voltage gated (ca2?|calcium)": [
+        245,
+        2396
+    ],
+    "ltd": [
+        22012
+    ],
+    "lts cortical": [
+        142232
+    ],
+    "lts pyramidal": [
+        142232
+    ],
+    "m (channel|current|conductance)s?": [
+        250
+    ],
+    "mcn1": [],
+    "medium spiny neurons": [
+        138633,
+        115952
+    ],
+    "mglur\\d?": [
+        207
+    ],
+    "mitral": [
+        267,
+        115950
+    ],
+    "modulatory commissural neuron 1": [],
+    "morphological analysis": [
+        3640
+    ],
+    "motor?neuro(n|nal|ne|nes|ns)": [
+        276
+    ],
+    "motor nerve (ending|terminal)": [
+        22013
+    ],
+    "multi ?compartmental": [
+        3641
+    ],
+    "multiple sclerosis": [
+        52406
+    ],
+    "muscarinic (k|potassium)": [
+        250
+    ],
+    "myelin(ated)?": [
+        52425
+    ],
+    "n methyl d aspartate": [
+        206
+    ],
+    "na k and ca currents?": [
+        2395,
+        2405,
+        2396
+    ],
+    "na ca and k currents?": [
+        2395,
+        2405,
+        2396
+    ],
+    "(na|sodium) (and )?(k|potassium) (channel|current|conductance)s?": [
+        2395,
+        2405
+    ],
+    "(na|sodium) (ca2?|calcium) exchanger": [
+        88209
+    ],
+    "(na|sodum) (channel|current|conductance)s?": [
+        2395
+    ],
+    "(na|sodium) inactivation": [
+        2395
+    ],
+    "(na|sodium) pump": [
+        120695
+    ],
+    "(na|sodium) (nernst|equilibrium|reversal) potential": [
+        2395
+    ],
+    "network (model|simulation)s?": [
+        112634
+    ],
+    "neur(al|onal) networks?": [
+        112634
+    ],
+    "neuromuscular junctions?": [
+        22013
+    ],
+    "neuron (modeling (environment|software)|simulation environment|simulator|software)": [
+        1882
+    ],
+    "nmda(r|rs)?": [
+        206
+    ],
+    "nonuniform geometry": [
+        3640
+    ],
+    "nucleus laminaris": [
+        143145,
+        52424
+    ],
+    "octopus cells?": [
+        277
+    ],
+    "odor information": [
+        115950
+    ],
+    "odorants?": [
+        115950
+    ],
+    "olfactory receptors?": [
+        221
+    ],
+    "(one|1) compartment": [
+        3638
+    ],
+    "ontogen(etic|y)": [
+        128875
+    ],
+    "oriens alveus": [
+        115946
+    ],
+    "oscillat(ing|ions?)": [
+        3634,
+        3543
+    ],
+    "p type (ca2?|calcium)": [
+        140826
+    ],
+    "paired pulse facilitation": [
+        22010
+    ],
+    "parameter (search|space)": [
+        3637
+    ],
+    "parameters? obtained from fits": [
+        3637
+    ],
+    "parkinson(ian|s)?": [
+        65417
+    ],
+    "pattern recognition": [
+        3542
+    ],
+    "periglomerular": [
+        3978
+    ],
+    "persistent (na|sodium)": [
+        241,
+        2395
+    ],
+    "pfc": [
+        147188
+    ],
+    "physiologically based multi ?compartmental": [
+        3641
+    ],
+    "population coherence": [
+        3635
+    ],
+    "prefrontal cortex": [
+        147188
+    ],
+    "program called neuron": [
+        1882
+    ],
+    "purkinje": [
+        271,
+        115953
+    ],
+    "random networks?": [
+        112634
+    ],
+    "realistic computer models?": [
+        3641
+    ],
+    "reconstructed (cell|neuron |neural |neuronal )?mopholog(ies|y)": [
+        3641
+    ],
+    "remyelinated?": [
+        52425
+    ],
+    "reticular (re )?thalamus": [
+        263
+    ],
+    "rectifying (k|potassium)": [
+        2405
+    ],
+    "regular (firing|spiking)": [
+        3543
+    ],
+    "retinal? ganglion": [
+        270
+    ],
+    "rgc": [
+        270
+    ],
+    "rhythmic spik(e|es|ing)": [
+        3543
+    ],
+    "schizophreni(a|c)": [
+        112853
+    ],
+    "schwann cells?": [
+        52425
+    ],
+    "seizures?": [
+        52405
+    ],
+    "short term (synaptic )?depression": [
+        3643,
+        3644,
+        22012
+    ],
+    "short term (synaptic )?plasticity": [
+        3643,
+        3644
+    ],
+    "signaling pathways?": [
+        55277
+    ],
+    "single compartment": [
+        3638
+    ],
+    "slow wave": [
+        3543
+    ],
+    "software neuron": [
+        1882
+    ],
+    "spatial compartmentalization effect": [
+        3640
+    ],
+    "spike frequency adaptation": [
+        116951
+    ],
+    "spikes? initiat(ion|ed)": [
+        3541
+    ],
+    "spike timing dependent plasticity|stdp": [
+        87578
+    ],
+    "spiking (behaviors?|patterns?)": [
+        3543
+    ],
+    "spinal motoneurone?s?": [
+        115954
+    ],
+    "spindle": [
+        3543,
+        93420
+    ],
+    "stomatogastric": [
+        115959
+    ],
+    "(neo)?striat(al|um)": [
+        138633,
+        115952
+    ],
+    "striatal cholinergic interneuron": [
+        7021
+    ],
+    "subthalamic nucleus": [
+        115952,
+        65417,
+        116868
+    ],
+    "sw activity": [
+        3543
+    ],
+    "synapse location": [
+        3640,
+        3641
+    ],
+    "synaptic depression": [
+        22012
+    ],
+    "synchron(iz(ation|ed)|ous(ly?)|y)": [
+        3635
+    ],
+    "t (type )?(channel|current|conductance)s?": [
+        245
+    ],
+    "tea|tetraethylammonia": [
+        2405
+    ],
+    "teleost thalamic": [
+        52427
+    ],
+    "temporal pattern?": [
+        3633
+    ],
+    "tetrodoxin|ttx": [
+        2395
+    ],
+    "thalamic reticular": [
+        263
+    ],
+    "thalamocortical": [
+        115951
+    ],
+    "theta (band|frequency)": [
+        3543,
+        3633
+    ],
+    "(tens|hundreds|thousands|millions|billions) of ([0-9a-z]+ )?([0-9a-z]+ )?(neurons|cells)": [
+        112634
+    ],
+    "(three|3) compartments": [
+        3638
+    ],
+    "(two|2) compartments": [
+        3638
+    ],
+    "transient (na|sodium)": [
+        242,
+        2395
+    ],
+    "variations? in dendritic morphology": [
+        3640
+    ],
+    "ventricular action potentials?": [
+        52423
+    ],
+    "voltage gated (ca2?|calcium)": [
+        2396
+    ],
+    "voltage gated (k|potassium)": [
+        2405
+    ],
+    "voltage gated (na|sodium)": [
+        2395
+    ],
+    "wakefulness": [
+        93420
+    ],
+    "active dendrit(ic|e) conductances?": [
+        3639,
+        3629
+    ],
+    "hippocamp(al|us) ca1 pyramidal": [
+        258,
+        115946
+    ],
+    "ih": [
+        251
+    ],
+    "realistic neural networks": [
+        3536
+    ],
+    "seroton(in|ergic)": [
+        239
+    ],
+    "hermissenda type b photoreceptors?": [
+        114290
+    ],
+    "5 ht": [
+        239
+    ],
+    "i ?ca ?s": [
+        2396
+    ],
+    "i ?k ?v": [
+        2405
+    ],
+    "(calcium|ca|ca2) currents?": [
+        2396
+    ],
+    "sensorimotor synapse": [
+        140966
+    ],
+    "plasticity": [
+        3643
+    ],
+    "mechanosensory": [
+        140966
+    ],
+    "transient homosynaptic depression": [
+        22012
+    ],
+    "aplysia": [
+        47316,
+        115956
+    ],
+    "cdcl2": [
+        2396
+    ],
+    "ryanodine": [
+        98012
+    ],
+    "kenyon cells?": [
+        47316,
+        114295
+    ],
+    "honeybee": [
+        47316
+    ],
+    "tail withdrawal reflex": [
+        115956
+    ],
+    "lp117": [
+        52414,
+        115956
+    ],
+    "auditory nerve": [
+        52419
+    ],
+    "cochlear amplifier": [
+        52419
+    ],
+    "localization phenomena": [
+        141125
+    ],
+    "phase velocities": [
+        141125
+    ],
+    "colliculus": [
+        118308,
+        144513
+    ],
+    "cochlear mechanics": [
+        1965
+    ],
+    "cochlear partition vibration": [
+        1965
+    ],
+    "AN": [
+        52419
+    ],
+    "thalamus": [
+        115951
+    ],
+    "neocortical neuro(n|ns)": [],
+    "thalamic reticular neurons?": [
+        263
+    ],
+    "cortical pyramidal cells": [],
+    "intrathalamic augmentation": [
+        64174,
+        115951
+    ],
+    "corticothalamocortical": [
+        115951
+    ],
+    "i kif": [
+        2405
+    ],
+    "4 ap": [
+        2405
+    ],
+    "4 aminopyridine": [
+        2405
+    ],
+    "iki": [
+        2405
+    ],
+    "vcn": [
+        88115
+    ],
+    "ilt": [
+        2405
+    ],
+    "ia": [
+        247
+    ],
+    "peak conductance": [
+        3631
+    ],
+    "neural networ(ks|k)": [
+        112634
+    ],
+    "integrate and fire neurons": [
+        154740
+    ],
+    "dopamine": [
+        224
+    ],
+    "l type calcium curren(ts|s)": [
+        243
+    ],
+    "neostriatum spiny direct pathway neuro(n|ns)": [
+        260
+    ],
+    "inositol( 1 4 5)? trisphosphate": [
+        153715,
+        98012
+    ],
+    "InsP3": [
+        153715,
+        98012
+    ],
+    "low threshold k currents?": [
+        2405
+    ],
+    "ik ?lt": [
+        88118
+    ],
+    "nav1 6": [
+        92087
+    ],
+    "oscillatio(n|ns)": [
+        3634
+    ],
+    "burs(t|ting)": [
+        3630
+    ],
+    "cerebell(ar|um) granule": [
+        7346
+    ],
+    "electrotonic": [
+        64175
+    ],
+    "rs spiny stellates?": [
+        114635
+    ],
+    "low threshold spiking interneuro(ns|n)": [
+        142232
+    ],
+    "nucleus reticularis ( nrt)? cel(ls|l)": [
+        263
+    ],
+    "thalamocortical sleep spindles?": [
+        93420
+    ],
+    "epileptogenic": [
+        52405
+    ],
+    "muscarinic": [
+        204
+    ],
+    "peptide(rgic)?": [
+        235
+    ],
+    "mitral cell synchronization": [
+        3635
+    ],
+    "mitral cell": [
+        267
+    ],
+    "r ?15": [
+        52420
+    ],
+    "conditional bursting neurone?s?": [
+        3630
+    ],
+    "burster (N|C)": [
+        3649,
+        3630
+    ],
+    "squid$giant axo(n|ns)": [
+        52426
+    ],
+    "barnacle muscle fibe(r|rs)": [
+        114299
+    ],
+    "bistable": [
+        169987
+    ],
+    "hirudo medicinalis": [
+        115958,
+        47316
+    ],
+    "(sodium|na) spikes?": [
+        2395
+    ],
+    "kv4( potassium)? channel": [
+        248
+    ],
+    "low threshold ca(lcium|2)? currents?": [
+        245
+    ],
+    "renshaw cel(ls|l)": [
+        117818
+    ],
+    "reticular thalamic ( rt)? nucleus": [
+        263
+    ],
+    "kcnq1": [
+        88212,
+        122822
+    ],
+    "fitting (a kinetic model|kinetic models)": [
+        3637
+    ],
+    "dendritic arborization": [
+        3640
+    ],
+    "parameter randomization": [
+        3637
+    ],
+    "frontal lobe neurone?s?": [
+        147188
+    ],
+    "retinal bipolar cel(l|ls)": [
+        7020
+    ],
+    "dorsal root ganglion": [
+        136307
+    ],
+    "pseudounipolar geometry": [
+        3641
+    ],
+    "interspike interval": [
+        3543,
+        3645
+    ],
+    "impulse barrage": [
+        3543
+    ],
+    "mossy fiber sprouting": [
+        52416
+    ],
+    "hilar cel(ls|l)": [
+        88216
+    ],
+    "epileptiform": [
+        52405
+    ],
+    "activation inactivation kinetics": [
+        3631
+    ],
+    "active dendrites": [
+        3639
+    ],
+    "anesthetized": [
+        202
+    ],
+    "ap duration": [
+        3649
+    ],
+    "arbor": [
+        3537
+    ],
+    "arrhythmogenic": [
+        52407
+    ],
+    "bk channels": [
+        2405,
+        253
+    ],
+    "cable model": [
+        3537
+    ],
+    "cables": [
+        3537
+    ],
+    "calcium conductance": [
+        2396
+    ],
+    "calcium dependent potassium": [
+        253,
+        2405
+    ],
+    "calcium spikes": [
+        98012
+    ],
+    "cardiac (ventricular )?action": [
+        52423,
+        3649
+    ],
+    "cardiac myocytes": [
+        3537
+    ],
+    "cardiac ventricular": [
+        52407,
+        88205
+    ],
+    "cells rgcs?": [
+        270
+    ],
+    "cerebellar purkinje": [
+        271
+    ],
+    "channel distribution": [
+        1882,
+        3537
+    ],
+    "channel noise": [
+        3631
+    ],
+    "channel opening": [
+        3631
+    ],
+    "channels dendrites": [
+        3537
+    ],
+    "channels distributed": [
+        3537
+    ],
+    "closed state": [
+        3540,
+        3631
+    ],
+    "closed time": [
+        3631
+    ],
+    "conductance calcium": [
+        2396
+    ],
+    "conductance calcium dependent": [
+        253
+    ],
+    "conductance sk": [
+        253
+    ],
+    "conformational": [
+        3631
+    ],
+    "connected networks?": [
+        112634
+    ],
+    "cortical architecture": [
+        112634
+    ],
+    "cortical (micro)?circuit": [
+        112634
+    ],
+    "cortical networks?": [
+        112634
+    ],
+    "current calcium": [
+        2396
+    ],
+    "currents recorded": [
+        3537
+    ],
+    "delayed rectifier potassium": [
+        248,
+        2405
+    ],
+    "sodium": [
+        2395
+    ],
+    "dendrodendritic synapses": [
+        3979
+    ],
+    "distal (inputs?|synaptic)": [
+        3537
+    ],
+    "distally": [
+        3537
+    ],
+    "dopamine depletion": [
+        65417,
+        224
+    ],
+    "dynamics intracellular": [
+        3537
+    ],
+    "epicardial": [
+        52407
+    ],
+    "epilep(sy|tic(us)?)": [
+        52405
+    ],
+    "epsc": [
+        233
+    ],
+    "gamma hz": [
+        112634
+    ],
+    "gamma power": [
+        112634
+    ],
+    "giant nerve": [
+        52426
+    ],
+    "globus pallidus gp": [
+        88217
+    ],
+    "golgi cells": [
+        115953
+    ],
+    "gp": [
+        88217
+    ],
+    "gp neuron": [
+        88217
+    ],
+    "hcn channels?": [
+        251
+    ],
+    "heterogeneous networks": [
+        112634
+    ],
+    "hippocampal place": [
+        98011
+    ],
+    "hodgkin huxley": [
+        248,
+        242,
+        3649
+    ],
+    "hyperpolarization activated": [
+        251
+    ],
+    "ictal": [
+        52405
+    ],
+    "inactivation times?": [
+        3631
+    ],
+    "inhibitory connections": [
+        112634
+    ],
+    "initial segment": [
+        3537
+    ],
+    "injected current": [
+        3537
+    ],
+    "inputs network": [
+        112634
+    ],
+    "ionotropic": [
+        3539
+    ],
+    "kinetics activation": [
+        3631
+    ],
+    "kv channels?": [
+        2405
+    ],
+    "lactotrophs?": [
+        62277
+    ],
+    "epilepsy": [
+        52405
+    ],
+    "long qt": [
+        52423,
+        52407,
+        3631,
+        88214
+    ],
+    "low threshold (calcium|ca|ca2)": [
+        245
+    ],
+    "ltp induction": [
+        3647,
+        3539
+    ],
+    "ventricular": [
+        88205
+    ],
+    "markov chain": [
+        3631
+    ],
+    "medium spiny neuron": [
+        260,
+        3537
+    ],
+    "membrane (action|excitability)": [
+        3649
+    ],
+    "membrane giant": [
+        52426
+    ],
+    "membrane potential oscillations": [
+        3537
+    ],
+    "metabotropic": [
+        233,
+        3539
+    ],
+    "midmyocardial": [
+        52407
+    ],
+    "mitral granule cells?": [
+        3979
+    ],
+    "model cardiac": [
+        52423
+    ],
+    "model networks?": [
+        112634
+    ],
+    "morphological electrophysiological": [
+        3537
+    ],
+    "morphologically realistic": [
+        3537
+    ],
+    "motor symptoms": [
+        88217,
+        65417
+    ],
+    "ms mv": [
+        3631
+    ],
+    "multi compartmental model": [
+        3537
+    ],
+    "multicompartment": [
+        248
+    ],
+    "multicompartmental model": [
+        3537
+    ],
+    "nap": [
+        241
+    ],
+    "nav": [
+        242
+    ],
+    "network connectivity": [
+        112634
+    ],
+    "nicotinic": [
+        178
+    ],
+    "nodes ranvier": [
+        248,
+        242
+    ],
+    "nucleus stn": [
+        65417
+    ],
+    "pallidus gp": [
+        88217
+    ],
+    "parkinso(n|ns|nian)": [
+        65417
+    ],
+    "periodic bursting": [
+        3630
+    ],
+    "pituitary": [
+        62277
+    ],
+    "potential initiation": [
+        3649
+    ],
+    "propagating waves": [
+        3636
+    ],
+    "proximal (apical )?dendrites": [
+        3537
+    ],
+    "qt syndrome": [
+        52423,
+        52407,
+        3631
+    ],
+    "random network": [
+        112634
+    ],
+    "ranvier": [
+        248,
+        242
+    ],
+    "rate dependence": [
+        3631
+    ],
+    "reciprocally": [
+        112634
+    ],
+    "recordings soma": [
+        3537
+    ],
+    "rectifier channels?": [
+        248
+    ],
+    "recurrent": [
+        112634
+    ],
+    "reticular neurons?": [
+        263
+    ],
+    "retinal? ganglion cells? rgcs?": [
+        270
+    ],
+    "rgcs": [
+        270
+    ],
+    "retina$cone": [
+        1966
+    ],
+    "schaffer collaterals?": [
+        258,
+        115946
+    ],
+    "scn": [
+        3537,
+        145886,
+        3634
+    ],
+    "seizure activity": [
+        52405
+    ],
+    "signaling (cascade|pathways?)": [
+        55277
+    ],
+    "action potentials?": [
+        3649
+    ],
+    "sk channels?": [
+        253
+    ],
+    "(sodium|na) conductance": [
+        2395
+    ],
+    "specific connectivity": [
+        112634
+    ],
+    "spiking network": [
+        112634
+    ],
+    "spiny neuron": [
+        3537
+    ],
+    "state open": [
+        3540,
+        3631
+    ],
+    "stomatogastric ganglion": [
+        3630,
+        47316
+    ],
+    "tetrodotoxin sensitive": [
+        2395
+    ],
+    "thalamic reticular neurons": [
+        263
+    ],
+    "voltage sensitive dye": [
+        3537
+    ],
+    "weakly synchronized": [
+        112634
+    ],
+    "wiring": [
+        112634
+    ],
+    "motor unit number estimation": [
+        22013,
+        276
+    ],
+    "mune": [
+        22013,
+        276
+    ],
+    "neuromuscular physiology": [
+        22013,
+        276
+    ],
+    "calcium": [
+        98012
+    ],
+    "calcium signals?": [
+        98012
+    ],
+    "memory storage": [
+        98012,
+        2396
+    ],
+    "potassium leak channel": [
+        248
+    ],
+    "networ(ks|k)": [
+        112634
+    ],
+    "s cells?": [
+        115958,
+        47316,
+        102282
+    ],
+    "lamina i": [
+        128582
+    ],
+    "medial superior olive": [
+        88110
+    ],
+    "glycine(rgic)?": [
+        1361
+    ],
+    "vestibular nuclei neurone?s?": [
+        139834
+    ],
+    "mvnns": [
+        139834
+    ],
+    "gcaclvai": [
+        98012
+    ],
+    "gc vai": [
+        98012
+    ],
+    "rat thalamocortical relay neurone?s?": [
+        262,
+        115951
+    ],
+    "t type ca(lcium|2)? channel": [
+        245
+    ],
+    "cacna1h": [
+        122809
+    ],
+    "parameter estimation method": [
+        3637
+    ],
+    "kinetic propert(ies|y)": [
+        3637
+    ],
+    "kinetic paramete(rs|r)": [
+        3637
+    ],
+    "ionic curren(ts|t)": [
+        3631
+    ],
+    "least square error principle": [
+        49304
+    ],
+    "current clamp data": [
+        49304
+    ],
+    "effector ion channel activity": [
+        3631
+    ],
+    "ca(2|lcium)? mediated feedback": [
+        98012
+    ],
+    "nav1 2": [
+        92083
+    ],
+    "cochlear ganglion": [
+        88112
+    ],
+    "ca(2|lcium)? cycling": [
+        2396
+    ],
+    "camkii": [
+        2396
+    ],
+    "(anti)?arrhythmic": [
+        52423
+    ],
+    "cardiac fibroblas(ts|t)": [
+        88205,
+        52423
+    ],
+    "heart cel(ls|l)": [
+        52423
+    ],
+    "myocyte": [
+        52423
+    ],
+    "ik": [
+        248
+    ],
+    "myocardi(um|al)": [
+        52423
+    ],
+    "(k|potassium) concentration": [
+        248
+    ],
+    "intracellular ionic concentratio(ns|n)": [
+        3631
+    ],
+    "endocardial": [
+        52423
+    ],
+    "gap junction channe(ls|l)": [
+        114107
+    ],
+    "transverse velocity": [
+        3543
+    ],
+    "idiopathic familial epilepsies": [
+        52405
+    ],
+    "herg": [
+        88206,
+        122807
+    ],
+    "axon pathfinding": [
+        3538
+    ],
+    "dendritic shape formation": [
+        8114
+    ],
+    "dendritic growth": [
+        8114
+    ],
+    "electrosensory lobe": [
+        88116
+    ],
+    "ca2? release": [
+        2396,
+        98012
+    ],
+    "c elegans": [
+        47316
+    ],
+    "generalized pps": [
+        49304
+    ],
+    "principal curv(es|e)": [
+        49304
+    ],
+    "fractional leaky integrate": [
+        155861
+    ],
+    "addictive compounds?": [
+        112854
+    ],
+    "amygdala nucle(i|us)": [
+        142628
+    ],
+    "aplysia sensorimotor synaps(e|es)": [
+        52415
+    ],
+    "neuron r15": [
+        52420,
+        115956,
+        47316
+    ],
+    "astrocy(te|tic)": [
+        87589
+    ],
+    "auditory cortic(e|es)": [
+        144485
+    ],
+    "boolean network": [
+        144990
+    ],
+    "hsn neuron": [
+        127712
+    ],
+    "vc neuro(ns|n)": [
+        127713,
+        47316
+    ],
+    "cabtrp ia": [
+        184582
+    ],
+    "calcium transients calcium rise times": [
+        97997
+    ],
+    "cardiac pacemaking": [
+        141450
+    ],
+    "catacomb2": [
+        64245
+    ],
+    "cellexcite": [
+        112469
+    ],
+    "cellular volume dynamics": [
+        144383
+    ],
+    "channelrhodospin": [
+        151550
+    ],
+    "chr": [
+        151550
+    ],
+    "(chloride|cl) influx": [
+        143004
+    ],
+    "comsol 4 2a": [
+        147741
+    ],
+    "nonspiking interneurons?$crayfish": [
+        87588
+    ],
+    "cytokine interactions?": [
+        185305
+    ],
+    "dendritic( voltage)? bistability": [
+        169987
+    ],
+    "drosophila": [
+        47316
+    ],
+    "duration selectivity": [
+        144515
+    ],
+    "egg laying": [],
+    "p and t type primary afferent fibers?": [
+        88119
+    ],
+    "ell pyramidal cell": [
+        88116
+    ],
+    "fly lobula plate tangential cel(ls|l)": [
+        157238
+    ],
+    "gamma oscillatio(ns|n)": [
+        156115
+    ],
+    "gnrh neuro(n|ns)": [
+        113950
+    ],
+    "grueneberg ganglion": [
+        151819
+    ],
+    "(hawkmoth|deilephila elpeno)": [],
+    "(snail|helix pomatia)": [
+        125736
+    ],
+    "ca1$stratum radiatum interneuro(ns|n)": [
+        136178
+    ],
+    "inferior olive": [
+        144503
+    ],
+    "intermittent periodic block": [
+        136303
+    ],
+    "intracortical microstimulation": [
+        147753
+    ],
+    "intramuscular interstitial cells of cajal": [
+        156002
+    ],
+    "icc im": [
+        156002
+    ],
+    "kinness": [
+        113940
+    ],
+    "lamprey brainstem spinal cord": [
+        151437,
+        114428
+    ],
+    "lamprey": [
+        151437,
+        47316
+    ],
+    "lateral superior olive": [
+        143146
+    ],
+    "lso": [
+        143146
+    ],
+    "c interneuron": [
+        116579
+    ],
+    "leech heart interneuron": [
+        52410
+    ],
+    "leech heart moto(r )?neurone?s?": [
+        153358
+    ],
+    "retzius neurone?s?": [
+        120911
+    ],
+    "lc neuro(ns|n)": [
+        145165
+    ],
+    "locust the lobula giant movement detector": [
+        116948
+    ],
+    "lgmd": [
+        116948
+    ],
+    "macrophag(es|e)": [
+        96243
+    ],
+    "magnetic stimulation": [
+        138323
+    ],
+    "maximum entropy principle": [
+        125294
+    ],
+    "medial nucleus of the trapezoid body": [
+        85986
+    ],
+    "medial septum": [
+        154751
+    ],
+    "medial superior olivary nucleus": [
+        88110
+    ],
+    "mso": [
+        88110
+    ],
+    "metabotropic glutamate": [
+        207
+    ],
+    "microglia": [
+        96242
+    ],
+    "moose pymoose": [
+        118327
+    ],
+    "motion detection": [
+        168963
+    ],
+    "motor behavio(rs|r)": [
+        186770
+    ],
+    "myenteric interstitial cells of cajal": [
+        156000
+    ],
+    "icc ?my": [
+        156000
+    ],
+    "nach(r|rs)": [
+        122825
+    ],
+    "alpha7 nicotinic acetylcholine": [
+        122825
+    ],
+    "bitufted interneurone?s?": [
+        93384
+    ],
+    "irregular spiking (is )?interneurone?s?": [
+        168312
+    ],
+    "medium spiny striatal neurone?s?": [
+        150619
+    ],
+    "dynamic neural field( dnf)? (simulator|simulations|calculatio(ns|n))": [
+        187110
+    ],
+    "neuronpm": [
+        82892
+    ],
+    "neuronvisio": [
+        147186
+    ],
+    "(nucleus accumbens|nacb)": [
+        112837
+    ],
+    "olfactory bulb aob": [
+        185340
+    ],
+    "olfactory bulb glomerul(i|us)": [
+        140469
+    ],
+    "jgcs": [
+        140469
+    ],
+    "categorical perception": [
+        113658
+    ],
+    "persistent neuronal activity": [
+        185343
+    ],
+    "reaction diffusion": [
+        183016
+    ],
+    "repetitive single spike modes of discharge": [
+        151445
+    ],
+    "reservoir networks": [
+        185098
+    ],
+    "dhskmcs": [
+        105531
+    ],
+    "motor unit twitch": [
+        117813
+    ],
+    "sympathetic preganglionic neurone?s?": [
+        167627
+    ],
+    "spinal alpha moto(r )?neurone?s?": [
+        115954
+    ],
+    "stomatogastric gangli(a|on)": [
+        115959
+    ],
+    "phasing storage and recall": [
+        151331
+    ],
+    "recall storage": [
+        151331
+    ],
+    "stn": [
+        116868
+    ],
+    "sc": [
+        118308
+    ],
+    "superior paraolivary nucleus": [
+        139658
+    ],
+    "spn": [
+        139658
+    ],
+    "geniculate thalamocortical": [
+        140252
+    ],
+    "ts": [
+        104624
+    ],
+    "tritonia diomedea activation": [
+        115957
+    ],
+    "turtle visual cortex": [
+        115948
+    ],
+    "visual cortex of turtles": [
+        115948
+    ],
+    "ukf": [
+        146816
+    ],
+    "chopper neurone?s?$ventral cochlear nucleus": [
+        88115
+    ],
+    "vmns": [
+        127024
+    ],
+    "vns": [
+        139834
+    ],
+    "wide dynamic range wdr neuron": [
+        128565
+    ],
+    "spiking leaky integrate and fire lif neurons": [
+        154740
+    ],
+    "alzheimer": [
+        112047
+    ],
+    "bg": [
+        115952
+    ],
+    "rhythms of epileptic seizures": [
+        139148
+    ],
+    "deep cerebellar nucle(us|i)": [
+        136179
+    ],
+    "dcn": [
+        136179
+    ],
+    "neural connectivity": [
+        114660
+    ],
+    "connectivity moti(f|fs)": [
+        114660
+    ],
+    "dbs": [
+        116944,
+        65417
+    ],
+    "entorhinal realignment": [
+        119191
+    ],
+    "entorhinal stellate cells": [
+        129068,
+        119191
+    ],
+    "entorhinal cortical interneurons": [
+        119191
+    ],
+    "globus pallidus": [
+        88217
+    ],
+    "gpi": [
+        88217,
+        65417
+    ],
+    "gp neurons": [
+        88217
+    ],
+    "hebbian and homeostatic plasticity": [
+        180821
+    ],
+    "hippocampal basket cel(l|ls)": [
+        190461
+    ],
+    "hippocampal area ca3 interneuro(n|ns)": [
+        139885
+    ],
+    "serca": [
+        88211
+    ],
+    "information flow": [
+        136098
+    ],
+    "information processing": [
+        136098
+    ],
+    "learning mechanis(m|ms)": [
+        83535
+    ],
+    "na ca2? exchanger": [
+        88209
+    ],
+    "striatal fast spiking fs interneurons": [
+        118395
+    ],
+    "olfactory bulb glomeruli": [
+        3978
+    ],
+    "olfactory bulb the glomerular layer": [
+        3978
+    ],
+    "orientation selective": [
+        147931
+    ],
+    "parkinson(ism|ian|s)?": [
+        65417
+    ],
+    "pd": [
+        65417
+    ],
+    "prc": [
+        137847
+    ],
+    "pituitary lactotrop(h|hs)": [
+        62277
+    ],
+    "procedural learning": [
+        83536
+    ],
+    "reinforcement": [
+        83536
+    ],
+    "learning networks": [
+        83536
+    ],
+    "learned reward associatio(ns|n)": [
+        83536
+    ],
+    "retinal?": [
+        118529
+    ],
+    "retinocortical": [
+        118529
+    ],
+    "reward modulated$(STDP|spike timing dependent)": [
+        116858
+    ],
+    "navigation": [
+        182690
+    ],
+    "striatal": [
+        138633
+    ],
+    "subthalamic n(euron|ucleus)": [
+        74300
+    ],
+    "5 ht1": [
+        198
+    ],
+    "5 ht2": [
+        199
+    ],
+    "5 ht3": [
+        208
+    ],
+    "5 ht4": [
+        200
+    ],
+    "ampa": [
+        205
+    ],
+    "at1r": [
+        186227
+    ],
+    "atp senstive (k|potassium) (current|channel)s?": [
+        87769
+    ],
+    "izhikevich (cell|neuron)s?": [
+        154741
+    ],
+    "morris lecar": [
+        150222
+    ],
+    "wang buzsaki": [
+        146805
+    ],
+    "integrate and fire$(adaptive exponential|adex)": [
+        154778
+    ],
+    "integrate and fire$fractional leaky": [
+        155861
+    ],
+    "integrate and fire$leaky": [
+        154740
+    ],
+    "single compartment$conductance based": [
+        156124
+    ],
+    "theta (neuron|cell)s": [
+        146806
+    ],
+    "acetylcholine|ach": [
+        209
+    ],
+    "action potential initiation": [
+        3541
+    ],
+    "(action selection|decision making)": [
+        83573
+    ],
+    "active dendrites?": [
+        3639
+    ],
+    "activity patterns?": [
+        3543
+    ],
+    "addiction": [
+        112854
+    ],
+    "adrenergic": [
+        215
+    ],
+    "(aging|alzheimers?)": [
+        112047
+    ],
+    "alpha1": [
+        193
+    ],
+    "alpha2": [
+        194
+    ],
+    "amino acid receptors?": [
+        219
+    ],
+    "amino acids?": [
+        231
+    ],
+    "amygdala": [
+        142628
+    ],
+    "angiotensin": [
+        186226
+    ],
+    "animatlab": [
+        150700
+    ],
+    "anoxic depolarization": [
+        139270
+    ],
+    "aplysia$b3(1|2)": [
+        116700
+    ],
+    "aplysia$r15": [
+        52420
+    ],
+    "aplysia$cultured (neuron|cell)s?": [
+        88109
+    ],
+    "aplysia$feeding cpg (neuron|cell)s?": [
+        65418
+    ],
+    "aplysia$interneurons?": [
+        52414
+    ],
+    "aplysia$(motor neuron|motoneuron)s?": [
+        52415
+    ],
+    "aplysia$sensory (neuron|cell)s?": [
+        52413
+    ],
+    "apopto(sis|tic)": [
+        144991
+    ],
+    "arteriolar network": [
+        52411
+    ],
+    "astrocyte": [
+        87589
+    ],
+    "attractor neural network": [
+        83539
+    ],
+    "axons?": [
+        3538
+    ],
+    "axonal action potentials?": [
+        3645
+    ],
+    "b lymphocyte": [
+        96244
+    ],
+    "beta oscillations?": [
+        185022
+    ],
+    "bifurcations?": [
+        143724
+    ],
+    "biopax": [
+        120322
+    ],
+    "biofeedback": [
+        116857
+    ],
+    "boolean networks?": [
+        144990
+    ],
+    "brain rhythms?": [
+        139148
+    ],
+    "brainstem": [
+        183076
+    ],
+    "brainstem (neuron|cell)s?": [
+        185139
+    ],
+    "brugada": [
+        88213
+    ],
+    "c elegans$hermaphrodite specific": [
+        127712
+    ],
+    "c elegans$vc (motor neuron|motoneuron)s?": [
+        127713
+    ],
+    "c elegans$uterine vulval cell": [
+        127714
+    ],
+    "c program": [
+        3529
+    ],
+    "clc 2 clcn2": [
+        143068
+    ],
+    "cn stellate cell": [
+        88113
+    ],
+    "cnrun": [
+        143758
+    ],
+    "CO": [
+        227
+    ],
+    "comsol": [
+        152965
+    ],
+    "copasi": [
+        156118
+    ],
+    "creb": [
+        151332
+    ],
+    "csim": [
+        82383
+    ],
+    "(ca|calcium|ca ?2) pumps?": [
+        146507
+    ],
+    "cabtrp 1a": [
+        184582
+    ],
+    "calc (calcium|ca) calculator": [
+        97997
+    ],
+    "calcium dynamics": [
+        98012
+    ],
+    "calcium waves": [
+        150554,
+        98012
+    ],
+    "(cardiac|heart)$atrial cells?": [
+        52422
+    ],
+    "(cardiac|heart)$pacemaking": [
+        141450
+    ],
+    "(cardiac|heart)$ventricular cells?": [
+        88205
+    ],
+    "catacomb": [
+        64245
+    ],
+    "(cav1 1|cacna1s)": [
+        122813,
+        2396
+    ],
+    "(cav1 2|cacna1c)": [
+        122814,
+        2396
+    ],
+    "(cav1 3|cacna1d)": [
+        122812,
+        2396
+    ],
+    "(cav2 1|cacna1a)": [
+        122819,
+        2396
+    ],
+    "(cav2 2|cacna1b)": [
+        122820,
+        2396
+    ],
+    "(cav3 1|cacna1g)": [
+        122810,
+        2396
+    ],
+    "(cav3 2|cacna1h)": [
+        122809,
+        2396
+    ],
+    "(cav3 3|cacna1i)": [
+        122811,
+        2396
+    ],
+    "cellml": [
+        120321
+    ],
+    "cerebell(um|ar)": [
+        115953
+    ],
+    "cerebellum$deep nucleus (neuron|cell)s?": [
+        136179
+    ],
+    "cerebellum$golgi (neuron|cell)s?": [
+        112687
+    ],
+    "cerebellum$granule (neuron|cell)s?": [
+        7346
+    ],
+    "cerebellum$purkinje (neuron|cell)s?": [
+        271
+    ],
+    "channel receptors?": [
+        3540
+    ],
+    "(channelrhodopsin)": [
+        151550
+    ],
+    "chemesis": [
+        53428
+    ],
+    "(cl|chloride) regulation": [
+        143004
+    ],
+    "cholinergic receptors?": [
+        218
+    ],
+    "cochlear?$hair cells?": [
+        1965
+    ],
+    "cochlear?$ganglion cells?$type ii": [
+        88112
+    ],
+    "cochlear?$bushy cells?": [
+        273
+    ],
+    "cochlear?$octopus cells?": [
+        277
+    ],
+    "cochlear?$(pyramidal|fusiform) cells?": [
+        274
+    ],
+    "coincidence detection": [
+        3632
+    ],
+    "(complementary|alternative) medicine": [
+        112855
+    ],
+    "((conductance|vgc) distributions?)|(distribution of (vgc|conductance)s?)": [
+        143636
+    ],
+    "channels? (are|were) distributed": [
+        143636
+    ],
+    "conduction failure": [
+        114307
+    ],
+    "connectionist networks?": [
+        83551
+    ],
+    "connectivity matri(x|ces)": [
+        114660
+    ],
+    "contrast gain control": [
+        152026
+    ],
+    "crab$(stomatogastric ganglion|stg)$(lateral gastric|lg)": [],
+    "crab$(stomatogastric ganglion|stg)$(lateral pyloric|lp)": [],
+    "crab$(stomatogastric ganglion|stg)$(modulatory commissural|mcn1)": [],
+    "crab$(stomatogastric ganglion|stg)$(interneuron 1|int1)": [],
+    "crayfis$identified nonspiking interneuron": [
+        87588
+    ],
+    "crayfish$(motor neuron|motoneuron)s?": [
+        150702
+    ],
+    "cython": [
+        146899
+    ],
+    "cytokine signaling": [
+        185305
+    ],
+    "drd1a": [
+        122828
+    ],
+    "drd2": [
+        122829
+    ],
+    "deep brain stimulation": [
+        116944,
+        65417
+    ],
+    "delays?": [
+        97752
+    ],
+    "dendritic bistability": [
+        169987
+    ],
+    "dentate gyrus$mopp cells?": [
+        124389
+    ],
+    "dentate gyrus$basket cells?": [
+        52417
+    ],
+    "dentate gyrus$granule cells?": [
+        257
+    ],
+    "dentate gyrus$hilar cells?": [
+        88216
+    ],
+    "dentate gyrus$mossy cells?": [
+        52416
+    ],
+    "depolarization blocks?": [
+        121254
+    ],
+    "depression": [
+        22012
+    ],
+    "depressor scutorum rostralis muscle": [
+        114299
+    ],
+    "detailed neuron(al)? models?": [
+        3641
+    ],
+    "development": [
+        128875
+    ],
+    "direction selectivity": [
+        116907
+    ],
+    "dopamine(rgic)? receptors?": [
+        223
+    ],
+    "dorsal root ganglion$cold sensing": [
+        185113
+    ],
+    "(dorsal root ganglion|drg) cells?": [
+        136307
+    ],
+    "drosophila antennal? lobe$dm1 projection": [
+        120612
+    ],
+    "drug binding": [
+        149383
+    ],
+    "dynamics solver": [
+        125369
+    ],
+    "dynorphin": [
+        2389
+    ],
+    "edlut": [
+        150203
+    ],
+    "ell pyramidal (cell|neuron)s?": [
+        88116
+    ],
+    "(ernst|event related neuronal simulation)": [
+        140884
+    ],
+    "electric fish$primary afferent fibers?": [
+        88119
+    ],
+    "electric fish$midbrain torus semicircularis": [
+        88204
+    ],
+    "electrogenic pumps?": [
+        120694
+    ],
+    "electroton(us|ic)": [
+        64175
+    ],
+    "pdp": [
+        53430
+    ],
+    "endocannabinoid": [
+        184489
+    ],
+    "enteric nervous system": [
+        115955
+    ],
+    "entorhinal cortex": [
+        119191
+    ],
+    "entorhinal cortex$stellate cell": [
+        129068
+    ],
+    "envelope synthesis": [
+        129070
+    ],
+    "ephinephrine": [
+        229
+    ],
+    "erythromelalgia": [
+        138271
+    ],
+    "evoked lfps?": [
+        139996
+    ],
+    "extracellular": [
+        183720
+    ],
+    "extracellular fields": [
+        84598
+    ],
+    "fortran": [
+        45540
+    ],
+    "facilitation": [
+        22010
+    ],
+    "(fly|drosophila)$lamina (cell|neuron)s?": [
+        168964
+    ],
+    "(fly|drosophila)$lobular plate vertical system": [
+        116967
+    ],
+    "(fly|drosophila)$medulla (cell|neuron)s?": [
+        168965
+    ],
+    "(fly|drosophila)$vertical system tangential": [
+        157238
+    ],
+    "g protein coupled": [
+        136106
+    ],
+    "genesis": [
+        1883
+    ],
+    "(gnustep nextstep|openstep)": [
+        97995
+    ],
+    "gaba": [
+        213
+    ],
+    "gabaa": [
+        202,
+        213
+    ],
+    "gabab": [
+        203,
+        213,
+        3539
+    ],
+    "gamma (oscillations?|frequency|rhythms?)": [
+        156115
+    ],
+    "gaseous receptors?": [
+        2372
+    ],
+    "gases": [
+        237
+    ],
+    "(gi|gastrointestinal) tract$intrinsic sensory": [
+        155799
+    ],
+    "glia": [
+        120799
+    ],
+    "globus pallidus (neuron|cell)s?": [
+        88217
+    ],
+    "glutamate": [
+        233
+    ],
+    "gnrh (cell|neuron)s?": [
+        113950
+    ],
+    "grueneberg ganglion (cell|neuron)s?": [
+        151819
+    ],
+    "hcn cnga1": [
+        122818,
+        251
+    ],
+    "herg kcnh2": [
+        122807
+    ],
+    "(cardiac|heart) cells?": [
+        52423
+    ],
+    "(cardiac|heart) diseases?": [
+        52407
+    ],
+    "hebbian plasticity": [
+        180821
+    ],
+    "(helix pacemaker bursting|rpa1)": [
+        125684
+    ],
+    "helix pomatia": [
+        125736
+    ],
+    "hermissenda photoreceptor type a": [
+        114289
+    ],
+    "hermissenda photoreceptor type b": [
+        114290
+    ],
+    "hippocamp(us|al)": [
+        115946
+    ],
+    "(ca1|ca3)": [
+        115946
+    ],
+    "ca1$pv fast firing": [
+        182866
+    ],
+    "ca1$axo axonic": [
+        151330
+    ],
+    "ca1$basket cells?": [
+        190461
+    ],
+    "ca1$bistratified cells?": [
+        151329
+    ],
+    "ca1$interneuron oriens alveus": [
+        35373
+    ],
+    "ca1$stratum radiatum interneurons?": [
+        136178
+    ],
+    "ca3$axo axonic cells?": [
+        181968
+    ],
+    "ca3$basket cells?": [
+        154093
+    ],
+    "ca3$pyramidal": [
+        259
+    ],
+    "ca3$stratum oriens$lacunosum moleculare interneurons?": [
+        139885
+    ],
+    "ca3$stratum radiatum$lacunosum moleculare interneurons?": [
+        140767
+    ],
+    "hippocamp(us|al)$dissociated (neuron|cell)s?": [
+        112447
+    ],
+    "hippocamp(us|al)$septum medial gabaergic (neuron|cell)s?": [
+        154750
+    ],
+    "histamine": [
+        238
+    ],
+    "hodgkin huxley (neuron|cell)s?": [
+        114737
+    ],
+    "homeosta(tic|sis)": [
+        144409
+    ],
+    "honeybee kenyon cells?": [
+        114295
+    ],
+    "i ?a ?slow": [
+        3277,
+        2405
+    ],
+    "i ?ano2": [
+        136104
+    ],
+    "i ?can": [
+        255,
+        2397
+    ],
+    "i ?cng": [
+        254,
+        2397
+    ],
+    "i ?ca ?p": [
+        140826
+    ],
+    "i ?ca(2|lcium)?": [
+        2396
+    ],
+    "i ?(chloride|cl)": [
+        240
+    ],
+    "i ?cl ?leak": [
+        139267,
+        240
+    ],
+    "i ?cl ?ca": [
+        252,
+        240
+    ],
+    "i ?k": [
+        248,
+        2405
+    ],
+    "i ?k ?ca": [
+        253,
+        2405
+    ],
+    "i ?k ?leak": [
+        249,
+        2405
+    ],
+    "i ?krp": [
+        112841,
+        2405
+    ],
+    "i ?l high threshold": [
+        243
+    ],
+    "i m": [
+        250,
+        2405,
+        209
+    ],
+    "i ?mi": [
+        184409
+    ],
+    "i ?mixed": [
+        2397
+    ],
+    "i n": [
+        244,
+        2396
+    ],
+    "i ?na ?leak": [
+        139268,
+        2395
+    ],
+    "i ?na ?p": [
+        241,
+        2395
+    ],
+    "i ?na ?t": [
+        242,
+        2395
+    ],
+    "i ?potassium": [
+        2405
+    ],
+    "i ?q": [
+        112844,
+        2396
+    ],
+    "i ?r": [
+        112843,
+        2396
+    ],
+    "i ?(sodium|na)": [
+        2395
+    ],
+    "i ?t low threshold": [
+        245,
+        2396
+    ],
+    "trpm8": [
+        152639,
+        182362,
+        185112
+    ],
+    "i ?h": [
+        251,
+        2397
+    ],
+    "i ?p ?q": [
+        246,
+        2396
+    ],
+    "trp": [
+        137264,
+        152639,
+        182362
+    ],
+    "thermoreceptors?": [
+        152639
+    ],
+    "capsaicin": [
+        182362
+    ],
+    "idl": [
+        144479
+    ],
+    "igor pro": [
+        83509
+    ],
+    "ip3": [
+        153715,
+        98012
+    ],
+    "irk": [
+        122824,
+        2405
+    ],
+    "i ?ahp": [
+        127083
+    ],
+    "i ?hco3": [
+        148257
+    ],
+    "i ?herg": [
+        88206
+    ],
+    "herg$i ?kr": [
+        88214,
+        52407
+    ],
+    "i ?k ?na": [
+        116966,
+        2405
+    ],
+    "i ?kht": [
+        88117,
+        2405
+    ],
+    "i ?klt": [
+        88118,
+        2405
+    ],
+    "i ?ks": [
+        88215,
+        2405
+    ],
+    "i ?na ?ca": [
+        88210
+    ],
+    "i ?serca": [
+        88211,
+        98012
+    ],
+    "inferior olive (cell|neuron)s?": [
+        144503
+    ],
+    "dendritic geometry": [
+        3640
+    ],
+    "information transfer": [
+        136098
+    ],
+    "intermittent blocks?": [
+        136303
+    ],
+    "intramuscular$interstitial cell of cajal": [
+        156002
+    ],
+    "intrinsic plasticity": [
+        41934
+    ],
+    "invertebrates?": [
+        47316
+    ],
+    "channel kinetics": [
+        3631
+    ],
+    "ion receptors?": [
+        2391
+    ],
+    "ionchannellab": [
+        125744
+    ],
+    "ions": [
+        236
+    ],
+    "java": [
+        53895
+    ],
+    "kcc2": [
+        146505
+    ],
+    "kca2 1 kcnn1": [
+        122815
+    ],
+    "kca2 2 kcnn2": [
+        122821
+    ],
+    "kainate": [
+        210,
+        233
+    ],
+    "kir": [
+        167500,
+        2405
+    ],
+    "kir2 leak": [
+        185501,
+        2405
+    ],
+    "kir2 1 kcnj2": [
+        185462,
+        2405
+    ],
+    "kir2 2 kcnj12": [
+        185502,
+        2405
+    ],
+    "kir2 3 kcnj4": [
+        185503,
+        2405
+    ],
+    "kir2 4 kcnj14": [
+        185504,
+        2405
+    ],
+    "kir6 2 kcnj11": [
+        122823,
+        2405
+    ],
+    "kv1 1 kcna1": [
+        122326,
+        2405
+    ],
+    "kv1 2 kcna2": [
+        122327,
+        2405
+    ],
+    "kv1 3 kcna3": [
+        122805,
+        2405
+    ],
+    "kv1 4 kcna4": [
+        122804,
+        2405
+    ],
+    "kv1 5 kcna5": [
+        122806,
+        2405
+    ],
+    "kv1 9 kv7 1 kcnq1": [
+        122822,
+        2405
+    ],
+    "kv2 1 kcnb1": [
+        122816,
+        2405
+    ],
+    "kv3 1 kcnc1": [
+        122817,
+        2405
+    ],
+    "kv3 3 kcnc3": [
+        122808,
+        2405
+    ],
+    "kv3 4 kcnc4": [
+        123580,
+        2405
+    ],
+    "kv4 1 kcnd1": [
+        136317,
+        2405
+    ],
+    "kv4 2 kcnd2": [
+        112842,
+        2405
+    ],
+    "kv4 3 kcnd3": [
+        122803,
+        2405
+    ],
+    "lcg": [
+        169347
+    ],
+    "laminar connectivity": [
+        128811
+    ],
+    "lamprey$(spinal cord|brainstem)": [
+        151437
+    ],
+    "late (na|sodium)": [
+        88208
+    ],
+    "(lateral superior olive|lso) (neuron|cell)s?": [
+        143146
+    ],
+    "learning": [
+        83535
+    ],
+    "leech": [
+        115958
+    ],
+    "leech$c interneurons?": [
+        116579
+    ],
+    "leech$retzius": [
+        120911
+    ],
+    "leech$s (neuron|cell)s?": [
+        102282
+    ],
+    "leech$t segment(al)? sensory (neuron|cell)s?": [
+        114293,
+        182362
+    ],
+    "leech$heart interneurons?": [
+        52410
+    ],
+    "leech$heart (motoneuron|motor neuron)s?": [
+        153358
+    ],
+    "leech$pressure p mechanosensory (cell|neuron)s?": [
+        114297,
+        182362
+    ],
+    "libroadrunner": [
+        184421,
+        184414
+    ],
+    "locking mixed mode": [
+        127084
+    ],
+    "locus coeruleus": [
+        145165
+    ],
+    "locust$lobula giant movement detector": [
+        116948
+    ],
+    "long term synaptic plasticity": [
+        3647
+    ],
+    "lua": [
+        136302
+    ],
+    "m1": [
+        179
+    ],
+    "m2": [
+        183
+    ],
+    "m3": [
+        180
+    ],
+    "m4": [
+        181
+    ],
+    "m5": [
+        182
+    ],
+    "matlab": [
+        36835
+    ],
+    "mcell": [
+        2835,
+        183016
+    ],
+    "(moose|pymoose)": [
+        118327
+    ],
+    "mvaspike": [
+        83451
+    ],
+    "macrophages?": [
+        96243
+    ],
+    "madsim": [
+        118095
+    ],
+    "magnetic stimulations?": [
+        138323
+    ],
+    "magnetoencephalography": [
+        113742
+    ],
+    "mathematica": [
+        143722
+    ],
+    "maximum entropy models?": [
+        125294
+    ],
+    "medial nucleus$trapezoid body": [
+        85986
+    ],
+    "mntb": [
+        85986
+    ],
+    "molecular networks?": [
+        145174
+    ],
+    "monoamine receptors?": [
+        211
+    ],
+    "monoamines": [
+        234
+    ],
+    "motion detect(ion|or|ors)": [
+        168963
+    ],
+    "motor control": [
+        186770
+    ],
+    "muscle model$vibrissa": [
+        127515
+    ],
+    "mysql": [
+        144532
+    ],
+    "myelinated (cell|neuron|axon)s?": [
+        52425
+    ],
+    "(myenteric interstitial cells?|iccmy)": [
+        156000
+    ],
+    "ncs": [
+        83448
+    ],
+    "(NEST|BLISS|SYNOD)": [],
+    "NEURON": [
+        1882
+    ],
+    "NEURONPM": [
+        82892
+    ],
+    "ng108 15": [
+        114112
+    ],
+    "nkcc1": [
+        146506
+    ],
+    "nmda": [
+        206
+    ],
+    "NO": [
+        2375
+    ],
+    "(nr2a|grin2a)": [
+        122826
+    ],
+    "(nr2b|grin2b)": [
+        122827
+    ],
+    "(na ca2?|sodium calcium) exchangers?": [
+        88209
+    ],
+    "(na k|sodium potassium) pumps?": [
+        120693
+    ],
+    "nav scn1b": [
+        127284,
+        2395
+    ],
+    "(nav1 1|scn1a)": [
+        92082,
+        2395
+    ],
+    "(nav1 2|scn2a)": [
+        92083,
+        2395
+    ],
+    "(nav1 3|scn3a)": [
+        92084,
+        2395
+    ],
+    "(nav1 6|scn8a)": [
+        92087,
+        2395
+    ],
+    "(nav1 7|scn9a)": [
+        92088,
+        2395
+    ],
+    "(nav1 8|scn10a)": [
+        92089,
+        2395
+    ],
+    "(nav1 9|scn11a|scn12a)": [
+        92091,
+        2395
+    ],
+    "nengo": [
+        136173
+    ],
+    "neocort(ex|ical)": [
+        115945
+    ],
+    "neocort(ex|ical)$bitufted interneurons?": [
+        93384
+    ],
+    "neocort(ex|ical)$deep neurogliaform interneurons?": [
+        150807
+    ],
+    "neocort(ex|ical)$dissociated cultured nerves?": [
+        128077
+    ],
+    "neocort(ex|ical)$(fast spiking|fs) interneurons?": [
+        97753
+    ],
+    "neocort(ex|ical)$baskets?": [],
+    "neocort(ex|ical)$layer (2 3|2|3) interneurons?": [
+        184130
+    ],
+    "neocort(ex|ical)$layer (2 3|2|3) pyramid(al|s)": [],
+    "neocort(ex|ical)$layer 4 interneurons?": [
+        184132
+    ],
+    "neocort(ex|ical)$layer 4 neurons?": [
+        182505
+    ],
+    "neocort(ex|ical)$layer 4 pyramid(al|s)": [
+        184128
+    ],
+    "neocort(ex|ical)$layer 5 interneurons?": [
+        184134
+    ],
+    "neocort(ex|ical)$layer (5 6|5|6) pyramid(s|al)": [],
+    "neocort(ex|ical)$layer 6a interneurons?": [
+        184136
+    ],
+    "neocort(ex|ical)$(spiking irregular|irregular spiking) interneurons?": [
+        168312
+    ],
+    "neocort(ex|ical)$(spiking low threshold|low threshold spiking|lts)": [
+        142232
+    ],
+    "neocort(ex|ical)$(spiking regular|regular spiking|rs)": [
+        142230
+    ],
+    "neocort(ex|ical)$spiny stellates?": [
+        114635
+    ],
+    "neocort(ex|ical)$superficial neurogliaform interneuron": [
+        150808
+    ],
+    "neocort(ex|ical)$pyramidal cortical thalamic": [],
+    "neocort(ex|ical)$pyramidal intra telencephalic": [],
+    "neocort(ex|ical)$pyramidal tract cortical spinal": [],
+    "neostriatum$(fast spiking|fs) interneurons?": [
+        118395
+    ],
+    "neostriatum$cholinergic (cell|neuron|interneuron)s?": [
+        7021
+    ],
+    "cholinergic": [
+        209
+    ],
+    "neostriatum$spiny direct pathway": [
+        260
+    ],
+    "neostriatum$spiny indirect pathway": [
+        153360
+    ],
+    "neostriatum$spiny (cell|neuron)s?": [
+        150619
+    ],
+    "neural field simulator": [
+        187110
+    ],
+    "neural mass": [
+        111952
+    ],
+    "neuroml": [
+        154351
+    ],
+    "neurord": [
+        139757
+    ],
+    "neuroblastomas?": [
+        88207
+    ],
+    "neurogenesis": [
+        155599
+    ],
+    "neuronetexperimenter": [
+        125650
+    ],
+    "nicotin(e|ic)": [
+        178
+    ],
+    "nociception": [
+        96767
+    ],
+    "noise sensitiv(e|ity)": [
+        122331
+    ],
+    "norephinephrine": [
+        230
+    ],
+    "(norns|neural net studio)": [
+        154742
+    ],
+    "nucleus accumbens$spiny projection": [
+        112837
+    ],
+    "octave": [
+        54156
+    ],
+    "olfactory bulb": [
+        115950
+    ],
+    "olfactory bulb$(accessory mitral|mitral accessory) cells?": [
+        185340
+    ],
+    "olfactory bulb$main$granule$mc": [
+        3979
+    ],
+    "olfactory bulb$main$granule$tc": [
+        153283
+    ],
+    "olfactory bulb$periglomerular": [
+        3978
+    ],
+    "olfactory bulb$juxtaglomerular": [
+        140469
+    ],
+    "olfactory bulb$main$mitral": [
+        267
+    ],
+    "olfactory bulb$tufted$middle": [
+        153282
+    ],
+    "olfactory bulb$short axon": [
+        168419
+    ],
+    "olfactory cortex": [
+        115949
+    ],
+    "olfactory cortex$anterior$interneuron$deep layer": [
+        6034
+    ],
+    "olfactory cortex$anterior$interneuron$superficial layer": [
+        6013
+    ],
+    "olfactory cortex$anterior$pyramidal": [
+        269
+    ],
+    "olfactory receptor neuron": [
+        268
+    ],
+    "opsins?": [
+        222
+    ],
+    "orientation selectivity": [
+        147931
+    ],
+    "oscillations?": [
+        3634
+    ],
+    "osmosis$water": [
+        144382
+    ],
+    "pcsim": [
+        116856
+    ],
+    "pgenesis": [
+        140257
+    ],
+    "psics": [
+        128066
+    ],
+    "pspice": [
+        57924
+    ],
+    "parameter fitting": [
+        3637
+    ],
+    "parameter sensitivity": [
+        116962
+    ],
+    "parkinson": [
+        65417
+    ],
+    "(pascal|delphi)": [
+        117353
+    ],
+    "pathophysiology": [
+        52404
+    ],
+    "pattern separation": [
+        185463
+    ],
+    "peptide receptors?": [
+        2388
+    ],
+    "peptides?": [
+        235
+    ],
+    "perceptual categor(y|ies)": [
+        113658
+    ],
+    "persistent activity": [
+        185343
+    ],
+    "phase response curves?": [
+        137847
+    ],
+    "phase interference": [
+        141125
+    ],
+    "pituitary cells?": [
+        62277
+    ],
+    "place cells?": [
+        98011
+    ],
+    "post tetanic potentiation": [
+        22011
+    ],
+    "posture$locomotion": [
+        150701
+    ],
+    "potassium buffering": [
+        151948
+    ],
+    "(prefrontal cortex|pfc)": [
+        147188
+    ],
+    "pynn": [
+        116010
+    ],
+    "python": [
+        114646
+    ],
+    "(qbasic|quickbasic|turbo basic)": [
+        58965
+    ],
+    "qub": [
+        62675
+    ],
+    "rate coding model (cell|neuron)s?": [
+        58584
+    ],
+    "remoto": [
+        180371
+    ],
+    "rebound firing": [
+        136252
+    ],
+    "recurrent discharge": [
+        151445
+    ],
+    "reinforcement learning": [
+        83536
+    ],
+    "reservoir computing": [
+        185098
+    ],
+    "respiratory column (cell|neuron)s?": [
+        125611
+    ],
+    "retina": [
+        118529
+    ],
+    "retina$bipolar": [
+        7020
+    ],
+    "retina$ganglion": [
+        270
+    ],
+    "reward modulated$stdp": [
+        116858
+    ],
+    "SABER": [
+        58962
+    ],
+    "sbml": [
+        184414
+    ],
+    "snnap": [
+        33983
+    ],
+    "split": [
+        83449
+    ],
+    "stdp": [
+        87578
+    ],
+    "STEPS": [
+        144556
+    ],
+    "schizophrenia": [
+        112853
+    ],
+    "scilab": [
+        83452
+    ],
+    "sensory receptors?": [
+        220
+    ],
+    "sensory (en)?cod(e|ing)": [
+        182362
+    ],
+    "sensory processing": [
+        140966
+    ],
+    "serotonin": [
+        239
+    ],
+    "short term synaptic plasticity": [
+        3644
+    ],
+    "simplified models?": [
+        3638
+    ],
+    "simulink": [
+        83572
+    ],
+    "skeletal muscle cells?": [
+        105531
+    ],
+    "sleep": [
+        93420
+    ],
+    "(na|sodium) pumps?": [
+        120695
+    ],
+    "spatial navigation": [
+        182690
+    ],
+    "spatio temporal activity patterns?": [
+        3636
+    ],
+    "spinal cord$ib$interneuron": [
+        117817
+    ],
+    "spinal cord$interneuron$ia": [
+        275
+    ],
+    "spinal cord$lamina i": [
+        128582
+    ],
+    "spinal cord$(motor neuron|motoneuron)s?": [
+        276
+    ],
+    "spinal cord$(motor neuron|motoneuron)s?$fast fatiguing": [
+        117815
+    ],
+    "spinal cord$(motor neuron|motoneuron)s?$fatigue resistant": [
+        117814
+    ],
+    "spinal cord$(motor neuron|motoneuron)s?$slow twitch": [
+        117813
+    ],
+    "renshaw cells?": [
+        117818
+    ],
+    "spinal cord$sympathetic preganglionic": [
+        167627
+    ],
+    "spinal$lamprey": [
+        114428
+    ],
+    "spinal motoneurons?": [
+        115954
+    ],
+    "spreading depression": [
+        167716
+    ],
+    "squid axon": [
+        52426
+    ],
+    "(sspice|symbolic spice)": [
+        97969
+    ],
+    "stick insect$nonspiking interneuron": [
+        118094
+    ],
+    "(stomatogastric ganglion|stg)": [
+        115959
+    ],
+    "(stomatogastric ganglion|stg)$pyloric dilator neurons?": [],
+    "(stomatogastric ganglion|stg)$pyloric neurons?": [],
+    "striatum": [
+        138633
+    ],
+    "stuttering": [
+        97751
+    ],
+    "substantia nigra pars compacta$dopaminergic cells?": [
+        261
+    ],
+    "substantia nigra pars reticulata$principal cells?": [
+        182544
+    ],
+    "subthalamus nucleus$projection neuron": [
+        74300
+    ],
+    "superior colliculus": [
+        118308
+    ],
+    "(suprachiasmatic nucleus|scn)": [
+        145884
+    ],
+    "synap(tic|ses?)": [
+        3539
+    ],
+    "synaptic integration": [
+        64174
+    ],
+    "synaptic plasticity": [
+        3643
+    ],
+    "synaptic noise": [
+        183719
+    ],
+    "synaptic input statistic": [
+        143085
+    ],
+    "synchronization": [
+        3635
+    ],
+    "teleost$thalamic": [
+        52427
+    ],
+    "temperature": [
+        152639
+    ],
+    "temporal pattern generation": [
+        3633
+    ],
+    "thalam(ic|us)": [
+        115951
+    ],
+    "thalam(ic|us)$dlm projection": [
+        144574
+    ],
+    "thalam(ic|us)$geniculate nucleus lateral$principal": [
+        262
+    ],
+    "thalam(ic|us)$lateral geniculate nucleus$interneuron": [
+        140252
+    ],
+    "thalam(ic|us)$reticular nucleus": [
+        263
+    ],
+    "therapeutics": [
+        13855
+    ],
+    "timothy syndrome": [
+        104624
+    ],
+    "topographica": [
+        76881
+    ],
+    "triggered activity": [
+        152968
+    ],
+    "tritonia": [
+        115957
+    ],
+    "tritonia$cerebral cell": [
+        93334
+    ],
+    "tritonia$swim interneuron$dorsal": [
+        93328
+    ],
+    "tritonia$swim interneuron$ventral": [
+        93335
+    ],
+    "turtle$cortex": [
+        115948
+    ],
+    "turtle$dorsal cortex$horizontal cells?": [
+        94854
+    ],
+    "turtle$dorsal cortex$lateral pyramidal cells?": [
+        94850
+    ],
+    "turtle$dorsal cortex$medial pyramidal cells?": [
+        94851
+    ],
+    "turtle$dorsal cortex$stellate cells?": [
+        94853
+    ],
+    "turtle$dorsal cortex$subpial cells?": [
+        94852
+    ],
+    "(tutorial|teaching)": [
+        3642
+    ],
+    "unsupervised learning": [
+        83538
+    ],
+    "VERTEX": [
+        156116
+    ],
+    "ventral cochlear nucleus$(t stellate|chopper)": [
+        88115
+    ],
+    "vestibular neurons?": [
+        139834
+    ],
+    "vibrissa (motor neuron|motoneuron)s?": [
+        127024
+    ],
+    "vibrissa motor plant": [
+        127514
+    ],
+    "(vcell|virtual cell)": [
+        55276
+    ],
+    "volume transmission": [
+        183421
+    ],
+    "wide dynamic range": [
+        128565
+    ],
+    "winner take all": [
+        83540
+    ],
+    "working memory": [
+        82787
+    ],
+    "xml": [
+        87474
+    ],
+    "xpp": [
+        33977
+    ],
+    "yale hmm": [
+        112042
+    ],
+    "(zinc|zn2?)": [
+        2392
+    ],
+    "egg laying circuit": [],
+    "(hawkmoth|deilephila elpenor)": [],
+    "mglur": [
+        207
+    ],
+    "mglur1": [
+        184,
+        207
+    ],
+    "mglur2": [
+        185,
+        207
+    ],
+    "mglur3": [
+        186,
+        207
+    ],
+    "mglur4": [
+        187,
+        207
+    ],
+    "mglur5": [
+        188,
+        207
+    ],
+    "mglur6": [
+        189,
+        207
+    ],
+    "mglur7": [
+        190,
+        207
+    ],
+    "mglur8": [
+        191,
+        207
+    ],
+    "nachr alpha 7": [
+        122825
+    ],
+    "neuroconstruct": [
+        143823
+    ],
+    "parplex": [
+        123850,
+        3536
+    ],
+    "unscented kalman filter": [
+        146816
+    ]
+}

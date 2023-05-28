@@ -114,6 +114,7 @@ urlpatterns = [
     re_path(r"^top-papers$(?i)", views.top_papers, name="top_papers"),
     re_path(r"^eavbindown$(?i)", views.download_zip, name="download_zip"),
     re_path(r"^getmodelfile$(?i)", views.download, name="download_file"),
+    re_path(r"^metadata-predictor$(?i)", views.metadata_predictor, name="metadata_predictor"),
     re_path(r"^findbycurrent$(?i)", views.findbycurrent, name="findbycurrent"),
     re_path(r"^findbyregionlist$(?i)", views.findbyregionlist, name="findbyregion"),
     re_path(

@@ -333,6 +333,15 @@ def _process_submit_list(request, listname, fieldname, attr_id, entry):
         entry[fieldname] = {"value": objs, "attr_id": attr_id}
 
 
+def metadata_predictor(request):
+    abstract = request.POST.get("abstract")
+    if abstract is None:
+        return HttpResponse("Forbidden", status=403)
+    return HttpResponse(json.dumps(models.predict_metadata(abstract)), content_type="application/json")
+
+
+
+@ensure_csrf_cookie
 def submit_model(request):
     metadata = [
         ["Model type", "model_type", _id_and_name(modeltypes)],
