@@ -88,6 +88,11 @@ This repository is currently intended to be bootstrapped from the classic EAV/CR
   change `modeldb2020.settings` to `Project.settings`
  - the settings file may need the full path to `TEMPLATES["DIRS"]`
 
+## on Analysis
+The `analysis` folder contains scripts for analyzing ModelDB in ways that may
+or may not be supported in the web interface. It includes:
+- `metadata_repeat_list.py` -- provides a list of all used metadata; combine with a free word-cloud generator to visualize
+
 ## On ModelViews
 
 You can gather a morphology suitable for frontpage display via
