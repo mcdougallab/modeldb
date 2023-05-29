@@ -1012,6 +1012,7 @@ class Model:
                         "readme.html",
                         "readme.htm",
                         "readme.md",
+                        "readme",
                     )
                 ) and readme_file is None:
                     readme_file = subfilename
