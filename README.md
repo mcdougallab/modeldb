@@ -67,6 +67,8 @@ This repository is currently intended to be bootstrapped from the classic EAV/CR
   from django.contrib.auth.models import User
   user = User.objects.create_user('john', 'lennon@thebeatles.com', 'johnpassword')
   ```
+- Pull links to biosimulations: `python3 pull_biosimulations.py` (in the `extract_data` folder). The website will still work without this, you just won't get any links to biosimulations.org
+- Insert static links to Open Source Brain: `python3 pull_opensourcebrain.py` (in the `extract_data` folder)
 - You can run a development server via, e.g. `python3 manage.py runserver 8888`
   - This will make the website available on port 8888 (you can then access it from your host system via port-forwarding.
   - This is separate from apache, which is also running and can later be connected to your django system.
