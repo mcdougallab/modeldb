@@ -334,6 +334,12 @@
     {% if Model.simPFid %}
         <a href="http://sim.neuroinf.jp/modules/xoonips/detail.php?item_id={{Model.simPFid.value}}">Simulation Platform <sup><i class="fas fa-external-link-alt"></i></sup></a><br>
     {% endif %}
+    {% if Model.biosimulations %}
+        <a href="https://biosimulations.org/projects/{{Model.biosimulations.value}}">BioSimulations.Org <sup><i class="fas fa-external-link-alt"></i></sup></a><br>
+    {% endif %}    
+    {% if Model.opensourcebrain %}
+        <a href="https://www.opensourcebrain.org/projects/{{Model.opensourcebrain.value}}">Open Source Brain <sup><i class="fas fa-external-link-alt"></i></sup></a><br>
+    {% endif %}    
     <a href="https://github.com/ModelDBRepository/{{Model.id}}">View on GitHub <sup><i class="fas fa-external-link-alt"></i></sup></a><br>
 {% endif %}
 {% endblock %}
