@@ -1,0 +1,80 @@
+{% extends "main.html" %}
+{% load static %}
+
+
+{% block head %}
+<link rel="stylesheet" href='{% static "neuronweb/static/css/styles-flot.css" %}'/>
+<link rel="stylesheet" href='{% static "neuronweb/static/css/jquery-ui.min.css" %}'/>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js" integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0=" crossorigin="anonymous"></script>
+<script src='{% static "neuronweb/static/js/jquery.dialogextend.js" %}'></script>
+
+<!-- The following are imports for Flot!-->
+<script type="text/javascript" src='{% static "neuronweb/flot/jquery.flot.js" %}'></script>
+<script type="text/javascript" src='{% static "neuronweb/flot/jquery.flot.navigate.js" %}'></script>
+<script type="text/javascript" src='{% static "neuronweb/flot/jquery.flot.resize.js" %}'></script>
+<script type="text/javascript" src='{% static "neuronweb/flot/jquery.flot.axislabels.js" %}'></script>
+
+<!-- Imports for jQuery/JavaScript/Flot that Robert and Nicole wrote -->
+<script type="text/javascript" src='{% static "neuronweb/myjQuery/myDialog.js" %}'></script>
+<script type="text/javascript" src='{% static "neuronweb/myjQuery/myFlot.js" %}'></script>
+
+<script src='{% static "neuronweb/static/js/jquery.cookie.js" %}'></script>
+<script src='{% static "neuronweb/static/js/jquery.treeview.js" %}' type="text/javascript"></script>
+<link rel="stylesheet" href='{% static "neuronweb/static/css/jquery.treeview.css" %}' />	
+
+<!-- support for touch events -->
+<script src='{% static "jquery.ui.touch-punch.min.js" %}'></script>
+
+<!-- the modelview code -->
+<script src='{% static "modelview/modelview.js" %}' type="text/javascript"></script>
+
+<script type="text/javascript">
+    $(() => {
+        load_modelview("{{Model.modelviews.default}}");
+        $("#modelview_select").change(function() {load_modelview(this.selectedOptions[0].value)});
+    });
+    function load_modelview(modelview_id) {
+        console.log("loading", modelview_id);
+        $("#modelview_tree").html("");
+        $("#modelview_graph1").html("").show();
+        $("#modelview_graph2").html("").show();
+        modelview_neuron_viewers = [];
+        $.getJSON(`/modelview-data/${modelview_id}`, function(json) {
+            $('#loading_modelview').hide();
+            modelview_data = json;
+            init_modelview();
+        });
+    }
+</script>
+{% endblock %}
+
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        {% include "showmodel-tabs.html" %}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <select id="modelview_select">
+            {% for item in Model.modelviews.all %}
+                <option value="{{item.id}}" {% if item.id == Model.modelviews.default %} selected {% endif %}>{{item.name}}</option>
+            {% endfor %}
+        </select>
+    </div>
+</div>
+<div class="row">
+    <div id="modelview_tree" class="col-sm-4">
+    </div>
+    <div class="col-sm-4">
+        <div id="modelview_graph1" class="vbox"></div>
+    </div>
+    <div class="col-sm-4">
+        <!-- the outer div allows the old code to still work by hiding the parent -->
+        <div id="modelview_graph2" class="vbox">
+        </div>
+    </div>
+</div>
+{% endblock %}
+

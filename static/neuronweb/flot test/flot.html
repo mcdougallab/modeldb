@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+	
+	<link rel="stylesheet" href="styles-flot.css"/>
+
+	<script src="jquery.js"></script>
+	<link rel="stylesheet" href="jquery-ui-1.10.3/themes/base/jquery.ui.all.css"/>
+	<link rel="stylesheet" href="jquery-ui-1.10.3/themes/base/jquery.ui.menubar.css"/>
+	
+	<script src="jquery-ui-1.10.3/ui/jquery.ui.core.js"></script>
+	<script src="jquery-ui-1.10.3/ui/jquery.ui.widget.js"></script>
+	<script src="jquery-ui-1.10.3/ui/jquery.ui.position.js"></script>
+	<script src="jquery-ui-1.10.3/ui/jquery.ui.button.js"></script>
+	<script src="jquery-ui-1.10.3/ui/jquery.ui.menu.js"></script>
+	<script src="jquery-ui-1.10.3/ui/jquery.ui.menubar.js"></script>
+	
+    <script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
+	<script src="jquery.dialogextend.js"></script>
+	
+	<!-- The following are imports for Flot!-->
+	<script type="text/javascript" src="flot/jquery.flot.js"></script>
+	<script type="text/javascript" src="flot/jquery.flot.navigate.js"></script>
+	<script type="text/javascript" src="flot/jquery.flot.resize.js"></script>
+	
+	<!-- Imports for jQuery/JavaScript/Flot that I wrote -->
+	<script type="text/javascript" src="myjQuery/myDialog.js"></script>
+	<script type="text/javascript" src="myjQuery/myFlot.js"></script>
+
+	<script>
+	$(function() {
+	
+		$('#Content').dialog({title:"hi"}).dialogExtend({'dblclick':'maximize', 
+        'maximizable': true, 'minimizable': true});
+	
+		var counter = 0;
+		var d1 = [];
+		for (var i = 0; i < 14; i += 0.5) {
+			d1.push([i, Math.sin(i)]);
+		}
+		var d2 = [[0, 3], [4, 8], [8, 5], [9, 13]];
+
+		// A null signifies separate line segments
+		var d3 = [[0, 12], [7, 12], null, [7, 2.5], [12, 2.5]];
+
+		$.plot("#placeholder", [ d1, d2, d3 ], {
+		yaxis: {min: 1, max:10}, 
+		xaxis: {min: 1, max:10},
+		zoom:  {interactive: true},
+		pan:   {interactive: true},
+		});
+		
+		$('#placeholder').bind("contextmenu",function(e){return false;}); //In the div, contextmenu is not to appear onclick.(save as, view source, etc options)
+		$('#placeholder'
+		).mousedown(
+		function(event){
+			if(event.which == 3)
+			{
+				console.log(event.which);
+			}
+		});
+		
+	});
+	
+	
+	$(function() {
+    $( "#placeholder" ).resizable();
+  });
+	
+	
+</script>
+
+</head>
+<body>
+
+<div id="header">
+		<h2>Basic Usage</h2>
+	</div>
+
+	<div id="content">
+
+		<div class="container">
+			<div id="placeholder" class="demo-placeholder" style="height:500px"></div>
+		</div>
+
+		<p>You don't have to do much to get an attractive plot.  Create a placeholder, make sure it has dimensions (so Flot knows at what size to draw the plot), then call the plot function with your data.</p>
+
+		<p>The axes are automatically scaled.</p>
+
+	</div>
+
+	<div id="footer">
+		Copyright &copy; 2007 - 2013 IOLA and Ole Laursen
+	</div>
+</body>
+</html>

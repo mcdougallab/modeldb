@@ -1,0 +1,35 @@
+.buttonHolder{
+	top:0px;
+	position:absolute;
+}
+
+.container{
+	width:300px;
+	height:300px;
+	}
+
+#placeholder{
+	width:100%;
+	height:100%;
+	}
+	
+.menu-invisible{
+	display:none;
+	position:absolute;
+}
+
+.menu-visible{
+	display:inline block;
+	position:absolute;
+	z-index:100000000;
+	}
+
+#menu{
+	font-size: 62.5%;	
+	}
+
+#resizable { 
+	width: 150px; 
+	height: 150px; 
+	padding: 0.5em; 
+	}

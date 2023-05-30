@@ -28,11 +28,11 @@
     </li>
   {% endif %}
   {% if not Model.data_to_curate %}
-  <!--
-    <li class="nav-item">
-      <a href="?model={{Model.id}}&tab=3" class="nav-link {% if tab == 3 %} active {% endif %}" role="tab" aria-expanded="false" aria-selected="false">Mechanisms</a>
-    </li>
-  -->
+    {% if Model.modelviews %}
+      <li class="nav-item">
+        <a href="?model={{Model.id}}&tab=3" class="nav-link {% if tab == 3 %} active {% endif %}" role="tab" aria-expanded="false" aria-selected="false">ModelView</a>
+      </li>
+    {% endif %}
     <li class="nav-item dropdown">
     {% if is_xpp %}
       </li><li class="nav-item">

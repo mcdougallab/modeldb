@@ -794,6 +794,19 @@ def showmodel(request):
             model.modeling_application["value"], context
         )
         return render(request, "showmodel7.html", context)
+    elif tab_id == 3:
+        papers = model.papers
+        citation_data = _prep_citations(papers)
+        context = {
+            "title": "ModelDB: ModelView",
+            "Model": model,
+            "tab": tab_id,
+        }
+
+        update_context_based_on_modeling_application(
+            model.modeling_application["value"], context
+        )
+        return render(request, "showmodel3.html", context)
     elif tab_id == 4:
         params = model.modelview("parameters")
         if params is not None and "by_file" in params:
@@ -961,6 +974,18 @@ def _prep_citations(papers):
         #    tmp_sorted_list = citation_group
         sorted_citations.append(tmp_sorted_list)
     return zip(papers, sorted_references, sorted_citations)
+
+
+def modelview_data(request, item):
+    # TODO: is there more security protection we need?
+    if '..' in item or '/' in item:
+        return HttpResponse("404 not found", status=404)
+    try:
+        with open(f"/home/bitnami/modelview-classic/{item}.json") as f:
+            result = f.read()
+    except FileNotFoundError:
+        return HttpResponse("404 not found", status=404)
+    return HttpResponse(result, content_type="application/json")
 
 
 def download_zip(request):
