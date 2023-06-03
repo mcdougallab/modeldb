@@ -31,7 +31,7 @@ from .models import (
     papers,
 )
 from .models import Paper
-
+import urllib
 
 ModelDB = models.ModelDB()
 
@@ -1133,7 +1133,7 @@ def download(request):
                 else:
                     contents = f'<pre>{html.escape(contents.decode("utf-8"))}</pre>'
             except:
-                contents = f"This file is not encoded as UTF-8. <a href='/getModelFile?model={model_id}&file={model.readme_file}'>Download it</a> to view."
+                contents = f"This file is not encoded as UTF-8. <a href='/getModelFile?model={model_id}&file={urllib.parse.quote(original_filename)}'>Download it</a> to view."
             contents = f"<html><body>{contents}</body></html>"
         response.write(contents)
         return response
