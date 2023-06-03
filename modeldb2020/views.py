@@ -567,6 +567,12 @@ def listbymodelname(request):
     return render(request, "listbymodelname.html", context)
 
 
+def publications(request):
+    context = {"title": "ModelDB: Publication List"}
+    return render(request, "publications.html", context)
+
+
+
 def my_logout(request):
     logout(request)
     next_url = request.GET.get("next")

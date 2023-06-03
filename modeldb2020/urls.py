@@ -150,6 +150,9 @@ urlpatterns = (
         re_path(
             r"^findbysimulator$(?i)", views.findbysimulator, name="findbysimulator"
         ),
+        re_path(
+            r"^publications$(?i)", views.publications, name="publications"
+        ),
         re_path(r"^(?:mdb)?citations$(?i)", views.mdbcitations, name="mdbcitations"),
         re_path(
             r"^models-with-uncurated-references$(?i)",

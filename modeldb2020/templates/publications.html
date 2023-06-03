@@ -1,0 +1,487 @@
+{% extends "main.html" %}
+
+{% block head %}
+<style>
+    .modellist>li {
+        padding-top: 1em;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-lg-12">
+        <center>
+            <h1>ModelDB and SenseLab publications</h1>
+        </center>
+        <h2>Journal articles</h2>
+        <ol>
+            <li>
+                Shepherd GM, Marenco L, Hines ML, Migliore M, McDougal RA, Carnevale NT, Newton AJH, Surles-Zeigler M,
+                Ascoli GA. (2019) Neuron names: a gene- and properties-based format, with special reference to cortical
+                neurons. <a href="http://dx.doi.org/10.3389/fnana.2019.00025">Frontiers in Neuroanatomy.</a> 13:25.
+            </li>
+            <li>
+                McDougal RA, Dalal I, Morse TM, Shepherd GM. (2018) Automated metadata suggestion during repository
+                submission. <a href="http://dx.doi.org/10.1007/s12021-018-9403-z">Neuroinformatics.</a>
+                McDougal RA, Morse TM, Hines ML, Shepherd GM. (2015) ModelView for ModelDB: Online
+                Presentation of Model Structure. <a
+                    href="http://dx.doi.org/10.1007/s12021-015-9269-2">Neuroinformatics</a> 13(4):459-70 <a
+                    href="https://www.ncbi.nlm.nih.gov/pubmed/?term=25896640">PubMed</a>
+            </li>
+            <li>
+                Samwald M, Chen J, Runneberg A, Lim E, Marenco L, Miller P, Shepherd G, Cheung K. (2010) Semantic
+                SenseLab: Implementing the vision of the Semantic Web in neuroscience. <i><a
+                        href="https://doi.org/10.1016/j.artmed.2009.11.003">Artificial Intelligence in Medicine</a></i>
+                48(1):21-28.
+                [<a href="https://pubmed.ncbi.nlm.nih.gov/20006477/">PubMed</a>]
+            </li>
+            <li>Morse TM. (2008) Neuroinformatics: From Bioinformatics to Databasing the Brain. Bioinformatics and
+                Biology Insights 2:259-270 [ <a href="https://pubmed.ncbi.nlm.nih.gov/19812780/">PubMed</a>
+                ]</li>
+            <li>Crasto CJ, Masiar P, Miller PL. (2007) NeuroExtract: Facilitating Neuroscience-oriented Retrieval from
+                Broadly-focused Bioscience Databases Using Text-based Query Mediation. JAMIA. 14: 355-360. [ <a
+                    href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=pubmed&cmd=Retrieve&dopt=AbstractPlus&list_uids=17329721&query_hl=6&itool=pubmed_docsum">PubMed</a>
+                ]</li>
+            <li>
+                Lam HY, Marenco L, Clark T, Gao Y, Kinoshita J, Shepherd G, Miller P, Wu E, Wong GT, Liu N, Crasto C,
+                Morse T, Stephens S, Cheung KH.&nbsp;(2007) AlzPharm: integration of neurodegeneration data using RDF.
+                BMC Bioinformatics May 9;8 Suppl 3:S4
+                [ <a
+                    href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=pubmed&cmd=Retrieve&dopt=AbstractPlus&list_uids=17493287&query_hl=3&itool=pubmed_DocSum">
+                    PubMed</a>&nbsp;]
+            </li>
+            <li>
+                Migliore M, Shepherd GM.&nbsp;Opinion: an integrated approach to classifying neuronal phenotypes.
+                Nat Rev Neurosci, 2005; 6(10):810-8. [ <a
+                    href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=pubmed&amp;dopt=Abstract&amp;list_uids=16276357">
+                    PubMed
+                </a>&nbsp;]
+            </li>
+            <li>
+                Marenco L, Wang TY, Shepherd G, Miller PL, Nadkarni P. QIS: A framework for
+                biomedical database federation. J Am Med Inform Assoc. 2004
+                Nov-Dec;11(6):523-34. [ <a
+                    href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=pubmed&amp;dopt=Abstract&amp;list_uids=15298995">
+                    PubMed
+                </a>&nbsp;]
+            </li>
+            <li>
+                Liu N, Xu F, Marenco L, Hyder F, Miller P, Shepherd GM. Informatics approaches
+                to functional MRI odor mapping of the rodent olfactory bulb: OdorMapBuilder and
+                OdorMapDB. Neuroinformatics. 2004; 2(1):3-18. [ <a
+                    href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=pubmed&amp;dopt=Abstract&amp;list_uids=15067166">
+                    PubMed
+                </a>&nbsp;]
+            </li>
+            <li>
+                Hines ML, Morse T, Migliore M, Carnevale NT, Shepherd GM. ModelDB: A Database
+                to Support Computational Neuroscience. J Comput Neurosci. 2004 Jul-Aug;
+                17(1):7-11. [ <a
+                    href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=15218350&amp;dopt=Abstract">
+                    PubMed
+                </a>]
+            </li>
+            <li>
+                Davison AP, Morse TM, Migliore M, Shepherd GM, Hines ML. Semi-automated
+                population of an online database of neuronal models (ModelDB) with citation
+                information, using PubMed for validation. Neuroinformatics. 2004; 2(3):327-32.
+                [ <a
+                    href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=15365194&amp;dopt=Abstract">
+                    PubMed
+                </a>]
+            </li>
+            <li>
+                Marenco L, Tosches N, Crasto CJ, Shepherd GM, Miller PL, Nadkarni PM. Achieving
+                evolvable web-database bioscience applications using the EAV/CR framework.
+                JAMIA 2003; 10(5):444-53. [ <a
+                    href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=12807806&amp;dopt=Abstract">
+                    PubMed
+                </a>&nbsp;]
+            </li>
+            <li>
+                Crasto CJ, Marenco LM, Migliore M, Mao B, Nadkarni, PM, Perry Miller P,
+                Shepherd GM: Text Mining Neuroscience Journal Articles to Populate Neuroscience
+                Databases. Neuroinformatics 2003; 3:215-38. [ <a
+                    href="https://link.springer.com/article/10.1385/NI%3A1%3A3%3A215">
+                    Abstract
+                </a>&nbsp;]
+            </li>
+            <li>
+                Migliore M, Morse TM, Davison, AP, Marenco L, Shepherd GM, Hines ML. ModelDB
+                Making models publicly accessible to support computational neuroscience.
+                Neuroinformatics 2003; 1:131-4 [<a href="https://pubmed.ncbi.nlm.nih.gov/15055399/">PubMed</a>]
+            </li>
+            <li>
+                Crasto C, Marenco L, Miller P, Shepherd G. Olfactory Receptor Database: A
+                metadata-driven automated population&nbsp;from sources of gene and protein
+                sequences. Nucleic Acids Research 2002; 30:354-360. [<a
+                    href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=11752336&amp;dopt=Abstract">PubMed</a>]
+            </li>
+            <li>
+                Shepherd GM. Supporting databases for neuroscience research. J Neurosci 2002
+                Mar 1; 22(5):1497. [<a
+                    href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=11880479&amp;dopt=Abstract">PubMed</a>&nbsp;]
+            </li>
+            <li>
+                Miller PL, Nadkarni P, Singer M, Marenco L, Hines M, Shepherd G: Integration
+                of multidisciplinary sensory data: a pilot model of the human brain project
+                approach. J Am Med Inform Assoc. 2001 Jan-Feb; 8(1):34-48. [ <a
+                    href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=11141511&amp;dopt=Abstract">PubMed</a>&nbsp;]
+            </li>
+            <li>
+                Skoufos E, Marenco L, Nadkarni PM, Miller PL, Shepherd GM. Olfactory receptor
+                database: a sensory chemoreceptor resource. Nucleic Acids Res. 2000 Jan 1;
+                28(1):341-3. [<a href="https://www.ncbi.nlm.nih.gov/pubmed/10592268?dopt=Abstract">PubMed</a>&nbsp;]
+            </li>
+            <li>
+                Nadkarni PM, Marenco L, Chen R, Skoufos E, Shepherd G, Miller P. Organization
+                of heterogeneous scientific data using the EAV/CR representation. J Am Med
+                Inform Assoc. 1999 Nov-Dec; 6(6):478-93. [<a
+                    href="https://www.ncbi.nlm.nih.gov/pubmed/10579606?dopt=Abstract">PubMed</a>&nbsp;]
+            </li>
+            <li>
+                Skoufos E, Healy MD, Singer MS, Nadkarni PM, Miller PL, Shepherd GM. Olfactory
+                Receptor Database: a database of the largest eukaryotic gene family. Nucleic
+                Acids Res 1999 Jan 1; 27(1):343-5 [<a
+                    href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=9847223&amp;dopt=Abstract">PubMed</a>&nbsp;]
+            </li>
+            <li>
+                Mirsky JS, Nadkarni PM, Healy MD, Miller PL, Shepherd GM. Database tools for
+                integrating and searching membrane property data correlated with neuronal
+                morphology. J Neurosci Methods. 1998 Jul 1; 82(1):105-21. [<a
+                    href="https://www.ncbi.nlm.nih.gov/pubmed/10223520?Dopt=Abstract">PubMed</a>&nbsp;]
+            </li>
+            <!--Skoufos E., Singer M. S. and Shepherd G.M. (1998) Eukaryotic Gene Nomenclature: Olfactory Receptors TIBS, in review-->
+            <li>
+                Healy MD, Smith JE, Singer MS, Nadkarni PM, Skoufos E, Miller
+                PL,&nbsp;Shepherd GM. Olfactory Receptor Database (ORDB): Resource for Sharing
+                and Analysing Published and Unpublished Data. Chem Senses 1997 Jun;
+                22(3):321-6. [<a href="https://www.ncbi.nlm.nih.gov/pubmed/9218144?Dopt=Abstract">PubMed</a>
+                ]
+            </li>
+            <li>
+                Peterson BE,&nbsp;Healy MD,&nbsp;Nadkarni PM,&nbsp;Miller PL,&nbsp;Shepherd
+                GM. ModelDB: an environment for running and storing computational models and
+                their results applied to neuroscience. Journal of the American Medical
+                Informatics Association, 1996; 33(6):389-98. [<a
+                    href="https://www.ncbi.nlm.nih.gov/pubmed/8930855?Dopt=Abstract">PubMed</a>
+                ]
+            </li>
+            <li>
+        </ol>
+        <h2>Conference papers</h2>
+        <ol>
+            <li>
+                Liu N, Xu F, Shepherd G, Miller P.&nbsp;Building, databasing, analyzing and
+                comparing rodent fMRI odor maps. Proceedings on The 9th World Multi-Conference
+                on Systemics, Cybernetics and Informatics, 2005; pp. 161-166.
+            </li>
+            <li>
+                Miller PL, Nadkarni PM, Kucherlapati R, Krauter KS, Kidd KK, Ward DC, Shepherd
+                GM, Berkowicz D: Network-based informatics support of research collaboration in
+                the Human Genome Project and the Human Brain Project. MEDINFO-95, Vancouver,
+                July 1995, pp. 1541-1544.
+            </li>
+            <li>
+                Marenco L, Nadkarni P, Skoufos E, Shepherd G, Miller P: Neuronal database
+                integration: The Senselab EAV data model. Proceedings of the 1999 AMIA Annual
+                Fall Symposium, Washington, DC, November 1999, pp. 102-106.
+            </li>
+            <li>
+                Skoufos, E., Mirsky, J.S., Healy, M.D., Singer, M.S., Hines, M.L., Nadkarni,
+                P.M., Miller, P.L.,&nbsp;Shepherd, G.M.&nbsp;Acquisition, storing and
+                retrieving diverse biomedical data using the World-Wide-Web: The Senselab
+                Paradigm. JAMIA. 1998; <A href="http://www.amia.org/pubs/symposia/D004719.PDF"><EM>text</EM></A>.
+            </li>
+        </ol>
+        <h2>Book Chapters and Invited Reviews:</h2>
+        <ol>
+            <li>McDougal RA, Morse TM, Carnevale T, Marenco L, Wang R, Migliore M, Miller PL, Shepherd GM, Hines ML.
+                (2017) Twenty years of ModelDB and beyond: Building essential modeling tools for the future of
+                neuroscience. <a href="http://dx.doi.org/10.1007/s10827-016-0623-7">J Comput Neurosci.</a> 42(1):1-10
+            </li>
+            <li>Marenco L, Wang R, McDougal RA, Olender T, Twik M, Bruford E, Liu X, Zhang J, Lancet D, Shepherd G,
+                Crasto C. (2016) ORDB, HORDE, ODORactor and other on-line knowledge resources of olfactory
+                receptor-odorant interactions. <a href="http://dx.doi.org/10.1093/database/baw132">Database.</a> baw132
+            <li>Crasto CJ (ed.). 2007. Neuroinformatics. Totowa, NJ: Humana Press. 313 p.</li>
+
+            <li>Crasto CJ, Shepherd, GM. 2007. Managing knowledge in the Neurosciences. In: Crasto CJ, ed.
+                Neuroinformatics. Totowa, NJ: Humana Press. pp. 3-22.</li>
+
+            <li>Hines ML, Morse TM, Carnevale NT. 2007. Model Structure Analysis in NEURON. In: Crasto CJ, ed.
+                Neuroinformatics. Totowa, NJ: Humana Press. pp. 91-102.</li>
+            <li>Crasto CJ, Marenco LN, Liu N, Morse TM, Cheung K, Lai PC, Bahl G, Masiar P, Lam HYK, Lim E, Chen H,
+                Nadkarni P, Migliore M, Miller PL, Shepherd GM. 2007. SenseLab: new developments in disseminating
+                neuroscience information. <a href="https://doi.org/10.1093/bib/bbm018">Briefings in Bioinformatics.</a>
+                8(3):150-162.</li>
+            <li>
+                Marenco L, Crasto CJ, Liu N, Migliore M, Liu J, Morse TM, Hines ML, Nadkarni
+                PM, Miller PL,&nbsp;Shepherd GM. SenseLab: a decade of experience with
+                multilevel, multidisciplinary neuroscience databases. In: <STRONG>
+                    Databasing the
+                    brain: from data to knowledge (Neuroinformatics)
+                </STRONG>. Edited by S.H.
+                Koslow and S. Subramaniam. John Wiley &amp; Sons, Inc. 2005; pp:343-7.
+            </li>
+            <li>
+                Miller PL, Marenco L, Shepherd G, Nadkarni P: Entity-attribute-value database
+                approaches for heterogeneous, evolving neuroscience data. In: <STRONG>
+                    Databasing
+                    the brain: from data to knowledge (Neuroinformatics)
+                </STRONG>. Edited by S.H.
+                Koslow and S. Subramaniam. John Wiley &amp; Sons, Inc. 2005; pp:83-98.
+            </li>
+            <li>
+                Crasto CJ, Liu N,&nbsp;Shepherd GM. Databases for the Functional Analyses of
+                Olfactory Receptors. In: <b>Neuroscience Database: A Practical Guide</b>. Ed.
+                Rolf Kotter. Kluwer Academic Publishers, Dusseldorf, pp: 37-50.[<a
+                    href="http://www.amazon.com/exec/obidos/ASIN/1402071655/qid%3D1037979465/sr%3D11-1/ref%3Dsr%5F11%5F1/102-9122916-7823353">amazon.com</a>]
+            </li>
+            <li>
+                Davison AP, Morse TM, Migliore M, Marenco L, Shepherd GM,&nbsp;Hines
+                ML.&nbsp;ModelDB: A Resource for Neuronal and Network Modeling<EM>.</EM>In: <b>
+                    Neuroscience
+                    Database: A Practical Guide
+                </b>. Ed. Rolf Kotter. Kluwer Academic Publishers,
+                Dusseldorf, 2002; pp: 99-109.[<a
+                    href="http://www.amazon.com/exec/obidos/ASIN/1402071655/qid%3D1037979465/sr%3D11-1/ref%3Dsr%5F11%5F1/102-9122916-7823353">amazon.com</a>]
+            </li>
+            <li>
+                Shepherd, G.M., Mirsky, J.S., Healy, M.D., Singer, M.S., Skoufos, E., Hines,
+                M., Nadkarni, P.M., and Miller, P.L.&nbsp;The Human Brain Project:
+                neuroinformatics tools for integrating, searching, and modeling
+                multidisciplinary neuroscience data. Trends Neurosci 1998; 21:460-8. Review. [<a
+                    href="https://www.ncbi.nlm.nih.gov/pubmed/9829685?dopt=Abstract">PubMed</a>
+                ]
+            <li>
+                Shepherd, G.M., Healy, M.D., Singer, M.S., Peterson, B.E., Mirsky, J.S.,
+                Wright, L., Smith, J.E., Nadkarni, P.M., and Miller, P. L. (1997). SenseLab: a
+                project in multidisciplinary, multilevel sensory integration. In <STRONG>
+                    Neuroinformatics:
+                    An Overview of the Human Brain Project
+                </STRONG>(Eds. Koslow, E.H. and
+                Huerta, M.F.). New York: Lawrence Erlbaum. p21-56 -- Reviewed in Frackowiak, R.
+                (1998). Recreating the Brain Online. Science Feb 27. 279: 1320.
+            </li>
+        </ol>
+        <h2>Abstracts</h2>
+        <ol>
+            <li> Morse TM, McDougal RA. Enhancing computational model discovery via network visualization and analysis.
+                San Diego CA: Society for Neuroscience, 2018.</li>
+            <li>
+                Surles-Zeigler M, Morse TM, McDougal RA, Shepherd GM. Integrating gene and protein data into SenseLab
+                databases for neuroinformatics-driven discovery. San Diego CA: Society for Neuroscience, 2018.
+            </li>
+            <li>
+                Morse TM, Wang R, Carnevale NT, Shepherd GM, McDougal RA. Pipeline to promote discovery and sharing of
+                computational neuroscience research. Washington DC: Society for Neuroscience, 2017.
+            </li>
+            <li>
+                Surles-Zeigler M, Morse TM, McDougal RA, Shepherd GM. Integrating molecular markers and gene expression
+                in SenseLab for neuroinformatics-driven discovery. Washington DC: Society for Neuroscience, 2017.
+            </li>
+            <li>
+                Shepherd GM, Morse TM, McDougal RA. Automated metadata identification for better model discovery. San
+                Diego CA: Society for Neuroscience, 2016.
+            </li>
+            <li>
+                Morse TM, McDougal RA, Carnevale NT, Marenco L, Wang R, Migliore M, Miller PL, Shepherd GM, Hines ML.
+                Recent advances in ModelDB. San Diego CA: Society for Neuroscience, 2016.
+            </li>
+            <li>
+                Marenco L, Wang R, McDougal RA, Morse TM, Carnevale NT, Miller PL, Shepherd GM. Development of
+                FunctionalConnectomeDB within SenseLab to incorporate and mine functional connectomics data. San Diego
+                CA: Society for Neuroscience, 2016.
+            </li>
+            <li>
+                Ikeno H, Yamazaki T, Kannon T, Okumura Y, Kamiyama Y, Ishihara A, Inagaki K, Hirata Y, Satoh S,
+                Wagatsuma H, Asai Y, Yamaguchi Y, McDougal R, Wang R, Marenco L, Morse T, Shepherd G, Usui S.
+                Development of an on-line simulation environment for computational neuroscience. Wakō, Saitama, Japan:
+                Advances in Neuroinformatics, 2016.
+            </li>
+            <li>
+                Morse TM, Marenco L, McDougal RA, Wang R, Hines ML, Carnevale NT, Cavarretta F, Migliore M, Crasto C,
+                Miller P, Shepherd GM. Advances in SenseLab's interoperable neuroinformatics databases:
+                FunctionalMicroconnectomeDB and ModelDB. Bonita Springs, FL: AChemS XXXVIII, 2016.
+            </li>
+
+            <li>Marenco LN, Wang R, McDougal RA, Cavarretta F, Short SM, Morse TM, Tripathy S, Migliore M, Carnevale NT,
+                Hines ML, Miller P, Shepherd GM. Microcircuit cell types, connectomics, and model discovery using
+                SenseLab and NeuroElectro. INCF exhibit booth demo at SfN 2015.
+            </li>
+
+            <li>Marenco L, Wang R, McDougal RA, Morse TM, Carnevale NT, Miller P, Shepherd GM. Exploring data-driven
+                techniques for visual representation of neuronal micro-connectomes. Chicago IL: Society for
+                Neuroscience, 2015.</li>
+
+            <li>McDougal RA, Neymotin SA, Morse TM, Hines ML, Lytton WW, Shepherd GM. Developing models with NEURON and
+                ModelDB. Columbus, OH: Mathematical Biosciences Institute, Modeling and Computation of Transmembrane
+                Transport Workshop, 2015.</li>
+
+            <li>Morse TM, Marenco L, McDougal RA, Wang R, Hines ML, Carnevale NT, Cavarretta F, Migliore M, Crasto C,
+                Miller P, Shepherd GM. Advances in SenseLab's interoperable neuroinformatics databases:
+                FunctionalMicroconnectomeDB and ModelDB. Bonita Springs, FL: AChemS XXXVIII, 2016.</li>
+
+            <li>Morse TM, McDougal RA. Unified real-time searching of keywords and attributes in ModelDB. Chicago IL:
+                Society for Neuroscience, 2015.</li>
+
+            <li>Marenco L, Wang R, McDougal RA, Morse TM, Carnevale NT, Miller P, Shepherd GM. Exploring data-driven
+                techniques for visual representation of neuronal micro-connectomes. Chicago IL: Society for
+                Neuroscience, 2015.</li>
+            <li>Short SM, McTavish TS, Morse TM, Shepherd GM, Verhagen JV (2015) Circuit models identify mechanisms of
+                respiration driven lateral inhibition underlying mitral activity. SfN Nanosymposium 561.08
+            </li>
+            <li>
+                Morse TM, Davison AP, Migliore M, Shepherd GM, Hines ML. Interoperability with
+                PUBMED Semi-Automatically Populates ModelDB with Citations. Annual Human Brain
+                Project Spring Meeting, Bethesda, MD, May 2003.[<a
+                    href="http://www.nimh.nih.gov/neuroinformatics/electronicdemo03.cfm">NIMH</a>]
+            </li>
+            <li>
+                Miller P, Brandt C, Cheung K, Nadkarni P, Shifman M, Srivastava R, White K:
+                XDesc: A prototype EAV database for describing the samples used in
+                heterogeneous microarray experiments. Workshop of Standards and Ontologies for
+                Functional Genomics, Hinxton, UK, November 2002, 34.
+            </li>
+            <li>
+                T.M. Morse, A.P. Davison, M. Migliore, L. Marenco, P.L. Miller, G.M. Shepherd,
+                M.L. Hines. MODELDB: SEARCHES AND CITATIONS IN A NEURONAL MODEL DATABASE
+                Program No. 312.11. 2002 Abstract Viewer/Itinerary Planner. Washington, DC:
+                Society for Neuroscience, 2002. Online. [<a
+                    href="https://www.sfn.org/Annual-Meeting/Past-and-Future-Annual-Meetings/Abstract-Archive">
+                    SFN
+                    2002
+                </a>]
+            </li>
+            <li>
+                Crasto C, Marenco L, Migliore M, Mao B, Nadkarni P, Miller PL, Shepherd GM:
+                Natural Language Processing in populating neuroscience databases using focused
+                searches in PUBMED. Annual Human Brain Project Spring Meeting, Bethesda, MD,
+                May 2002. [<a href="http://www.nimh.nih.gov/neuroinformatics/crasto2002.cfm">NIMH</a>]
+            </li>
+            <li>
+                Mao B-Q, Marenco L, Miller PL, Shepherd GM: Expansion of NeuronDB: membrane
+                property inventories and interneurons. Annual Human Brain Project Spring
+                Meeting, Bethesda, MD, May 2002. [<a
+                    href="http://www.nimh.nih.gov/neuroinformatics/mao2002.cfm">NIMH</a>]
+            </li>
+            <li>
+                Liu N, Marenco L, Nadkarni P, Miller PL, Shepherd GM: Senselab Odor Map
+                Database (OdorMapDB) and tools for online regional brain image analysis. Annual
+                Human Brain Project Spring Meeting, Bethesda, MD, May 2002. [<a
+                    href="http://www.nimh.nih.gov/neuroinformatics/liu2002.cfm">NIMH</a>]
+            </li>
+            <li>
+                Marenco L, Crasto C, Mao B, Liu N, Nadkarni P, Davison A, Morse T, Migliore M,
+                Hines M, Miller P, and Shepherd G: Databases for the new era of neurogenomics
+                and neuroproteomics. Annual Human Brain Project Spring Meeting, Bethesda, MD,
+                May 2002. <a href="http://www.nimh.nih.gov/neuroinformatics/marenco2002.cfm">
+                    NIMH
+                </a>]
+            </li>
+            <li>
+                Morse TM, Davison AP, Migliore M, Marenco L, Miller PL, Shepherd GM, Hines ML.
+                (2002) ModelDB: searches, surveys, and citations in a neuronal model database.
+                Annual Human Brain Project Spring Meeting, Bethesda, MD, May 2002.[<a
+                    href="http://www.nimh.nih.gov/neuroinformatics/morse2002.cfm">NIMH</a>]
+            </li>
+            <li>
+                Crasto CJ, Marenco L, Nadkarni P, Miller P. Shepherd G: A pilot approach to
+                automated and efficient transfer of neuroscience data from journal articles to
+                searchable databases. Proceedings of the 2001 AMIA Annual Fall Symposium,
+                Washington, DC, November 2001, p. 883.
+            </li>
+            <li>
+                Crasto C, Marenco L, Nadkarni P, Miller P, Morse T, Davison A, Migliore M,
+                Hines M, Dala R, Singer M, Shepherd G: Electronic tools to support the analysis
+                of neuronal integration in the genomic era. Annual Human Brain Project Spring
+                Meeting, Bethesda, MD, May 2001.
+            </li>
+            <li>
+                Crasto C, Marenco L, Nadkarni P, Miller P, Shepherd G: A pilot approach to
+                automated and efficient transfer of neuroscience data from journal articles to
+                searchable databases. Annual Human Brain Project Spring Meeting, Bethesda, MD,
+                May 2001.
+            </li>
+            <li>
+                Crasto C, Marenco L, Miller P, Shepherd G: Automatic population of the
+                Olfactory Receptor Database. Annual Human Brain Project Spring Meeting,
+                Bethesda, MD, May 2001.
+            </li>
+            <li>
+                Marenco L, Nadkarni P, Miller PL, Shepherd GM: NeuroWeb Linker:
+                Vocabulary-based integration of web-based neuroscience resources. Annual Human
+                Brain Project Spring Meeting, Bethesda, MD, May 2001.
+            </li>
+            <li>
+                Morse TM, Migliore M, Hines ML, Shepherd GM. (2001) ModelDB: A Database to
+                Facilitate the Testing and Exploration of Neuronal and Network Models. Annual
+                HBP Spring Meeting. May [<a href="http://www.nimh.nih.gov/neuroinformatics/morse2001.cfm">NIMH</a>]
+            </li>
+            <li>
+                Marenco L, Singer MS, Nadkarni PM, Hines M, Miller PL, Shepherd GM: Databases,
+                database tools, and database infrastructure: The EAV/CR strategy. Human Brain
+                Project/Neuroinformatics 2000 Conference, Bethesda, MD, June 2000, p. 6.
+            </li>
+            <li>
+                Marenco L, Nadkarni PM, Miller PL, Shepherd GM Advantages of the SenseLab
+                EAV/CR design in data integration and interoperability. Human Brain
+                Project/Neuroinformatics 2000 Conference, Bethesda, MD, June 2000, p. 29.
+            </li>
+            <li>
+                Marenco L, Nadkarni P, Miller PL, Shepherd G: The SenseLab database: System
+                design towards interoperability. Proceedings of the 2000 AMIA Annual Fall
+                Symposium, Los Angeles, CA, November 2000, p. 1080.
+            </li>
+            <li>
+                Mirsky, J.S., Hines, M., Nadkarni, P.M., Healy, M.D., Miller, P.L., and
+                Shepherd, G.M. (1998). Web accessible methods for organizing whole cell
+                neuronal models. AChemS abstract.
+            </li>
+            <li>
+                Skoufos E. , Nakardi P.M., Miller P.L. and Shepherd G. M.(1998) Making the
+                connection from odor molecule to olfactory receptor: A Bioinformatics approach.
+                Meeting of the Association for Chemoreception Sciences, Sarasota, FL.
+            </li>
+            <li>
+                Skoufos E. Healy M.D., Singer M.S., Nakardi P.M., Miller P.L. and Shepherd G.
+                M.(1998) OdorDB and ORDB: A pair of complementary ligand-receptor databases.
+                Keystone Symposium on Genomics and Drug Discovery, Santa Fe, NM.
+            </li>
+            <li>
+                Mirsky, J.S., Nadkarni, P., Healy, M.D., Hines, M., Miller, P.L., Shepherd,
+                G.M. (1997). Database tools for integrating membrane property data. Society for
+                Neuroscience abstract.
+            </li>
+            <li>
+                Skoufos E., Healy M.D., Smith J.E., Singer M.S., Nakardi P.M., Miller P.L. and
+                Shepherd G. M. (1997) Olfactory Receptor Database version 2: An improved tool
+                for the analysis of the molecular properties of the olfactory receptor
+                molecules. Chemical Senses, 22:794-795
+            </li>
+            <li>
+                Skoufos E., Singer M. S. and Shepherd G.M. (1997) A proposal for the systematic
+                nomenclature of the olfactory receptors. Chemical Senses, 22:795
+            </li>
+            <li>
+                Mirsky, J.S., Nadkarni, P., Healy, M.D., Miller, P.L., Shepherd, G.M. (1997).
+                NeuronDB: A database tool for enhancing experimental analysis of neuronal
+                properties. ISOT (International Symposium on Olfaction and Taste) and AChemS
+                (Association for Chemoreception Sciences) Abstract. (Chemical Senses 1997 Dec
+                22:6:749).
+            </li>
+            <li>
+                Mirsky JS, Nadkarni P, Hines M, Healy MD, Miller PL, Shepherd GM: Database
+                tools for integrating membrane property data. 1997 ISOT XII/AChemS XIX
+                Conference, San Diego, CA, July 1997.
+            </li>
+            <li>
+                Healy, M.D., Smith, J.E., Singer, M.S., Nadkarni, P.M., Miller, P.L., and
+                Shepherd, G.M. (1996). Olfactory receptor database: tools for sharing and
+                analysing published and unpublished data. Poster at the 1996 Annual Meeting,
+                Society for Neuroscience.
+            </li>
+        </ol>
+    </div>
+</div>
+{% endblock %}
