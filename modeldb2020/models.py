@@ -1046,6 +1046,26 @@ class Model:
             self._file_hierarchy = file_hierarchy
         return self._readme_file, self._file_hierarchy
 
+    @property
+    def reused_files(self):
+        model_id = self._model["id"]
+        all_reuse = []
+        for file_info in sdb.model_files.find({"model_id": model_id}):
+            if file_info["basename"]:
+                file_hash = file_info["hash"]
+                all_matches = sdb.model_files.find({"hash": file_hash})
+                my_results = []
+                for match in all_matches:
+                    if match["model_id"] != model_id:
+                        my_results.append({"model_id": match["model_id"], "path": match["path"]})
+                if my_results:
+                    all_reuse.append({"basename": file_info["basename"], "path": file_info["path"], "reuse": my_results})
+        return all_reuse
+
+
+def lookup_title(model_id):
+    return sdb.models.find_one({"id": model_id})["name"]
+
 
 class Paper:
     def __init__(self, paper_id):

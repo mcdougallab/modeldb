@@ -572,7 +572,6 @@ def publications(request):
     return render(request, "publications.html", context)
 
 
-
 def my_logout(request):
     logout(request)
     next_url = request.GET.get("next")
@@ -658,6 +657,7 @@ within the next hour.""",
     else:
         return render(request, "rwac_reset.html", context)
 
+
 def eavdownload_redirect(request):
     model_id = request.GET.get("o")
     if model_id is None:
@@ -690,7 +690,11 @@ def showmodel_redirect(request, model_id=None, tab_id=None, filename=None):
         filename_string = ""
     else:
         filename_string = f"file={urllib.parse.quote(filename)}"
-    return redirect(f"/{model_id}?{tab_string}{'' if (not tab_string) or (not filename_string) else '&'}{filename_string}".strip("?"))
+    return redirect(
+        f"/{model_id}?{tab_string}{'' if (not tab_string) or (not filename_string) else '&'}{filename_string}".strip(
+            "?"
+        )
+    )
 
 
 def search_redirect(request):
@@ -740,7 +744,7 @@ def update_context_based_on_modeling_application(model_app, context):
 
 @ensure_csrf_cookie
 def showmodel(request, model_id):
-    #model_id = request.GET.get("model", -1)
+    # model_id = request.GET.get("model", -1)
     tab_id = int(request.GET.get("tab", 1))
     filename = request.GET.get("file")
     access = None
@@ -998,7 +1002,7 @@ def _prep_citations(papers):
 
 def modelview_data(request, item):
     # TODO: is there more security protection we need?
-    if '..' in item or '/' in item:
+    if ".." in item or "/" in item:
         return HttpResponse("404 not found", status=404)
     try:
         with open(f"/home/bitnami/modelview-classic/{item}.json") as f:
@@ -1184,6 +1188,40 @@ def findbyregionlist(request):
         "subhead": "Click on a neuron/cell to show a list of models of that type.",
     }
     return render(request, "treepage.html", context)
+
+
+def modelview_components(request, model_id):
+    callback = request.GET.get("callback")
+    model = models.Model(model_id, files_needed=False)
+    reused_files = model.reused_files
+    response = {
+        "text": f"{len(reused_files)} files shared with other ModelDB models",
+        "noop": True,
+    }
+    children = []
+    for file_info in reused_files:
+        children.append(
+            {
+                "text": f"<a href='/{model_id}?tab=2&file={urllib.parse.quote(file_info['path'])}'>{file_info['basename']}</a>",
+                "children": [
+                    {
+                        "text": f"<a href='/{child['model_id']}?tab=2&file={urllib.parse.quote(child['path'])}'>{models.lookup_title(child['model_id'])}</a>",
+                        "noop": True,
+                    }
+                    for child in file_info["reuse"]
+                ],
+                "noop": True,
+            }
+        )
+    if children:
+        response["children"] = children
+    response_str = json.dumps(response)
+    if not callback:
+        return HttpResponse(response_str, content_type="application/json")
+    else:
+        return HttpResponse(
+            f"{callback}({response_str})", content_type="text/javascript"
+        )
 
 
 def trends(request):
