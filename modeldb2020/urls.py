@@ -42,8 +42,8 @@ urlpatterns = (
         ),
         re_path(
             r"^(?:modeldb/)?showmodel(?:\.(?:cs)?html)?(?:\.asp)?$(?i)",
-            views.showmodel,
-            name="showmodel",
+            views.showmodel_redirect,
+            name="showmodel_redirect",
         ),
         # NOTE: anything that uses POST should appear above here or the redirects may lose POST data
         # these next two lines standardize the URIs: no modeldb/, no .cshtml or .html
@@ -175,6 +175,6 @@ urlpatterns = (
     + [
         path("change-password", views.change_password),
         path("admin/", admin.site.urls),
-        path("<slug:model_id>", views.showmodel_redirect, name="showmodel_redirect"),
+        path("<slug:model_id>", views.showmodel, name="showmodel"),
     ]
 )

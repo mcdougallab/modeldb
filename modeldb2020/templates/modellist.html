@@ -304,7 +304,7 @@
                         data-varied_connectivity="{{model.short_varied_connectivity}}" {% endif %}
                         {% if model.has_gap_junctions %} data-has_gap_junctions="{{model.short_has_gap_junctions}}"
                         {% endif %} {% if model.has_plasticity %} data-has_plasticity="{{model.short_has_plasticity}}"
-                        {% endif %} {% endif %}><a href="/showmodel?model={{model.id}}">{{model.name}}</a></li>
+                        {% endif %} {% endif %}><a href="/{{model.id}}">{{model.name}}</a></li>
                     {% endfor %}
                 </ol>
             </div>

@@ -660,9 +660,12 @@ within the next hour.""",
 
 
 def showmodel_redirect(request, model_id=None, tab_id=None, filename=None):
+    filename = request.GET.get("file")
     # TODO: handle filename
     if model_id is None:
-        return HttpResponse("404 not found", status=404)
+        model_id = request.GET.get("model")
+        if model_id is None:
+            return HttpResponse("404 not found", status=404)
     try:
         m = int(model_id)
     except ValueError:
@@ -675,8 +678,14 @@ def showmodel_redirect(request, model_id=None, tab_id=None, filename=None):
     if tab_id == 1:
         tab_string = ""
     else:
-        tab_string = f"&tab={tab_id}"
-    return redirect(f"/showmodel?model={model_id}{tab_string}")
+        tab_string = f"tab={tab_id}"
+    if filename is None:
+        filename = request.GET.get("file")
+    if filename is None:
+        filename_string = ""
+    else:
+        filename_string = f"file={urllib.parse.quote(filename)}"
+    return redirect(f"/{model_id}?{tab_string}{'' if (not tab_string) or (not filename_string) else '&'}{filename_string}".strip("?"))
 
 
 def search_redirect(request):
@@ -725,8 +734,8 @@ def update_context_based_on_modeling_application(model_app, context):
 
 
 @ensure_csrf_cookie
-def showmodel(request):
-    model_id = request.GET.get("model", -1)
+def showmodel(request, model_id):
+    #model_id = request.GET.get("model", -1)
     tab_id = int(request.GET.get("tab", 1))
     filename = request.GET.get("file")
     access = None

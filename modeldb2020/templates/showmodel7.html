@@ -126,7 +126,7 @@
                 {% if my_ref.model_link %}
                 <ul>
                     {% for link in my_ref.model_link %}
-                        <li><a href="/showmodel?model={{link.id}}">{{link.name}} [Model]</a></li>
+                        <li><a href="/{{link.id}}">{{link.name}} [Model]</a></li>
                     {% endfor %}
                 </ul>
             {% endif %}

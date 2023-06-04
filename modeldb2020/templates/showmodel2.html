@@ -20,7 +20,7 @@
     <ul class="nav thin" style="display: block !important;">
         {% for item in content %}
             {% if item.name %}
-                <li style="padding-bottom: 0.5em"><a href="/showmodel?tab=2&model={{Model.id}}&file={{filename}}/{{item.name}}">
+                <li style="padding-bottom: 0.5em"><a href="/{{Model.id}}?tab=2&file={{filename}}/{{item.name}}">
                     {% if item.type == 'jpg' or item.type == 'pdf' or item.type == 'gif' or item.type == 'svg' %}
                         <i class="fas fa-file-image"></i>
                     {% elif item.type == 'folder' %}
@@ -76,7 +76,7 @@
                 <li>{{dup.model_name}}
                     <ul>
                         {% for item in dup.data %}
-                            <li><a href="/showmodel?tab=2&model={{dup.model}}&file={{item.path}}">{{item.path}}</a></li>
+                            <li><a href="/{{dup.model}}?tab=2&file={{item.path}}">{{item.path}}</a></li>
                         {% endfor %}
                     </ul>
                 </li>
