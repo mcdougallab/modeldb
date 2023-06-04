@@ -371,6 +371,11 @@ def static(request, page="", title=""):
     return render(request, f"{page}.html", context)
 
 
+def cookie_accept(request):
+    request.session["cookieaccepted"] = True
+    return HttpResponse("ok")
+
+
 def modellist_redirect(request):
     object_id = request.GET.get("id")
     # TODO: handle not having a model argument more gracefully

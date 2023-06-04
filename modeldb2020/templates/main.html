@@ -19,6 +19,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.17.1/bootstrap-table.min.css" integrity="sha512-zfridm8+ad8KSyxzl1REhqDP5975y8Q0AYaF22bcVGOnaVxlekxODmCGu0TP+Kbk3JbiNK5ENTHs7pT+yf+rBA==" crossorigin="anonymous" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.17.1/bootstrap-table.min.js" integrity="sha512-KtafFo5oE7fpMVyO/gXFnwsAXeGwl8Kxyikp1SCtMc+mXrvzO7WP1Zs70gSNmkcrBd9PS3byB/HFKvAVKtTWdg==" crossorigin="anonymous"></script>
     <script src='{% static "csrf-support.js" %}'></script>
+    <script>
+        $(()=>{
+            $("#cookiebannerbutton").click(()=>{
+                $("#cookiebanner").hide();
+                $.get("/cookieaccept");
+            });
+        });
+    </script>
 
 
   <style>
@@ -231,6 +239,18 @@
 </footer>
 
     </div>
-
+    {% if not request.session.cookieaccepted %}
+        <div style="position:fixed; bottom:0px; background-color: black; color: white; padding:1em" id="cookiebanner">
+            <div class="row">
+                <div class="col-sm-8">
+                    This website requires cookies and limited processing of your personal data in order to function. By continuing to browse 
+                    or otherwise use this site, you are agreeing to this use. See our <a href="/privacy-policy" style="color:white;text-decoration: underline;">Privacy policy</a> and
+                    <a href="/howtocite" style="color:white;text-decoration: underline;">how to cite and terms of use.</a> 
+                </div>
+                <div class="col-sm-4 my-auto">
+                    <button id="cookiebannerbutton" type="button" class="btn btn-primary" style="width:100%">I agree; hide this banner</button>
+                </div>
+        </div>
+    {% endif %}
 </body>
 </html>

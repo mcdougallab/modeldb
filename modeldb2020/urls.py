@@ -30,6 +30,7 @@ except ImportError:
 urlpatterns = (
     [
         path("", views.index, name="index"),
+        path("cookieaccept", views.cookie_accept, name="cookieaccept"),
         path(
             "favicon.ico",
             RedirectView.as_view(url=staticfiles_storage.url("favicon.ico")),
