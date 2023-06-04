@@ -121,9 +121,6 @@ function setup_modelview() {
     
     last_positioned_dialog = tree_dialog;
     
-    // open all links in new window, based on http://trevordavis.net/blog/use-jquery-to-open-all-external-links-in-a-new-window
-    $('a').attr('target', '_blank');
-    
     // setup the neuron views
     if (modelview_data.neuron == undefined) {
         modelview_data.neuron = [];
