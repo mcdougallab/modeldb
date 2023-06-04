@@ -371,8 +371,27 @@ def static(request, page="", title=""):
     return render(request, f"{page}.html", context)
 
 
-def modellist(request):
+def modellist_redirect(request):
     object_id = request.GET.get("id")
+    # TODO: handle not having a model argument more gracefully
+    if object_id is None:
+        return listbymodelname(request)
+    tab_id = request.GET.get("tab")
+    all_simu = request.GET.get("all_simu")
+    if tab_id is None:
+        if all_simu is None:
+            options = ""
+        else:
+            options = f"?all_simu={all_simu}"
+    else:
+        if all_simu is None:
+            options = f"?tab={tab_id}"
+        else:
+            options = f"?tab={tab_id}&all_simu={all_simu}"
+    return redirect(f"/modellist/{object_id}{options}")
+
+
+def modellist(request, object_id):
     tab_id = request.GET.get("tab", 1)
     all_simu = request.GET.get("all_simu", "")
     if object_id is None:

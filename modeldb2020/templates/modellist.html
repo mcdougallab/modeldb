@@ -255,9 +255,9 @@
         {% if health  %}
         <ul class="nav nav-tabs">
             <li class="nav-item"><a class="nav-link {% if tab == 1 %}active{% endif %}"
-                    href="/ModelList?id={{datatype}}&tab=1">Models</a></li>
+                    href="/ModelList/{{datatype}}&tab=1">Models</a></li>
             <li class="nav-item"><a class="nav-link {% if tab == 2 %}active{% endif %}"
-                    href="/ModelList?id={{datatype}}&tab=2">More Topics</a></li>
+                    href="/ModelList/{{datatype}}&tab=2">More Topics</a></li>
         </ul>
         <div class="tab-content">
 
@@ -695,7 +695,7 @@
     Top concepts studied with {{ obj.name }}:
     <ul>
         {% for concept in concepts %}
-        <li><a href="/modellist?id={{concept.0}}">{{concept.1}}</a> ({{concept.2}})</li>
+        <li><a href="/modellist/{{concept.0}}">{{concept.1}}</a> ({{concept.2}})</li>
         {% endfor %}
     </ul>
     <br>
@@ -706,7 +706,7 @@
     Top neurons studied with {{ obj.name }}:
     <ul>
         {% for neuron in neurons %}
-        <li><a href="/modellist?id={{neuron.0}}">{{neuron.1}}</a> ({{neuron.2}})</li>
+        <li><a href="/modellist/{{neuron.0}}">{{neuron.1}}</a> ({{neuron.2}})</li>
         {% endfor %}
     </ul>
     <br>
@@ -717,7 +717,7 @@
     Top currents studied with {{ obj.name }}:
     <ul>
         {% for current in currents %}
-        <li><a href="/modellist?id={{current.0}}">{{current.1}}</a> ({{current.2}})</li>
+        <li><a href="/modellist/{{current.0}}">{{current.1}}</a> ({{current.2}})</li>
         {% endfor %}
     </ul>
     <br>

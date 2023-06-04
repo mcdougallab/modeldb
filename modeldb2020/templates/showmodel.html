@@ -121,7 +121,7 @@
                 {% if access != 'rw' %}
                     {% for item in Model.model_type.value %}
                         {% spaceless %}
-                            <a href="/ModelList?id={{item.object_id}}">{{item.object_name}}</a>{% if not forloop.last %};{% endif %}
+                            <a href="/ModelList/{{item.object_id}}">{{item.object_name}}</a>{% if not forloop.last %};{% endif %}
                         {% endspaceless %}
                     {% endfor %}
                 {% else %}
@@ -139,7 +139,7 @@
                 {% if access != 'rw' %}
                     {% for item in Model.region.value %}
                         {% spaceless %}
-                            <a href="/ModelList?id={{item.object_id}}">{{item.object_name}}</a>{% if not forloop.last %};{% endif %}
+                            <a href="/ModelList/{{item.object_id}}">{{item.object_name}}</a>{% if not forloop.last %};{% endif %}
                         {% endspaceless %}
                     {% endfor %}
                 {% else %}
@@ -157,7 +157,7 @@
                 {% if access != 'rw' %}
                     {% for item in Model.neurons.value %}
                         {% spaceless %}
-                            <a href="/ModelList?id={{item.object_id}}">{{item.object_name}}</a>{% if not forloop.last %};{% endif %}
+                            <a href="/ModelList/{{item.object_id}}">{{item.object_name}}</a>{% if not forloop.last %};{% endif %}
                         {% endspaceless %}
                     {% endfor %}
                 {% else %}
@@ -175,7 +175,7 @@
                 {% if access != 'rw' %}
                     {% for item in Model.currents.value %}
                         {% spaceless %}
-                            <a href="/ModelList?id={{item.object_id}}">{{item.object_name}}</a>{% if not forloop.last %};{% endif %}
+                            <a href="/ModelList/{{item.object_id}}">{{item.object_name}}</a>{% if not forloop.last %};{% endif %}
                         {% endspaceless %}
                     {% endfor %}
                 {% else %}
@@ -193,7 +193,7 @@
                 {% if access != 'rw' %}
                     {% for item in Model.receptors.value %}
                         {% spaceless %}
-                            <a href="/ModelList?id={{item.object_id}}">{{item.object_name}}</a>{% if not forloop.last %};{% endif %}
+                            <a href="/ModelList/{{item.object_id}}">{{item.object_name}}</a>{% if not forloop.last %};{% endif %}
                         {% endspaceless %}
                     {% endfor %}
                 {% else %}
@@ -211,7 +211,7 @@
                 {% if access != 'rw' %}
                     {% for item in Model.gene.value %}
                         {% spaceless %}
-                            <a href="/ModelList?id={{item.object_id}}">{{item.object_name}}</a>{% if not forloop.last %};{% endif %}
+                            <a href="/ModelList/{{item.object_id}}">{{item.object_name}}</a>{% if not forloop.last %};{% endif %}
                         {% endspaceless %}
                     {% endfor %}
                 {% else %}
@@ -229,7 +229,7 @@
                 {% if access != 'rw' %}
                     {% for item in Model.neurotransmitters.value %}
                         {% spaceless %}
-                            <a href="/ModelList?id={{item.object_id}}">{{item.object_name}}</a>{% if not forloop.last %};{% endif %}
+                            <a href="/ModelList/{{item.object_id}}">{{item.object_name}}</a>{% if not forloop.last %};{% endif %}
                         {% endspaceless %}
                     {% endfor %}
                 {% else %}
@@ -247,7 +247,7 @@
                 {% if access != 'rw' %}
                     {% for item in Model.model_concept.value %}
                         {% spaceless %}
-                            <a href="/ModelList?id={{item.object_id}}">{{item.object_name}}</a>{% if not forloop.last %};{% endif %}
+                            <a href="/ModelList/{{item.object_id}}">{{item.object_name}}</a>{% if not forloop.last %};{% endif %}
                         {% endspaceless %}
                     {% endfor %}
                 {% else %}
@@ -265,7 +265,7 @@
                 {% if access != 'rw' %}
                     {% for item in Model.modeling_application.value %}
                         {% spaceless %}
-                            <a href="/ModelList?id={{item.object_id}}">{{item.object_name}}</a>{% if not forloop.last %};{% endif %}
+                            <a href="/ModelList/{{item.object_id}}">{{item.object_name}}</a>{% if not forloop.last %};{% endif %}
                         {% endspaceless %}
                     {% endfor %}
                 {% else %}
@@ -283,7 +283,7 @@
             <p><b>Implementer(s):</b>
                 {% for item in Model.implemented_by.value %}
                     {% spaceless %}
-                        <a href="/ModelList?id={{item.object_id}}">{{item.object_name}}</a>{% if not forloop.last %};{% endif %}
+                        <a href="/ModelList/{{item.object_id}}">{{item.object_name}}</a>{% if not forloop.last %};{% endif %}
                     {% endspaceless %}
                 {% endfor %}
                 {% if Model.data_to_curate %}

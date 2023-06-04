@@ -32,21 +32,21 @@
             </td>
             <td>
                 {% if item.hosted %}
-                    <a href="/ModelList?id={{item.id}}">{{item.hosted}}</a>
+                    <a href="/modellist/{{item.id}}">{{item.hosted}}</a>
                 {% else %}
                     0
                 {% endif %}
             </td>
             <td>
                 {% if item.link %}
-                    <a href="/ModelList?id={{item.linkid}}">{{item.link}}</a>
+                    <a href="/modellist/{{item.linkid}}">{{item.link}}</a>
                 {% else %}
                     0
                 {% endif %}
             </td>
             <td>
                 {% if item.hosted or item.link %}
-                    <a href="/modellist?id={% firstof item.id item.linkid %}&all_simu=true">{{item.total}}</a>
+                    <a href="/modellist/{% firstof item.id item.linkid %}?all_simu=true">{{item.total}}</a>
                 {% else %}
                     {{item.total}}
                 {% endif %}
