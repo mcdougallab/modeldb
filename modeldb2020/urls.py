@@ -121,7 +121,8 @@ urlpatterns = (
         ),
         re_path(r"^private-models$(?i)", views.private_models, name="private_models"),
         re_path(r"^top-papers$(?i)", views.top_papers, name="top_papers"),
-        re_path(r"^eavbindown$(?i)", views.download_zip, name="download_zip"),
+        re_path(r"^eavbindown$(?i)", views.eavdownload_redirect, name="eavdownload_redirect"),
+        re_path(r"^download/(?P<model_id>[0-9]+)$(?i)", views.download_zip, name="download_zip"),
         re_path(r"^getmodelfile$(?i)", views.download, name="download_file"),
         re_path(
             r"^metadata-predictor$(?i)",

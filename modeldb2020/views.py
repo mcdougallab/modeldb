@@ -658,10 +658,15 @@ within the next hour.""",
     else:
         return render(request, "rwac_reset.html", context)
 
+def eavdownload_redirect(request):
+    model_id = request.GET.get("o")
+    if model_id is None:
+        return HttpResponse("Forbidden", status=403)
+    return redirect(f"/download/{model_id}")
+
 
 def showmodel_redirect(request, model_id=None, tab_id=None, filename=None):
     filename = request.GET.get("file")
-    # TODO: handle filename
     if model_id is None:
         model_id = request.GET.get("model")
         if model_id is None:
@@ -1003,8 +1008,7 @@ def modelview_data(request, item):
     return HttpResponse(result, content_type="application/json")
 
 
-def download_zip(request):
-    model_id = request.GET.get("o", -1)
+def download_zip(request, model_id):
     model = _get_model(request, model_id)
     if model is None:
         return HttpResponse("Forbidden", status=403)
