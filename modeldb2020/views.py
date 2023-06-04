@@ -962,13 +962,14 @@ def showmodel(request, model_id):
 
             return render(request, "showmodel.html", context)
 
-
-def mdbcitations(request):
-    # TODO: probably can't always assume ints? maybe should recast existing to str?
-    paper_id = str(request.GET.get("id", -1))
+def citations_redirect(request):
+    paper_id = request.GET.get("id", -1)
     # TODO: handle not having a model argument more gracefully
-    if paper_id == "-1":
+    if paper_id == -1:
         return HttpResponse("Forbidden", status=403)
+    return redirect(f"/citations/{paper_id}")
+
+def mdbcitations(request, paper_id):
     # TODO: we actually know what datatype this is
     papers = [ModelDB.object_by_id(paper_id)]
     citation_data = _prep_citations(papers)

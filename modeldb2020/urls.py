@@ -156,7 +156,8 @@ urlpatterns = (
         re_path(
             r"^publications$(?i)", views.publications, name="publications"
         ),
-        re_path(r"^(?:mdb)?citations$(?i)", views.mdbcitations, name="mdbcitations"),
+        re_path(r"^(?:mdb)?citations$(?i)", views.citations_redirect, name="mdbcitations_redirect"),
+        re_path(r"^citations/(?P<paper_id>.+)$(?i)", views.mdbcitations, name="mdbcitations"),
         re_path(
             r"^models-with-uncurated-references$(?i)",
             views.models_with_uncurated_references,

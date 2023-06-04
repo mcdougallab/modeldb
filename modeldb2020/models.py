@@ -1170,7 +1170,7 @@ class Paper:
         else:
             base_info = f"{self.authors[0]} et al. ({self.year})."
 
-        base_info = f'<a href="/citations?id={self._id}">{base_info}</a>'
+        base_info = f'<a href="/citations/{self._id}">{base_info}</a>'
         return (
             base_info
             + f" {self.title} <i>"
