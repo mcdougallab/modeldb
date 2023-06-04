@@ -60,7 +60,7 @@ class Model:
 for i, model in enumerate(sdb.models.find()):
     print(f"Processing {i + 1}: {model['id']}")
     new_data = Model(model["id"]).rows()
-    sdb.model_files.remove({"model_id": model["id"]})
+    sdb.model_files.delete_many({"model_id": model["id"]})
     sdb.model_files.insert_many(new_data)
 
 sdb.model_files.drop_indexes()
