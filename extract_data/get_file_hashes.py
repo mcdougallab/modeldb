@@ -59,6 +59,9 @@ class Model:
 
 for i, model in enumerate(sdb.models.find()):
     print(f"Processing {i + 1}: {model['id']}")
+    if model['id'] == 267116:
+        print("  ... skipping for now because of known memory issues")
+        continue
     new_data = Model(model["id"]).rows()
     sdb.model_files.delete_many({"model_id": model["id"]})
     sdb.model_files.insert_many(new_data)
