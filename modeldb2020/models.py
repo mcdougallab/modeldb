@@ -1149,7 +1149,7 @@ class Paper:
             + link_prefix
             + self.journal
             + link_suffix
-            + "</i> "
+            + "</i>. "
             + self.volume
             + pubmed
         )
@@ -1157,7 +1157,7 @@ class Paper:
     @property
     def text(self):
         base_info = ", ".join(self.authors) + f". ({self.year})."
-        return f"{base_info} {self.title} {self.journal} {self.volume}"
+        return f"{base_info} {self.title} {self.journal}. {self.volume}"
 
     def __getitem__(self, item):
         return getattr(self, item)
