@@ -73,6 +73,7 @@ urlpatterns = (
             {"page": "neuron_download_guide", "title": "NEURON download help"},
             name="neuron_download_guide",
         ),
+        re_path(r"^privacy-policy$(?i)", views.static, {"page": "privacy-policy", "title": "Privacy Policy"}, name="privacy_policy"),
         re_path(
             r"^howtocite$(?i)",
             views.static,

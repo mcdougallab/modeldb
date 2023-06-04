@@ -448,6 +448,14 @@ class ModelDB(models.Model):
     def paper_mentions(self):
         return ptrm
 
+    @property
+    def news(self):
+        try:
+            with open(settings.security["news"]) as f:
+                return f.read()
+        except:
+            return ""
+
     def has_private_model(self, id_):
         return bool(sdb.private_models.find_one({"id": int(id_)}))
 

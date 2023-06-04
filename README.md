@@ -46,6 +46,7 @@ This repository is currently intended to be bootstrapped from the classic EAV/CR
   - `smtp_server` (optional, but required for sending mail)
   - `smtp_user` (optional, but required for sending mail)
   - `smtp_password` (optional, but required for sending mail)
+  - `news` (optional, but a file listed here will be used for filling out the news section of the homepage)
 - Run the scripts in the `extract_data` directory in this order:
   - `init_db.py`
   - `extract_data.py`

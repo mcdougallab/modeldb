@@ -2,11 +2,11 @@
 {% load static %}
 
 {% block sidecolumn %}
-    <div class="well">
-        <center>
-            <a class="twitter-timeline" href="https://twitter.com/SenseLabProject" data-widget-id="596035977384226818">Tweets by @SenseLabProject</a>
-            <script>!function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https'; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = p + "://platform.twitter.com/widgets.js"; fjs.parentNode.insertBefore(js, fjs); } }(document, "script", "twitter-wjs");</script>
-        </center>
+    <div class="well" style="border: 1px solid lightgray; padding: 1em; border-radius:1em">
+        <h4>ModelDB news</h4>
+        {{ModelDB.news | safe}}
+        <hr>
+        For more, follow us <a href="https://twitter.com/SenseLabProject">@SenseLabProject</a>.
     </div>
 {% endblock %}
 
