@@ -45,8 +45,15 @@ model_ids = [
 ]
 
 
+alternate_model_ids = [
+    item["id"]
+    for item in requests.get(
+        "https://senselab.med.yale.edu/_site/webapi/object.json/?cl=92"
+    ).json()["objects"]
+]
+
 models_added = []
-for model_id in progress_bar(model_ids):
+for model_id in progress_bar(model_ids + alternate_model_ids):
     # don't reload anything that you already have
     if model_id in prev_model_ids:
         continue
@@ -57,7 +64,7 @@ for model_id in progress_bar(model_ids):
     ).json()
     metadata = {"title": unprocessed_metadata["object_name"], "id": model_id}
     for item in unprocessed_metadata["object_attribute_values"]:
-        if item["attribute_id"] == 23:
+        if item["attribute_id"] in (23, 311):
             # the zip file
             with open(os.path.join(zip_dir, f"{model_id}.zip"), "wb") as f:
                 f.write(base64.standard_b64decode(item["value"]["file_content"]))
@@ -126,20 +133,23 @@ def get_metadata(object_id):
         "class_id": data["object_class"]["class_id"],
     }
     for attr in data["object_attribute_values"]:
-        if "value" not in attr:
-            attr["value"] = attr["values"]
-        elif isinstance(attr["value"], dict):
-            attr["value"] = [attr["value"]]
-        result[attr["attribute_name"]] = {
-            "value": attr["value"],
-            "attr_id": attr["attribute_id"],
-        }
+        # skip alternate model source code
+        if attr["attribute_id"] != 311:
+            if "value" not in attr:
+                attr["value"] = attr["values"]
+            elif isinstance(attr["value"], dict):
+                attr["value"] = [attr["value"]]
+            result[attr["attribute_name"]] = {
+                "value": attr["value"],
+                "attr_id": attr["attribute_id"],
+            }
     if result["class_id"] == 18:
         result["links"] = {}
     return result
 
 
 for class_name, class_id in [
+    ["alternate_models", 92],
     ["publication_facts", 195],
     ["currents", 17],
     ["papers", 42],
