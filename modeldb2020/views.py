@@ -782,6 +782,7 @@ def showmodel(request, model_id):
             tab_id = int(request.POST.get("tab", 1))
             filename = request.POST.get("file")
 
+    model_id = str(model_id)
     if not ModelDB.has_model(model_id):
         if ModelDB.has_private_model(model_id):
             access = request.session.get(model_id)

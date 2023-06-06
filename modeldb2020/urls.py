@@ -181,6 +181,6 @@ urlpatterns = (
     + [
         path("change-password", views.change_password),
         path("admin/", admin.site.urls),
-        path("<slug:model_id>", views.showmodel, name="showmodel"),
+        path("<int:model_id>", views.showmodel, name="showmodel"),
     ]
 )
