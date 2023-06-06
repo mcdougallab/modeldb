@@ -21,7 +21,10 @@
             {{query}}
         </p>
 
-        {% if model_results or paper_results or celltype_results or author_results or simenvironment_results or current_results or region_results or receptor_results or gene_results or transmitter_results %}
+        {% if model_accession_matches or model_results or paper_results or celltype_results or author_results or simenvironment_results or current_results or region_results or receptor_results or gene_results or transmitter_results %}
+            {% if model_accession_matches %}
+                <a href="#model_accession">Model ID match</a><br><br>
+            {% endif %}
             {% if author_results %}
                 <a href="#authors">Model authors</a><br><br>
             {% endif %}
@@ -50,7 +53,7 @@
                 <a href="#simenvironments">Simulation Environments</a><br><br>
             {% endif %}
             {% if model_results %}
-                <a href="#models">Models</a><br><br>
+                <a href="#models">Model titles</a><br><br>
             {% endif %}
             {% if paper_results %}
                 <a href="#papers">Papers</a><br><br>
@@ -146,6 +149,15 @@
         </div>
     {% endfor %}
     <br>
+{% endif %}
+{% if model_accession_matches %}
+<h2 id="model_accession">Model ID match</h2>
+{% for model in model_accession_matches %}
+    <div class="search_result">
+        <a href="/{{model.id}}">{{model.name}}</a>
+    </div>
+{% endfor %}
+<br>
 {% endif %}
 {% if model_results %}
     <h2 id="models">Model titles</h2>

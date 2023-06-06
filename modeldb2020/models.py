@@ -491,6 +491,7 @@ class ModelDB(models.Model):
         modeltype=[],
         brainregions=[],
         title=[],
+        model_id=None,
         authors=[],
     ):
         result = []
@@ -507,6 +508,7 @@ class ModelDB(models.Model):
                 # and hasany(model.get('authors'), authors)
                 and hasanytitle([model.get("name")], title, add_star=True)
                 and hasany(model.get("brainregions"), brainregions)
+                and (model_id is None or model_id == model["id"])
             ):
                 result.append(self.model(model["id"]))
 

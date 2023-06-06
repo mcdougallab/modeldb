@@ -1488,11 +1488,15 @@ def search(request):
     elif my_q is not None:
         # remove excess whitespace
         my_q = my_q.strip()
-
+        try:
+            model_id_matches = ModelDB.find_models(model_id=int(my_q))
+        except:
+            model_id_matches = []
         context = {
             "title": f"ModelDB: search: {my_q}",
             "query": my_q,
             "celltype_results": models.find_celltypes_by_name(my_q),
+            "model_accession_matches": model_id_matches,
             "model_results": sorted(
                 ModelDB.find_models(title=[my_q]), key=model_sort_rule
             ),
