@@ -901,6 +901,7 @@ class Model:
         if files_needed:
             self._readme_file = None
             self._setup_filetree()
+        #raise Exception(str(self._model['alternative_version']))
 
     def modelview(self, data_type):
         if data_type == "parameters":
@@ -909,7 +910,7 @@ class Model:
         return None
 
     def update(self, data):
-        print(f"Model {self._model['id']} update (not implemented)")
+        print(f"Model {self.id2} update (not implemented)")
         print("Current data:")
         _model = dict(self._model)
         del _model["_id"]
@@ -925,6 +926,13 @@ class Model:
             ]
         else:
             return []
+    
+    @property
+    def alternative_version(self):
+        if "alternative_version" not in self._model:
+            return "test"# []
+        else:
+            return self._model['alternative_version']
 
     def __getattr__(self, key):
         if key in self._model:

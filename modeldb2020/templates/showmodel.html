@@ -85,7 +85,6 @@
             
                 return dict;
             }
-            
         </script>
         <style>
             .fullwidth {
@@ -93,6 +92,16 @@
             }
         </style>
     {% endif %}
+    <script>
+        $(() => {
+            // make sure we have the right model selected
+            $("#alternatemodelselector").val({{Model.id2}});
+            $("#alternatemodelselector").change(() => {
+                window.location = `https://modeldb.science/${$("#alternatemodelselector").val()}`
+            });
+        });
+    </script>
+
 {% endblock %}
 {% block leftcol %}
 
@@ -325,6 +334,23 @@
 {% endblock %}
 
 {% block belowshapeplot %}
+{% if Model.alternative_version %}
+<div>
+There are {{Model.alternative_version.value|length}} other versions of this model. You may select a different one below:
+</div>
+<div>
+<center>
+<select id="alternatemodelselector" size="width:100%">
+<option value="{{Model.id}}">Original</option>
+{% for ver in Model.alternative_version.value %}
+<option value="{{ver.object_id}}">{{ver.object_name}}</option>
+{% endfor %}
+</select>
+</center>
+</div>
+<hr style="width:75%">
+{% endif %}
+
     {% if access == 'rw' %}
         <br>
         <button class="btn btn2" id="savebutton">Save changes (not implemented)</button>
