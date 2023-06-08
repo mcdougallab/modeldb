@@ -239,6 +239,68 @@ def add_new_author_to_collection(object_name, lastname, firstname, initials, orc
     return id_
 
 
+def get_reference_pmids(pmid):
+    pmids_list = []
+    dois_list = []
+    r = requests.get(
+        f"https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id={pmid}&retmode=xml"
+    )
+    doc = m.parseString(r.text)
+    reference_list = doc.getElementsByTagName("ReferenceList")[0]
+    ids = reference_list.getElementsByTagName("ArticleIdList")
+    pubmed = True
+
+    for article_id in ids:
+        pubmed = False
+        for i in article_id.getElementsByTagName("ArticleId"):
+            if "pubmed" == i.getAttributeNode("IdType").childNodes[0].nodeValue:
+                articleid_pmid = i.childNodes[0].nodeValue
+                pmids_list.append(articleid_pmid)
+                pubmed = True
+        if pubmed == False:
+            for i in article_id.getElementsByTagName("ArticleId"):
+                if "doi" == i.getAttributeNode("IdType").childNodes[0].nodeValue:
+                    articleid_doi = i.childNodes[0].nodeValue
+                    dois_list.append(articleid_doi)
+
+    pmids_string = ",".join(pmids_list)
+    return pmids_string, dois_list
+
+
+# check if reference is in the papers collection
+# True -- new, False -- exists
+def check_new_reference(pmid, doi): 
+    if doi is None:
+        return sdb.papers.find_one({"pubmed_id.value": str(pmid)}) is None
+    else:
+        return sdb.papers.find_one({"doi.value": doi}) is None
+
+
+def insert_new_paper(metadata_dict):
+    new_info_dict = {}
+
+    id_ = new_object_id
+    new_info_dict["id"] = id_
+    new_paper_name = paper_name(metadata_dict)
+
+    new_info_dict["name"] = new_paper_name
+    new_info_dict['created'] = datetime.now().isoformat()
+    new_info_dict["ver_number"] = 1
+
+    #this is for python 3.9 or newer
+    #new_paper_dict = new_info_dict | metadata_dict
+    new_info_dict.update(metadata_dict)
+
+    sdb.papers.insert_one({new_info_dict}) 
+
+    return id_
+
+
+def retrieve_paper(pmid):
+    paper = sdb.papers.find_one({"pubmed_id.value": str(pmid)})
+    return paper
+
+
 def get_articles(pmids):
     url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi"
     time.sleep(1)
@@ -276,7 +338,7 @@ def get_author_metadata(article, pmid):
     else:
         for author in authors:
             author_dict = {}
-
+            
             if author.getElementsByTagName("LastName"):
                 author_last_name = author.getElementsByTagName("LastName")[0].firstChild.nodeValue
             else:
@@ -493,64 +555,75 @@ def get_metadata(pmids):
     return metadata_w_pmid
 
 
-def get_reference_pmids(pmid):
-    pmids_list = []
-    dois_list = []
-    r = requests.get(
-        f"https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id={pmid}&retmode=xml"
+
+def add_references_to_paper(pmid):
+    all_references = []
+    missing_references = []
+    reference_pmids, reference_dois = get_reference_pmids(pmid)
+    for ref_pmid in reference_pmids:
+        ref_dict = {}
+        ref_pmid_metadata = get_metadata(ref_pmid)
+        print(ref_pmid "ref_pmid", ref_pmid_metadata[ref_pmid]) # to delete
+        if check_new_reference(ref_pmid, None):
+            new_paper_id = insert_new_paper(ref_pmid_metadata[ref_pmid])
+            new_paper_name = paper_name(ref_pmid_metadata[ref_pmid])
+            ref_dict = {
+                "object_id": new_paper_id,
+                "object_name": new_paper_name
+            }
+        else: 
+            paper = retrieve_paper(ref_pmid)
+            ref_dict = {
+                "object_id": paper['id'],
+                "object_name": paper['name']
+            }
+        all_references.append(ref_dict)
+
+    for ref_doi in reference_dois: 
+        ref_dict = {}
+        reference_doi_to_pmid = lookup_pmid_from_doi(ref_doi)
+        if reference_doi_to_pmid is not None:
+            if check_new_reference(reference_doi_to_pmid, None):
+                time.sleep(1)
+                doi_metadata = get_metadata(reference_doi_to_pmid)
+                print(ref_doi, "doi_metadata", doi_metadata[ref_doi]) #to delete
+                new_paper_id = insert_new_paper(doi_metadata[ref_doi])
+                new_paper_name = paper_name(doi_metadata[ref_doi])
+                ref_dict = {
+                    "object_id": new_paper_id,
+                    "object_name": new_paper_name
+                }
+            else: 
+                paper = retrieve_paper(reference_doi_to_pmid) 
+                ref_dict = {
+                    "object_id": paper['id'],
+                    "object_name": paper['name']
+                }
+            all_references.append(ref_dict)
+        elif reference_doi_to_pmid is None:
+            missing_references.append(ref_doi)
+
+
+    references_dict = {
+        "value": all_references,
+        "attr_id": 140
+    }
+
+    if len(missing_references) != 0:
+        missing_references_dict = {
+            "value": missing_references,
+            "attr_id": 211
+        }
+
+    references = {
+        "references" : references_dict,
+        "missing_references": missing_references_dict,
+    }
+
+    sdb.papers.update_one({"pubmed_id": pmid}, 
+        {"$set": references}
     )
-    doc = m.parseString(r.text)
-    reference_list = doc.getElementsByTagName("ReferenceList")[0]
-    ids = reference_list.getElementsByTagName("ArticleIdList")
-    pubmed = True
 
-    for article_id in ids:
-        pubmed is False
-        for i in article_id.getElementsByTagName("ArticleId"):
-            if "pubmed" == i.getAttributeNode("IdType").childNodes[0].nodeValue:
-                articleid_pmid = i.childNodes[0].nodeValue
-                pmids_list.append(articleid_pmid)
-                pubmed is True
-        if pubmed is False:
-            for i in article_id.getElementsByTagName("ArticleId"):
-                if "doi" == i.getAttributeNode("IdType").childNodes[0].nodeValue:
-                    articleid_doi = i.childNodes[0].nodeValue
-                    dois_list.append(articleid_doi)
-
-    pmids_string = ",".join(pmids_list)
-    return pmids_string, dois_list
-
-
-# check if reference is in the papers collection
-# True -- new, False -- exists
-def check_new_reference(pmid, doi): 
-    if doi is None:
-        return sdb.papers.find_one({"pubmed_id.value": str(pmid)}) is None
-    else:
-        return sdb.papers.find_one({"doi.value": doi}) is None
-
-
-def insert_new_paper(metadata_dict):
-    new_info_dict = {}
-
-    id_ = new_object_id
-    new_info_dict["id"] = id_
-    new_paper_name = paper_name(metadata_dict)
-
-    new_info_dict["name"] = new_paper_name
-    new_info_dict['created'] = datetime.now().isoformat()
-    new_info_dict["ver_number"] = 1
-
-    new_paper_dict = new_info_dict | metadata_dict
-
-    sdb.papers.insert_one({new_paper_dict}) 
-
-    return id_
-
-
-def retrieve_paper(pmid):
-    paper = sdb.papers.find_one({"pubmed_id.value": str(pmid)})
-    return paper
 
 
 def get_reference_metadata(pmid):
@@ -572,9 +645,10 @@ def get_reference_metadata(pmid):
             if check_new_reference(reference_doi_to_pmid, None):
                 time.sleep(1)
                 doi_metadata = get_metadata(reference_doi_to_pmid)
-                reference_metadata_dict = reference_metadata_dict | doi_metadata
-                new_paper_id = insert_new_paper(reference_metadata_dict[reference_doi_to_pmid])
-                reference_metadata_dict[reference_doi_to_pmid]["id"] = new_paper_id 
+                new_paper_id = insert_new_paper(doi_metadata)
+                doi_metadata["id"] = new_paper_id
+                reference_metadata_dict[reference_doi_to_pmid] = doi_metadata 
+
             else: 
                 paper = retrieve_paper(reference_doi_to_pmid) 
                 reference_metadata_dict[reference_doi_to_pmid] = paper
