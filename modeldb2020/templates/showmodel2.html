@@ -8,7 +8,7 @@
         {% endfor %}
         {% if not is_folder %}
             <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-                <a class="btn" style="margin-top: -7px" href="/getModelFile?model={{Model.id}}&file={{filename}}"><i class="fas fa-file-download" title="Download file"></i></a>
+                <a class="btn" style="margin-top: -7px" href="/getModelFile?model={{Model.id2}}&file={{filename}}"><i class="fas fa-file-download" title="Download file"></i></a>
             </div>
         {% else %}
             <li/>
@@ -20,7 +20,7 @@
     <ul class="nav thin" style="display: block !important;">
         {% for item in content %}
             {% if item.name %}
-                <li style="padding-bottom: 0.5em"><a href="/{{Model.id}}?tab=2&file={{filename}}/{{item.name}}">
+                <li style="padding-bottom: 0.5em"><a href="/{{Model.id2}}?tab=2&file={{filename}}/{{item.name}}">
                     {% if item.type == 'jpg' or item.type == 'pdf' or item.type == 'gif' or item.type == 'svg' %}
                         <i class="fas fa-file-image"></i>
                     {% elif item.type == 'folder' %}
@@ -41,14 +41,14 @@
     </ul>
 {% else %}
     {% if extension == 'jpg' or extension == 'jpeg' or extension == 'gif' or extension == 'png' or extension == 'bmp' %}
-        <img src="/getModelFile?model={{Model.id}}&file={{filename}}" style="max-width: 100%;"></img>
+        <img src="/getModelFile?model={{Model.id2}}&file={{filename}}" style="max-width: 100%;"></img>
     {% elif extension == 'svg' %} 
-        <img src="/getModelFile?model={{Model.id}}&file={{filename}}&download=false" style="max-width: 100%;"></img>
+        <img src="/getModelFile?model={{Model.id2}}&file={{filename}}&download=false" style="max-width: 100%;"></img>
 
     {% else %}
         <!-- iframe height solution adapted from https://stackoverflow.com/questions/819416/adjust-width-and-height-of-iframe-to-fit-with-content-in-it -->
         <!-- TODO: replace with something that handles window resizes -->
-        <iframe src="/getModelFile?model={{Model.id}}&file={{filename}}&embed=True" onload='javascript:(function(o){o.style.height=(64+o.contentWindow.document.body.scrollHeight)+"px";}(this));' style="height:200px;width:100%;border:none;overflow:hidden;"></iframe>
+        <iframe src="/getModelFile?model={{Model.id2}}&file={{filename}}&embed=True" onload='javascript:(function(o){o.style.height=(64+o.contentWindow.document.body.scrollHeight)+"px";}(this));' style="height:200px;width:100%;border:none;overflow:hidden;"></iframe>
     {% endif %}
 {% endif %}
 

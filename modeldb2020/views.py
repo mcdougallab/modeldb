@@ -897,7 +897,7 @@ def showmodel(request, model_id):
 
         for i, name in enumerate(filename):
             link = (
-                f'/showmodel?tab=2&model={model_id}&file={"/".join(filename[0: i + 1])}'
+                f'/{model_id}?tab=2&file={"/".join(filename[0: i + 1])}'
             )
             breadcrumbs.append(f'<a href="{link}">{name}</a>')
         if original_file_valid:
@@ -1103,10 +1103,10 @@ def download(request):
     model_id = request.GET.get("model", -1)
     model = _get_model(request, model_id)
     if model is None:
-        return HttpResponse("Forbidden", status=403)
+        return HttpResponse("Forbidden-1", status=403)
     filename = request.GET.get("file")
     if not model.has_path(filename):
-        return HttpResponse("Forbidden", status=403)
+        return HttpResponse(f"Forbidden-2-{filename}", status=403)
     embed = request.GET.get("embed", "").lower() == "true"
     original_filename = filename
     # discard path information; only keep filename

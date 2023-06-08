@@ -34,6 +34,13 @@ with open(settings.security["metadata-predictor-rules"], "r") as f:
 token = re.compile("[a-zA-Z0-9]+")
 
 
+# identify alternative models
+alternative_models = {}
+for model in sdb.models.find({"alternative_version": {"$exists": True}}):
+    for ver in model["alternative_version"]["value"]:
+        alternative_models[ver["object_id"]] = model["id"]
+
+
 def tokenize(text):
     """not doing stop word removal"""
     return [word for word in token.findall(text)]
@@ -553,7 +560,7 @@ class ModelDB(models.Model):
         return getattr(self, name)
 
     def has_model(self, id_):
-        return id_ in modeldb
+        return id_ in modeldb or int(id_) in alternative_models
 
     def object_by_id(self, object_id):
         return _object_by_id(object_id)
@@ -884,6 +891,11 @@ def get_parameters(model):
 
 class Model:
     def __init__(self, model_id, files_needed=True):
+        if int(model_id) in alternative_models:
+            self.id2 = model_id
+            model_id = alternative_models[int(model_id)]
+        else:
+            self.id2 = model_id
         self._model = modeldb[str(model_id)]
         self._zip = None
         if files_needed:
@@ -946,7 +958,7 @@ class Model:
             self._zip = zipfile.ZipFile(
                 os.path.join(
                     settings.security["modeldb_zip_dir"],
-                    f"{self._model['id']}.zip",
+                    f"{self.id2}.zip",
                 )
             )
         return self._zip
@@ -975,7 +987,7 @@ class Model:
         return any(item.startswith(path) for item in name_list)
 
     def zip_file(self):
-        filename = f"{self._model['id']}.zip"
+        filename = f"{self.id2}.zip"
         with open(
             os.path.join(settings.security["modeldb_zip_dir"], filename), "rb"
         ) as f:
@@ -1050,15 +1062,15 @@ class Model:
 
     @property
     def reused_files(self):
-        model_id = self._model["id"]
+        model_id = id2
         all_reuse = []
-        for file_info in sdb.model_files.find({"model_id": model_id}):
+        for file_info in sdb.model_files.find({"model_id": id2}):
             if file_info["basename"]:
                 file_hash = file_info["hash"]
                 all_matches = sdb.model_files.find({"hash": file_hash})
                 my_results = []
                 for match in all_matches:
-                    if match["model_id"] != model_id:
+                    if match["model_id"] != id2:
                         my_results.append({"model_id": match["model_id"], "path": match["path"]})
                 if my_results:
                     all_reuse.append({"basename": file_info["basename"], "path": file_info["path"], "reuse": my_results})
