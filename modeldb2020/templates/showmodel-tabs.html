@@ -4,13 +4,11 @@
 {% else %}
   {{Model.name}}
 {% endif %}
-    {% if access == 'rw' %}
-      <sup><button id="edit_model_name" title="Edit model name"><i class="fas fa-edit" aria-hidden="true"></i></button></sup>
-    {% endif %}
     {% if show_tab_2 %}
       <a href="/download/{{Model.id2}}"><i title="Download zip" class="fas fa-download"></i></a>
     {% endif %}
-    {% if access == 'rw' %}
+    {% if access == 'rw' and tab == 1 %}
+      <input type="file" style="display:none" id="new_zip" name="filename">
       <button id="edit_model_zip" title="Upload new zip"><i class="fas fa-upload" aria-hidden="true"></i></button>
     {% endif %}
   </input>

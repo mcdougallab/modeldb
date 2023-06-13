@@ -43,6 +43,9 @@
                     $(this).append($element);
                     $(this).trigger("change");
                 });
+                $("#edit_model_zip").click(() => {
+                    document.getElementById('new_zip').click();
+                });
 
 
             });                
@@ -299,9 +302,6 @@
                     <br>
                     <textarea name="model_implementers" id="modelimplementers" class="fullwidth">{{Model.data_to_curate.implementers}}</textarea>
                 {% endif %}
-                {% if access == 'rw' %}
-                    <button title="Edit implemented by" id="edit_implemented_by"><i class="fas fa-edit" aria-hidden="true"></i></button>
-                {% endif %}
             </p>
         {% endif %}
         <p>
@@ -319,9 +319,6 @@
                         <p class="indented">{{Model.data_to_curate.citation}}</p>
                     {% endif %}
                 {% endif %}
-            {% endif %}
-            {% if access == 'rw' %}
-                <button title="Edit papers" id="edit_papers"><i class="fas fa-edit" aria-hidden="true"></i></button>
             {% endif %}
         </p>      
     </div>
