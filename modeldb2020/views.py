@@ -840,7 +840,7 @@ def showmodel(request, model_id):
         }
 
         update_context_based_on_modeling_application(
-            model.modeling_application["value"], context
+            model.modeling_application.get("value", []), context
         )
         return render(request, "showmodel7.html", context)
     elif tab_id == 3:
@@ -853,7 +853,7 @@ def showmodel(request, model_id):
         }
 
         update_context_based_on_modeling_application(
-            model.modeling_application["value"], context
+            model.modeling_application.get("value", []), context
         )
         return render(request, "showmodel3.html", context)
     elif tab_id == 4:
@@ -871,7 +871,7 @@ def showmodel(request, model_id):
         }
 
         update_context_based_on_modeling_application(
-            model.modeling_application["value"], context
+            model.modeling_application.get("value", []), context
         )
 
         if context["is_xpp"] is True:
@@ -927,7 +927,7 @@ def showmodel(request, model_id):
         }
 
         update_context_based_on_modeling_application(
-            model.modeling_application["value"], context
+            model.modeling_application.get("value", []), context
         )
 
         if access == "rw":

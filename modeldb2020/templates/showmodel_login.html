@@ -18,7 +18,7 @@
         </div>
     </div>
 
-    <form action="/showmodel" method="post">
+    <form action="/{{model}}" method="post">
         {% csrf_token %}
         Access code: <input type="password" name="access_code" />
         <input type="hidden" name="tab" value="{{tab_id}}"/>
