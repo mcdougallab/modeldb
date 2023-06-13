@@ -1251,6 +1251,7 @@ class PrivateModel(Model):
     def __init__(self, model_id):
         self._model = sdb.private_models.find_one({"id": int(model_id)})
         self._zip = None
+        self.id2 = model_id
         self._readme_file = None
         self._setup_filetree()
         self._model.setdefault("model_paper", {"value": []})
