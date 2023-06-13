@@ -119,7 +119,9 @@
         {% endif %}
     {% endif %}
     {% if Model.data_to_curate %}
-        <button id="makepublic" class="btn btn2">Request to make public</button><br><br>
+        {% if access == "rw" %}
+            <button id="makepublic" class="btn btn2">Request to make public</button><br><br>
+        {% endif %}
         <a href="/forget_access?model={{Model.id}}" class="btn btn2">Forget access</a>
     {% endif %}
     <div>

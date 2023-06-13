@@ -312,8 +312,12 @@
                 {% endfor %}
             {% else %}
                 {% if Model.data_to_curate %}
-                    <br>
-                    <textarea name="model_citation" id="modelcitation" class="fullwidth">{{Model.data_to_curate.citation}}</textarea>
+                    {% if access == "rw" %}
+                        <br>
+                        <textarea name="model_citation" id="modelcitation" class="fullwidth">{{Model.data_to_curate.citation}}</textarea>
+                    {% else %}
+                        <p class="indented">{{Model.data_to_curate.citation}}</p>
+                    {% endif %}
                 {% endif %}
             {% endif %}
             {% if access == 'rw' %}
