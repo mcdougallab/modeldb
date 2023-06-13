@@ -810,7 +810,11 @@ class CellType(SenseLabClass):
             return None
 
     def links(self):
-        return {item: self._data[item] for item in ['interlex', 'neuromorpho_url', 'neuroelectro'] if item in self._data}
+        return {
+            item: self._data[item]
+            for item in ["interlex", "neuromorpho_url", "neuroelectro"]
+            if item in self._data
+        }
 
 
 def models_with_uncurated_papers():
@@ -901,7 +905,7 @@ class Model:
         if files_needed:
             self._readme_file = None
             self._setup_filetree()
-        #raise Exception(str(self._model['alternative_version']))
+        # raise Exception(str(self._model['alternative_version']))
 
     def modelview(self, data_type):
         if data_type == "parameters":
@@ -926,13 +930,13 @@ class Model:
             ]
         else:
             return []
-    
+
     @property
     def alternative_version(self):
         if "alternative_version" not in self._model:
-            return "test"# []
+            return "test"  # []
         else:
-            return self._model['alternative_version']
+            return self._model["alternative_version"]
 
     def __getattr__(self, key):
         if key in self._model:
@@ -1070,18 +1074,26 @@ class Model:
 
     @property
     def reused_files(self):
-        model_id = id2
+        model_id = self.id2
         all_reuse = []
-        for file_info in sdb.model_files.find({"model_id": id2}):
+        for file_info in sdb.model_files.find({"model_id": self.id2}):
             if file_info["basename"]:
                 file_hash = file_info["hash"]
                 all_matches = sdb.model_files.find({"hash": file_hash})
                 my_results = []
                 for match in all_matches:
-                    if match["model_id"] != id2:
-                        my_results.append({"model_id": match["model_id"], "path": match["path"]})
+                    if match["model_id"] != self.id2:
+                        my_results.append(
+                            {"model_id": match["model_id"], "path": match["path"]}
+                        )
                 if my_results:
-                    all_reuse.append({"basename": file_info["basename"], "path": file_info["path"], "reuse": my_results})
+                    all_reuse.append(
+                        {
+                            "basename": file_info["basename"],
+                            "path": file_info["path"],
+                            "reuse": my_results,
+                        }
+                    )
         return all_reuse
 
 
@@ -1255,6 +1267,16 @@ class PrivateModel(Model):
         self._readme_file = None
         self._setup_filetree()
         self._model.setdefault("model_paper", {"value": []})
+
+    def update(self, data):
+        print(f"Private model {self.id2} update")
+        print(json.dumps(data, indent=4))
+        sdb.private_models.update_one({"id": int(self.id2)}, {"$set": data})
+        self._model = sdb.private_models.find_one({"id": int(self.id2)})
+        print("New data:")
+        model = dict(self._model)
+        del model["_id"]
+        print(json.dumps(model, indent=4))
 
     def zip_file(self):
         filename = f"{self._model['id']}.zip"

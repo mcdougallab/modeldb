@@ -50,18 +50,26 @@
 
             });                
             function do_save() {
-                $.ajax(
+                // TODO: switch to put but had issues with csrf
+                console.log(create_data());
+                fetch(
                     '/api/v1/models/{{Model.id}}',
                     {
-                        success: () => handle_save_response('', 'success'),
-                        error: () => handle_save_response('', 'failed'),
-                        data: JSON.stringify(create_data()),
-                        type: 'PUT'
+                        method: "POST",
+                        body: create_data()
+                    }
+                ).then(
+                    (result) => {
+                        handle_save_response('', 'success');
+                    },
+                    (result) => {
+                        handle_save_response('', 'failed');
                     }
                 );
             }
             function handle_save_response(data, status) {
                 let msg;
+                let bgcolor;
                 if (status == 'success') {
                     msg = 'Save successful';
                     bgcolor = 'lightgreen';
@@ -76,17 +84,18 @@
             }
 
             function create_data() {
-                let dict = {}
+                const formData = new FormData();
                 for (let ms of $('.multiselect')) {
-                    dict[ms.name] = $(ms).select2('val')
+                    formData.append(ms.name, $(ms).select2('val'));
                 }
-                dict['edit_model_name'] = document.getElementById("edit_model_name").value  
-                dict['model_notes'] = document.getElementById("model_notes").value  
-                dict['expmotivation'] = document.getElementById("expmotivation").value
-                dict['modelimplementers'] = document.getElementById("modelimplementers").value
-                dict['modelcitation'] = document.getElementById("modelcitation").value 
-            
-                return dict;
+                formData.append('edit_model_name', document.getElementById("edit_model_name").value);
+                formData.append('model_notes', document.getElementById("model_notes").value);
+                formData.append('expmotivation', document.getElementById("expmotivation").value);
+                formData.append('modelimplementers', document.getElementById("modelimplementers").value);
+                formData.append('modelcitation', document.getElementById("modelcitation").value); 
+                formData.append("new_zip", new_zip.files[0]);
+                formData.append("csrfmiddlewaretoken", "{{csrf_token}}");
+                return formData;
             }
         </script>
         <style>
@@ -354,7 +363,7 @@ There are {{Model.alternative_version.value|length}} other versions of this mode
 
     {% if access == 'rw' %}
         <br>
-        <button class="btn btn2" id="savebutton">Save changes (not implemented)</button>
+        <button class="btn btn2" id="savebutton">Save changes</button>
     {% endif %}
 {% if not Model.data_to_curate %}
     <hr width="75%"/>

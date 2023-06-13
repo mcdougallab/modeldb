@@ -111,6 +111,17 @@ def unprocessed_refs_view(request, _id=None):
     return HttpResponse(str(new_id))
 
 
+def _get_multiselect_data(field, attr_id):
+    return {
+        "value": [
+            {"object_id": int(_id), "object_name": models._object_by_id(_id).name}
+            for _id in field.split(",")
+            if _id
+        ],
+        "attr_id": attr_id,
+    }
+
+
 def models_view(request, model_id=None, field=None):
     if model_id is not None:
         model_id = str(model_id)
@@ -119,9 +130,30 @@ def models_view(request, model_id=None, field=None):
                 return _output(request, ModelDB.model(model_id)._model)
             else:
                 return HttpResponse("404 Not Found", status=404)
-        elif request.method == "PUT":
-            # TODO: is this the right way to pass data? explicitly converting to/from JSON?
-            data = json.loads(request.body)
+        elif request.method == "POST":
+            data = {
+                "name": request.POST["edit_model_name"],
+                "notes": {"value": request.POST["model_notes"], "attr_id": 24},
+                "expmotivation": request.POST["expmotivation"],
+                "neurons": _get_multiselect_data(request.POST["neurons"], 25),
+                "model_type": _get_multiselect_data(request.POST["model_type"], 112),
+                "modeling_application": _get_multiselect_data(
+                    request.POST["modeling_application"], 114
+                ),
+                "currents": _get_multiselect_data(request.POST["currents"], 27),
+                "model_concept": _get_multiselect_data(
+                    request.POST["model_concept"], 113
+                ),
+                "gene": _get_multiselect_data(request.POST["gene"], 476),
+                "region": _get_multiselect_data(request.POST["region"], 471),
+                "receptors": _get_multiselect_data(request.POST["receptors"], 26),
+                "neurotransmitters": _get_multiselect_data(
+                    request.POST["neurotransmitters"], 28
+                ),
+                "data_to_curate.citation": request.POST["modelcitation"],
+                "data_to_curate.implementers": request.POST["modelimplementers"],
+            }
+            # TODO: new_zip
 
             from .views import all_model_access
 
@@ -138,7 +170,9 @@ def models_view(request, model_id=None, field=None):
                     return HttpResponse("success")
             return HttpResponse("403 Forbidden", status=403)
         else:
-            return HttpResponse("403 Forbidden", status=403)
+            return HttpResponse(
+                f"403 Forbidden; unsupported method: {request.method}", status=403
+            )
     elif field is not None:
         my_filter = get_filter(request)
         return _output(

@@ -74,7 +74,12 @@ urlpatterns = (
             {"page": "neuron_download_guide", "title": "NEURON download help"},
             name="neuron_download_guide",
         ),
-        re_path(r"^privacy-policy$(?i)", views.static, {"page": "privacy-policy", "title": "Privacy Policy"}, name="privacy_policy"),
+        re_path(
+            r"^privacy-policy$(?i)",
+            views.static,
+            {"page": "privacy-policy", "title": "Privacy Policy"},
+            name="privacy_policy",
+        ),
         re_path(
             r"^howtocite$(?i)",
             views.static,
@@ -114,8 +119,12 @@ urlpatterns = (
         re_path(
             r"^listbymodelname$(?i)", views.listbymodelname, name="listbymodelname"
         ),
-        re_path(r"^modellist$(?i)", views.modellist_redirect, name="modellist_redirect"),
-        re_path(r"^modellist/(?P<object_id>[0-9]+)$(?i)", views.modellist, name="modellist"),
+        re_path(
+            r"^modellist$(?i)", views.modellist_redirect, name="modellist_redirect"
+        ),
+        re_path(
+            r"^modellist/(?P<object_id>[0-9]+)$(?i)", views.modellist, name="modellist"
+        ),
         re_path(
             r"^help(?:menu)?$(?i)",
             views.static,
@@ -124,9 +133,19 @@ urlpatterns = (
         ),
         re_path(r"^private-models$(?i)", views.private_models, name="private_models"),
         re_path(r"^top-papers$(?i)", views.top_papers, name="top_papers"),
-        re_path(r"^eavbindown$(?i)", views.eavdownload_redirect, name="eavdownload_redirect"),
-        re_path(r"^download/(?P<model_id>[0-9]+)$(?i)", views.download_zip, name="download_zip"),
-        re_path(r"^modelview_components/(?P<model_id>[0-9]+)$(?i)", views.modelview_components, name="modelview_components"),
+        re_path(
+            r"^eavbindown$(?i)", views.eavdownload_redirect, name="eavdownload_redirect"
+        ),
+        re_path(
+            r"^download/(?P<model_id>[0-9]+)$(?i)",
+            views.download_zip,
+            name="download_zip",
+        ),
+        re_path(
+            r"^modelview_components/(?P<model_id>[0-9]+)$(?i)",
+            views.modelview_components,
+            name="modelview_components",
+        ),
         re_path(r"^getmodelfile$(?i)", views.download, name="download_file"),
         re_path(
             r"^metadata-predictor$(?i)",
@@ -155,11 +174,15 @@ urlpatterns = (
         re_path(
             r"^findbysimulator$(?i)", views.findbysimulator, name="findbysimulator"
         ),
+        re_path(r"^publications$(?i)", views.publications, name="publications"),
         re_path(
-            r"^publications$(?i)", views.publications, name="publications"
+            r"^(?:mdb)?citations$(?i)",
+            views.citations_redirect,
+            name="mdbcitations_redirect",
         ),
-        re_path(r"^(?:mdb)?citations$(?i)", views.citations_redirect, name="mdbcitations_redirect"),
-        re_path(r"^citations/(?P<paper_id>.+)$(?i)", views.mdbcitations, name="mdbcitations"),
+        re_path(
+            r"^citations/(?P<paper_id>.+)$(?i)", views.mdbcitations, name="mdbcitations"
+        ),
         re_path(
             r"^models-with-uncurated-references$(?i)",
             views.models_with_uncurated_references,
@@ -168,7 +191,9 @@ urlpatterns = (
         re_path(r"^forget_access$(?i)", views.forget_access, name="forget_access"),
         path(r"rwac-reset/p<slug:code>", views.rwac_reset_p, name="rwac_reset_p"),
         path(r"rwac-reset/<int:model_id>", views.rwac_reset, name="rwac_reset"),
-        path(r"modelview-data/<slug:item>", views.modelview_data, name="modelview_data"),
+        path(
+            r"modelview-data/<slug:item>", views.modelview_data, name="modelview_data"
+        ),
         re_path(
             r"^(?P<kind>model)author/(?P<author>.+)$(?i)",
             views.modelauthor,

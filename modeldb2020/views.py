@@ -896,9 +896,7 @@ def showmodel(request, model_id):
         breadcrumbs = []
 
         for i, name in enumerate(filename):
-            link = (
-                f'/{model_id}?tab=2&file={"/".join(filename[0: i + 1])}'
-            )
+            link = f'/{model_id}?tab=2&file={"/".join(filename[0: i + 1])}'
             breadcrumbs.append(f'<a href="{link}">{name}</a>')
         if original_file_valid:
             breadcrumbs[-1] = name
@@ -987,12 +985,14 @@ def showmodel(request, model_id):
 
             return render(request, "showmodel.html", context)
 
+
 def citations_redirect(request):
     paper_id = request.GET.get("id", -1)
     # TODO: handle not having a model argument more gracefully
     if paper_id == -1:
         return HttpResponse("Forbidden", status=403)
     return redirect(f"/citations/{paper_id}")
+
 
 def mdbcitations(request, paper_id):
     # TODO: we actually know what datatype this is
