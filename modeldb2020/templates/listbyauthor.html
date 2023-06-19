@@ -25,7 +25,7 @@ function name_link(name) {
     }
     let uri = encodeURI(name);
     console.log(uri);
-    return `<a href="/modelauthor/${uri}">${name}</a>`
+    return `<a href="/{{listtype}}/${uri}">${name.split("[")[0].trim()}</a>`
 }
 </script>
 

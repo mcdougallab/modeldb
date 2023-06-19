@@ -1,0 +1,48 @@
+{% extends "bigleftcol.html" %}
+{% block head %}
+<style>
+    .modellist>li {
+        padding-top: 1em;
+    }
+</style>
+{% endblock %}
+{% block header %}
+    <h1>Models implemented by {{implementer}}</h1>
+{% endblock %}
+{% block leftcol %}
+    <ol class="modellist">
+        {% for model in models %}
+            <li><a href="/{{model.id}}">{{model.name}}</a></li>
+        {% endfor %}
+    </ol>
+{% endblock %}
+{% block sidecolumn %}
+    <!--
+    {% if kind == "model" and num_first_author %}
+        <a href="/firstauthor/{{author}}">{{num_first_author}} first author models</a>
+        <br><br>
+    {% endif %}
+    {% if kind == "first" %}
+        <a href="/modelauthor/{{author}}">{{num_author}} total models by {{author}}</a>
+        <br><br>
+    {% endif %}
+    -->
+    {% if concepts %}
+        <b>Top implemented concepts:</b><br>
+        <ul>
+            {% for concept in concepts %}
+                <li><a href="/modellist/{{concept.0}}">{{concept.1}}</a> ({{concept.2}})</li>
+            {% endfor %}
+        </ul>
+        <br>
+    {% endif %}
+    {% if neurons %}
+        <b>Top implemented neurons:</b><br>
+        <ul>
+            {% for item in neurons %}
+                <li><a href="/modellist/{{item.0}}">{{item.1}}</a> ({{item.2}})</li>
+            {% endfor %}
+        </ul>
+        <br>
+    {% endif %}
+{% endblock %}

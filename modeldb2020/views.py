@@ -77,7 +77,7 @@ def sendmail(
     server_name = settings.security.get("smtp_server")
     smtp_user = settings.security.get("smtp_user")
     smtp_password = settings.security.get("smtp_password")
-    if server_name and smtp_user and smtp_password and to == "rmcdougal@gmail.com":
+    if server_name and smtp_user and smtp_password:
         server = smtplib.SMTP(server_name)
         server.starttls()
         server.login(smtp_user, smtp_password)
@@ -135,7 +135,13 @@ def list_by_first_author(request):
     return _display_author_list(request, models.first_authors, "Model First Authors")
 
 
-def _display_author_list(request, authors, kind):
+def list_by_implementer(request):
+    return _display_author_list(
+        request, models.all_implementers, "Model Implementers", listtype="implementers"
+    )
+
+
+def _display_author_list(request, authors, kind, listtype="modelauthor"):
     order = sorted(authors)
     data = [{"n": name, "c": len(authors[name])} for name in order]
     context = {
@@ -143,6 +149,7 @@ def _display_author_list(request, authors, kind):
         "datajson": json.dumps(data),
         "title": f"ModelDB: {kind}",
         "request": request,
+        "listtype": listtype,
     }
     return render(request, "listbyauthor.html", context)
 
@@ -217,6 +224,40 @@ def modelauthor(request, author=None, kind=None):
         "neurons": neurons,
     }
     return render(request, "modelauthor.html", context)
+
+
+def implementer(request, implementer=None):
+    if implementer not in models.all_implementers:
+        return HttpResponse("404 not found", status=404)
+    the_models = sorted(
+        [
+            models.Model(entry, files_needed=False)
+            for entry in models.all_implementers[implementer]
+        ],
+        key=lambda model: model.name,
+    )
+    concepts = _filter_models_for_top_category(
+        the_models, "model_concept", modelconcepts
+    )
+    neurons = _filter_models_for_top_category(the_models, "neurons", celltypes)
+
+    # find the set of all papers, drop duplicates
+    papers_all = itertools.chain.from_iterable([model.papers for model in the_models])
+    papers = []
+    paper_ids = set()
+    for paper in papers_all:
+        paper_id = paper.id
+        if paper_id not in paper_ids:
+            papers.append(paper)
+            paper_ids.add(paper_id)
+    context = {
+        "title": f"ModelDB: models implemented by {implementer}",
+        "implementer": implementer,
+        "models": the_models,
+        "concepts": concepts,
+        "neurons": neurons,
+    }
+    return render(request, "implementer.html", context)
 
 
 def models_with_uncurated_references(request):

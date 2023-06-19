@@ -64,6 +64,12 @@ urlpatterns = (
         re_path(
             r"^listbyanyauthor$(?i)", views.list_by_any_author, name="listbyanyauthor"
         ),
+        re_path(
+            r"^implementers$(?i)", views.list_by_implementer, name="listbyimplementer"
+        ),
+        re_path(
+            r"implementers/(?P<implementer>.+)", views.implementer, name="implementer"
+        ),
         # re_path(r'^listbyfirstauthor$(?i)', views.list_by_first_author, name='listbyfirstauthor'),
         re_path(r"^submitmodel$(?i)", views.submit_model, name="submitmodel"),
         re_path(r"^search$(?i)", views.search, name="search"),

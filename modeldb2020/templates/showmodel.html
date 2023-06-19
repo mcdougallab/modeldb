@@ -304,7 +304,7 @@
             <p><b>Implementer(s):</b>
                 {% for item in Model.implemented_by.value %}
                     {% spaceless %}
-                        <a href="/ModelList/{{item.object_id}}">{{item.object_name}}</a>{% if not forloop.last %};{% endif %}
+                        <a href="/implementers/{{item.object_name}}">{{item.object_name}}</a>{% if not forloop.last %};{% endif %}
                     {% endspaceless %}
                 {% endfor %}
                 {% if Model.data_to_curate %}

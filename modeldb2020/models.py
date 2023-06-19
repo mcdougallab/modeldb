@@ -211,6 +211,7 @@ def refresh():
     global transmitters, simenvironments, modelconcepts
     global modeltypes, celltypes, papers, cites_paper_unsorted
     global all_authors, all_author_accent_mapping, first_authors, icg, models_by_paper, ptrm
+    global all_implementers
 
     modeldb = load_collection("models")
     currents = load_collection("currents")
@@ -232,11 +233,17 @@ def refresh():
 
     all_authors = {}
     first_authors = {}
+    all_implementers = {}
 
     no_authors_listed = "No authors listed"
 
     missing_papers = []
     for model in modeldb.values():
+        if "implemented_by" in model:
+            for implementer in model["implemented_by"]["value"]:
+                name = implementer["object_name"]
+                all_implementers.setdefault(name, [])
+                all_implementers[name].append(model["id"])
         for paper in model.get("model_paper", {"value": []})["value"]:
             paper_id = str(paper["object_id"])
             if paper_id not in papers:
