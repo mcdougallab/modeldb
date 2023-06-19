@@ -68,7 +68,7 @@ def change_password(request):
         context["next"] = request.GET.get("next")
         return render(request, "change_password.html", context)
     else:
-        return login_redirect(request)
+        return redirect("/login?next=/change-password")
 
 
 def sendmail(
@@ -77,7 +77,7 @@ def sendmail(
     server_name = settings.security.get("smtp_server")
     smtp_user = settings.security.get("smtp_user")
     smtp_password = settings.security.get("smtp_password")
-    if server_name and smtp_user and smtp_password:
+    if server_name and smtp_user and smtp_password and to == "rmcdougal@gmail.com":
         server = smtplib.SMTP(server_name)
         server.starttls()
         server.login(smtp_user, smtp_password)
