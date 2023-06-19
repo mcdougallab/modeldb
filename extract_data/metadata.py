@@ -210,7 +210,7 @@ def check_authors():
 
 # this is for getting metadata from pubmed
 # and using it to update the papers collection
-def get_author_info(pmids_to_process, papers):
+def get_author_info(pmids_to_process, papers, do_update=True):
     metadata_dict = get_metadata(pmids_to_process)
     for paper in papers:
         pmid = paper["pubmed_id"]["value"]
@@ -230,33 +230,34 @@ def get_author_info(pmids_to_process, papers):
             print(paper["id"], paper["authors"]["value"])
 
             updated_paper_name = paper_name(my_metadata, paper)
-            current_date = datetime.now().isoformat()
+            if do_update:
+                current_date = datetime.now().isoformat()
 
-            new_values = {
-                "name": updated_paper_name,
-                "authors.value": paper["authors"]["value"],
-                "ver_date": current_date,
-                "ver_number": paper["ver_number"] + 1,
-                "journal": my_metadata["journal"],
-                "pubmed_id": my_metadata["pubmed_id"],
-            }
+                new_values = {
+                    "name": updated_paper_name,
+                    "authors.value": paper["authors"]["value"],
+                    "ver_date": current_date,
+                    "ver_number": paper["ver_number"] + 1,
+                    "journal": my_metadata["journal"],
+                    "pubmed_id": my_metadata["pubmed_id"],
+                }
 
-            if "doi" in my_metadata:
-                new_values["doi"] = my_metadata["doi"]
+                if "doi" in my_metadata:
+                    new_values["doi"] = my_metadata["doi"]
 
-            if "volume" in my_metadata:
-                new_values["volume"] = my_metadata["volume"]
+                if "volume" in my_metadata:
+                    new_values["volume"] = my_metadata["volume"]
 
-            if "year" in my_metadata:
-                new_values["year"] = my_metadata["year"]
+                if "year" in my_metadata:
+                    new_values["year"] = my_metadata["year"]
 
-            if "month" in my_metadata:
-                new_values["month"] = my_metadata["month"]
+                if "month" in my_metadata:
+                    new_values["month"] = my_metadata["month"]
 
-            if "day" in my_metadata:
-                new_values["day"] = my_metadata["day"]
+                if "day" in my_metadata:
+                    new_values["day"] = my_metadata["day"]
 
-            sdb.papers.update_one({"id": paper["id"]}, {"$set": new_values})
+                sdb.papers.update_one({"id": paper["id"]}, {"$set": new_values})
 
 
 # adds new authors to authors collection
@@ -568,16 +569,15 @@ def get_reference_pmids(pmid):
     doc = m.parseString(r.text)
     reference_list = doc.getElementsByTagName("ReferenceList")[0]
     ids = reference_list.getElementsByTagName("ArticleIdList")
-    pubmed = True
 
     for article_id in ids:
-        pubmed is False
+        pubmed = False
         for i in article_id.getElementsByTagName("ArticleId"):
             if "pubmed" == i.getAttributeNode("IdType").childNodes[0].nodeValue:
                 articleid_pmid = i.childNodes[0].nodeValue
                 pmids_list.append(articleid_pmid)
-                pubmed is True
-        if pubmed is False:
+                pubmed = True
+        if not pubmed:
             for i in article_id.getElementsByTagName("ArticleId"):
                 if "doi" == i.getAttributeNode("IdType").childNodes[0].nodeValue:
                     articleid_doi = i.childNodes[0].nodeValue
@@ -599,7 +599,7 @@ def check_new_reference(pmid, doi):
 def insert_new_paper(metadata_dict):
     new_info_dict = {}
 
-    id_ = new_object_id
+    id_ = new_object_id()
     new_info_dict["id"] = id_
     new_paper_name = paper_name(metadata_dict)
 
@@ -607,9 +607,8 @@ def insert_new_paper(metadata_dict):
     new_info_dict["created"] = datetime.now().isoformat()
     new_info_dict["ver_number"] = 1
 
-    new_paper_dict = new_info_dict | metadata_dict
-
-    sdb.papers.insert_one({new_paper_dict})
+    new_info_dict.update(metadata_dict)
+    sdb.papers.insert_one(new_info_dict)
 
     return id_
 
@@ -638,7 +637,7 @@ def get_reference_metadata(pmid):
             if check_new_reference(reference_doi_to_pmid, None):
                 time.sleep(1)
                 doi_metadata = get_metadata(reference_doi_to_pmid)
-                reference_metadata_dict = reference_metadata_dict | doi_metadata
+                reference_metadata_dict.update(doi_metadata)
                 new_paper_id = insert_new_paper(
                     reference_metadata_dict[reference_doi_to_pmid]
                 )
@@ -649,13 +648,30 @@ def get_reference_metadata(pmid):
         elif reference_doi_to_pmid is None:
             missing_references.append(doi)
 
-    if len(missing_references) != 0:
-        reference_metadata_dict.setdefault("missing_references", {})["value"] = []
-        reference_metadata_dict["missing_references"]["value"] = missing_references
+    if missing_references:
+        reference_metadata_dict.setdefault("missing_references", {})["value"] = missing_references
         reference_metadata_dict["missing_references"]["attr_id"] = 211
 
     return reference_metadata_dict
 
+
+def insert_paper_with_references(pmid):
+    # returns new papers id
+    reference_metadata = get_reference_metadata(pmid)
+    metadata = get_metadata(pmid)[str(pmid)]
+    metadata["pubmed_id"] = {"value": pmid, "attr_id": 153}
+    #get_author_info([pmid], [metadata], do_update=False)
+    if 'missing_references' in reference_metadata:
+        metadata["missing_references"] = reference_metadata["missing_references"]
+        del reference_metadata["missing_references"]
+    metadata["references"] = {
+        "value": [
+            {"object_id": item["id"], "object_name": item["name"]}
+            for item in reference_metadata.values()
+        ],
+        "attr_id": 140
+    }
+    return insert_new_paper(metadata)
 
 if __name__ == "__main__":
     check_authors()
