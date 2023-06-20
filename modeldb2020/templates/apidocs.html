@@ -43,7 +43,18 @@
         <a href="/api/v1/models?modeling_application=NEURON">/api/v1/models?modeling_application=NEURON</a>
         shows the set of models using NEURON as a modeling application. Multiple fields may be filtered
         at the same time, but currently only one filter value for a given field is allowed, and only
-        potentially multi-valued fields are supported.
+        potentially multi-valued fields are supported. <code>null</code> is returned when a model does not have
+        an entry for the corresponding field.
+    </p>
+    <p>
+        Repeated queries of the models endpoint in short succession will appear in consistent order
+        provided there are no intervening server restarts or new public models.
+        That is, calling <a href="/api/v1/models/ver_date?modeling_application=NEURON">/api/v1/models/ver_date?modeling_application=NEURON</a>
+        and then <a href="/api/v1/models?modeling_application=NEURON">/api/v1/models?modeling_application=NEURON</a>
+        will return two lists that can be zipped together, with the ith <code>ver_date</code> corresponding
+        to the ith model id.
+        Do not cache the results as no guarantees are made about order across server restarts or 
+        when models are added.
     </p>
     <p>
         All results are returned with mime type <code>application/json</code>.
