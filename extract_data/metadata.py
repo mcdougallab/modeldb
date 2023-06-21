@@ -338,7 +338,7 @@ def get_author_metadata(article, pmid):
     else:
         for author in authors:
             author_dict = {}
-            
+
             if author.getElementsByTagName("LastName"):
                 author_last_name = author.getElementsByTagName("LastName")[0].firstChild.nodeValue
             else:
@@ -563,7 +563,7 @@ def add_references_to_paper(pmid):
     for ref_pmid in reference_pmids:
         ref_dict = {}
         ref_pmid_metadata = get_metadata(ref_pmid)
-        print(ref_pmid "ref_pmid", ref_pmid_metadata[ref_pmid]) # to delete
+        print(ref_pmid, "ref_pmid", ref_pmid_metadata[ref_pmid]) # to delete
         if check_new_reference(ref_pmid, None):
             new_paper_id = insert_new_paper(ref_pmid_metadata[ref_pmid])
             new_paper_name = paper_name(ref_pmid_metadata[ref_pmid])
@@ -612,6 +612,11 @@ def add_references_to_paper(pmid):
     if len(missing_references) != 0:
         missing_references_dict = {
             "value": missing_references,
+            "attr_id": 211
+        }
+    else: 
+        missing_references_dict = {
+            "value": 'all done',
             "attr_id": 211
         }
 
@@ -664,6 +669,7 @@ def get_reference_metadata(pmid):
 
 
 if __name__ == "__main__":
-    check_authors()
+    #check_authors()
     #get_metadata(pmid)
     #get_reference_metadata(pmid)
+    add_references_to_paper(36223200)
