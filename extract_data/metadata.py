@@ -556,29 +556,31 @@ def get_metadata(pmids):
 
 
 
-def add_references_to_existing_paper(pmid):
-    reference_metadata = get_reference_metadata(pmid)
-    metadata = retrieve_paper(pmid)
-    if 'missing_references' in reference_metadata:
-        metadata["missing_references"] = reference_metadata["missing_references"]
-        del reference_metadata["missing_references"]
-    metadata["references"] = {
-        "value": [
-            {"object_id": item["id"], "object_name": item["name"]}
-            for item in reference_metadata.values()
-        ],
-        "attr_id": 140
-    }
+def add_references_to_existing_paper():
+    pubmed_ids = [paper["pubmed_id"] for paper in sdb.papers.find()]
+    for pmid in pubmed_ids:
+        reference_metadata = get_reference_metadata(pmid)
+        metadata = retrieve_paper(pmid)
+        if 'missing_references' in reference_metadata:
+            metadata["missing_references"] = reference_metadata["missing_references"]
+            del reference_metadata["missing_references"]
+        metadata["references"] = {
+            "value": [
+                {"object_id": item["id"], "object_name": item["name"]}
+                for item in reference_metadata.values()
+            ],
+            "attr_id": 140
+        }
 
-    references = {
-        "references" : metadata["references"],
-        "missing_references": metadata["missing_references"],
-    }
+        references = {
+            "references" : metadata["references"],
+            "missing_references": metadata["missing_references"],
+        }
 
-    sdb.papers.update_one({"pubmed_id": pmid}, 
-        {"$set": references}
-    )
-    
+        sdb.papers.update_one({"pubmed_id": pmid}, 
+            {"$set": references}
+        )
+
 
 def insert_paper_with_references(pmid):
     # returns new papers id
