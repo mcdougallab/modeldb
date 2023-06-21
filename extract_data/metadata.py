@@ -556,79 +556,46 @@ def get_metadata(pmids):
 
 
 
-def add_references_to_paper(pmid):
-    all_references = []
-    missing_references = []
-    reference_pmids, reference_dois = get_reference_pmids(pmid)
-    for ref_pmid in reference_pmids:
-        ref_dict = {}
-        ref_pmid_metadata = get_metadata(ref_pmid)
-        print(ref_pmid, "ref_pmid", ref_pmid_metadata[ref_pmid]) # to delete
-        if check_new_reference(ref_pmid, None):
-            new_paper_id = insert_new_paper(ref_pmid_metadata[ref_pmid])
-            new_paper_name = paper_name(ref_pmid_metadata[ref_pmid])
-            ref_dict = {
-                "object_id": new_paper_id,
-                "object_name": new_paper_name
-            }
-        else: 
-            paper = retrieve_paper(ref_pmid)
-            ref_dict = {
-                "object_id": paper['id'],
-                "object_name": paper['name']
-            }
-        all_references.append(ref_dict)
-
-    for ref_doi in reference_dois: 
-        ref_dict = {}
-        reference_doi_to_pmid = lookup_pmid_from_doi(ref_doi)
-        if reference_doi_to_pmid is not None:
-            if check_new_reference(reference_doi_to_pmid, None):
-                time.sleep(1)
-                doi_metadata = get_metadata(reference_doi_to_pmid)
-                print(ref_doi, "doi_metadata", doi_metadata[ref_doi]) #to delete
-                new_paper_id = insert_new_paper(doi_metadata[ref_doi])
-                new_paper_name = paper_name(doi_metadata[ref_doi])
-                ref_dict = {
-                    "object_id": new_paper_id,
-                    "object_name": new_paper_name
-                }
-            else: 
-                paper = retrieve_paper(reference_doi_to_pmid) 
-                ref_dict = {
-                    "object_id": paper['id'],
-                    "object_name": paper['name']
-                }
-            all_references.append(ref_dict)
-        elif reference_doi_to_pmid is None:
-            missing_references.append(ref_doi)
-
-
-    references_dict = {
-        "value": all_references,
+def add_references_to_existing_paper(pmid):
+    reference_metadata = get_reference_metadata(pmid)
+    metadata = retrieve_paper(pmid)
+    if 'missing_references' in reference_metadata:
+        metadata["missing_references"] = reference_metadata["missing_references"]
+        del reference_metadata["missing_references"]
+    metadata["references"] = {
+        "value": [
+            {"object_id": item["id"], "object_name": item["name"]}
+            for item in reference_metadata.values()
+        ],
         "attr_id": 140
     }
 
-    if len(missing_references) != 0:
-        missing_references_dict = {
-            "value": missing_references,
-            "attr_id": 211
-        }
-    else: 
-        missing_references_dict = {
-            "value": 'all done',
-            "attr_id": 211
-        }
-
     references = {
-        "references" : references_dict,
-        "missing_references": missing_references_dict,
+        "references" : metadata["references"],
+        "missing_references": metadata["missing_references"],
     }
 
     sdb.papers.update_one({"pubmed_id": pmid}, 
         {"$set": references}
     )
+    
 
+def insert_paper_with_references(pmid):
+    # returns new papers id
+    reference_metadata = get_reference_metadata(pmid)
+    metadata = get_metadata(pmid)[str(pmid)]
+    metadata["pubmed_id"] = {"value": pmid, "attr_id": 153}
+    if 'missing_references' in reference_metadata:
+        metadata["missing_references"] = reference_metadata["missing_references"]
+        del reference_metadata["missing_references"]
+    metadata["references"] = {
+        "value": [
+            {"object_id": item["id"], "object_name": item["name"]}
+            for item in reference_metadata.values()
+        ],
+        "attr_id": 140
+    }
+    return insert_new_paper(metadata)
 
 
 def get_reference_metadata(pmid):
@@ -672,4 +639,4 @@ if __name__ == "__main__":
     #check_authors()
     #get_metadata(pmid)
     #get_reference_metadata(pmid)
-    add_references_to_paper(36223200)
+    #add_references_to_existing_paper(36223200)
