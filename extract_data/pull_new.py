@@ -5,7 +5,6 @@ import os
 import base64
 
 
-
 try:
     from tqdm import tqdm as progress_bar
 except:
