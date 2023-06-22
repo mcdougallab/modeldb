@@ -605,6 +605,7 @@ def insert_new_paper(metadata_dict):
 
     new_info_dict["name"] = new_paper_name
     new_info_dict["created"] = datetime.now().isoformat()
+    new_info_dict["ver_date"] = new_info_dict["created"]
     new_info_dict["ver_number"] = 1
 
     new_info_dict.update(metadata_dict)
@@ -649,7 +650,9 @@ def get_reference_metadata(pmid):
             missing_references.append(doi)
 
     if missing_references:
-        reference_metadata_dict.setdefault("missing_references", {})["value"] = missing_references
+        reference_metadata_dict.setdefault("missing_references", {})[
+            "value"
+        ] = missing_references
         reference_metadata_dict["missing_references"]["attr_id"] = 211
 
     return reference_metadata_dict
@@ -660,8 +663,8 @@ def insert_paper_with_references(pmid):
     reference_metadata = get_reference_metadata(pmid)
     metadata = get_metadata(pmid)[str(pmid)]
     metadata["pubmed_id"] = {"value": pmid, "attr_id": 153}
-    #get_author_info([pmid], [metadata], do_update=False)
-    if 'missing_references' in reference_metadata:
+    # get_author_info([pmid], [metadata], do_update=False)
+    if "missing_references" in reference_metadata:
         metadata["missing_references"] = reference_metadata["missing_references"]
         del reference_metadata["missing_references"]
     metadata["references"] = {
@@ -669,9 +672,60 @@ def insert_paper_with_references(pmid):
             {"object_id": item["id"], "object_name": item["name"]}
             for item in reference_metadata.values()
         ],
-        "attr_id": 140
+        "attr_id": 140,
     }
     return insert_new_paper(metadata)
+
+
+# Updates references for singular existing paper
+def add_references_to_existing_paper(paper_id):
+    metadata = sdb.papers.find_one({"id": paper_id})
+    pmid = metadata["pubmed_id"]["value"]
+    reference_metadata = get_reference_metadata(pmid)
+
+    if "missing_references" in reference_metadata:
+        metadata["missing_references"] = reference_metadata["missing_references"]
+        del reference_metadata["missing_references"]
+
+    # the if statement here comes up with e.g. books (paper 267767's Ito reference)
+    metadata["references"] = {
+        "value": [
+            {"object_id": item["id"], "object_name": item["name"]}
+            for item in reference_metadata.values()
+            if "name" in item and "id" in item
+        ],
+        "attr_id": 140,
+    }
+
+    metadata["ver_date"] = datetime.now().isoformat()
+    metadata["ver_number"] = 1 + metadata.get("ver_number", 0)
+
+    sdb.papers.update_one({"id": paper_id}, {"$set": metadata})
+
+
+# Updates entire paper collection's references
+def add_missing_references_to_paper_collection():
+    all_model_papers = sdb.models.distinct("model_paper.value.object_id")
+    for paper_id in all_model_papers:
+        paper = sdb.papers.find_one({"id": paper_id})
+        if "pubmed_id" in paper:
+            if not paper.get("references", {}).get("value"):
+                try:
+                    add_references_to_existing_paper(paper_id)
+                    print(
+                        "successfully added references to paper",
+                        paper_id,
+                        "PMID:",
+                        paper["pubmed_id"]["value"],
+                    )                    
+                except:
+                    print(
+                        "failed to add references to paper",
+                        paper_id,
+                        "PMID:",
+                        paper["pubmed_id"]["value"],
+                    )
+
 
 if __name__ == "__main__":
     check_authors()
