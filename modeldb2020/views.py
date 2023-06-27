@@ -1257,6 +1257,30 @@ def findbyregionlist(request):
     return render(request, "treepage.html", context)
 
 
+def browse_by_region(request):
+    regions = models.regions_tree()
+    html = "<ul>"
+    for parent, region_list in regions.items():
+        html += (
+            f"<li>{parent}<ul><li>"
+            + "</li><li>".join(
+                f"<a href='/modellist/{r}'>{models.regions[str(r)]['name']}</a>"
+                for r in sorted(
+                    region_list, key=lambda r: models.regions[str(r)]["name"]
+                )
+            )
+            + "</li></ul></li>"
+        )
+    html += "</ul>"
+    context = {
+        "title": "ModelDB: Browse by species or region",
+        "content": html,
+        "header": "Browse by species or region",
+        "subhead": "Click on a region to show a list of models of that type.",
+    }
+    return render(request, "treepage.html", context)
+
+
 def modelview_components(request, model_id):
     callback = request.GET.get("callback")
     model = models.Model(model_id, files_needed=False)

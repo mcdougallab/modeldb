@@ -158,6 +158,7 @@ for class_name, class_id in [
     ["transmitters", 7],
     ["simenvironments", 36],
     ["modelconcepts", 39],
+    ["edges", 125],
     ["modeltypes", 38],
     ["celltypes", 18],
 ]:

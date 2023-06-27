@@ -159,6 +159,7 @@ urlpatterns = (
             name="metadata_predictor",
         ),
         re_path(r"^findbycurrent$(?i)", views.findbycurrent, name="findbycurrent"),
+        re_path(r"^regions$(?i)", views.browse_by_region, name="regions"),
         re_path(r"^findbyregionlist$(?i)", views.findbyregionlist, name="findbyregion"),
         re_path(
             r"^findbyregiontable$(?i)", views.findbyregionlist, name="findbyregion"

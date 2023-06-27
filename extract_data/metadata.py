@@ -717,7 +717,7 @@ def add_missing_references_to_paper_collection():
                         paper_id,
                         "PMID:",
                         paper["pubmed_id"]["value"],
-                    )                    
+                    )
                 except:
                     print(
                         "failed to add references to paper",

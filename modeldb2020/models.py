@@ -27,6 +27,27 @@ network_models = {
 }
 del network_models_pd
 
+
+def regions_tree():
+    result = {
+        "Species": [],
+        "Vertebrate regions": [],
+        "Invertebrate regions": [],
+        "Miscellaneous": [],
+    }
+    for r in sdb.regions.find():
+        try:
+            parent = r["parent"]["object_name"]
+        except:
+            continue
+        result.setdefault(parent, []).append(r["id"])
+    # make sure we end with miscellaneous
+    misc = result["Miscellaneous"]
+    del result["Miscellaneous"]
+    result["Miscellaneous"] = misc
+    return result
+
+
 with open(settings.security["metadata-predictor-rules"], "r") as f:
     metadata_predictor_rules = json.load(f)
 
@@ -183,12 +204,13 @@ def set_unprocessed_refs(paper_id, data):
 # TODO: force object_id to be string here so we don't have to do it later
 def load_collection(name):
     new_collection = {str(item["id"]): item for item in getattr(sdb, name).find()}
-    # expand parent data (if any) into reciprocal parent-child data
-    for item in new_collection.values():
-        if "parent" in item:
-            item["parent"] = str(item["parent"])
-            new_collection[item["parent"]].setdefault("children", [])
-            new_collection[item["parent"]]["children"].append(str(item["id"]))
+    if name != "regions":
+        # expand parent data (if any) into reciprocal parent-child data
+        for item in new_collection.values():
+            if "parent" in item:
+                item["parent"] = str(item["parent"])
+                new_collection[item["parent"]].setdefault("children", [])
+                new_collection[item["parent"]]["children"].append(str(item["id"]))
     return new_collection
 
 
