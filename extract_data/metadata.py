@@ -566,7 +566,11 @@ def get_reference_pmids(pmid):
     r = requests.get(
         f"https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id={pmid}&retmode=xml"
     )
-    doc = m.parseString(r.text)
+    try:
+        doc = m.parseString(r.text)
+    except:
+        print(r.text)
+        raise
     reference_list = doc.getElementsByTagName("ReferenceList")[0]
     ids = reference_list.getElementsByTagName("ArticleIdList")
 
