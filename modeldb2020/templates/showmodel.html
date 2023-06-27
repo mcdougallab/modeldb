@@ -2,6 +2,12 @@
 {% load static %}
 
 {% block head %}
+    <meta property="og:url" content="https://modeldb.science/{{Model.id2}}"/>
+    <meta property="og:title" content="{{Model.name|escape}}"/>
+    <meta property="og:description" content="{{Model.notes.value|escape}}"/>
+    <meta name="twitter:url" content="https://modeldb.science/{{Model.id2}}"/>
+    <meta name="twitter:title" content="{{Model.name|escape}}"/>
+    <meta name="twitter:description" content="{{Model.notes.value|escape}}"/>
     {% if access == 'rw' %}
         <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
