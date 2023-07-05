@@ -194,8 +194,6 @@ def check_authors():
     papers = []
     paper_ids = [paper["id"] for paper in sdb.papers.find()]
     for paper_id in paper_ids:
-        if int(paper_id) < 234000:
-            continue
         paper = sdb.papers.find_one({"id": paper_id})
         pmid = get_pmid_from_paper(paper)
         if pmid is not None:
@@ -732,6 +730,7 @@ def add_missing_references_to_paper_collection():
 
 
 if __name__ == "__main__":
+    input("Type enter to run check_authors or ctrl^c to quit")
     check_authors()
     # get_metadata(pmid)
     # get_reference_metadata(pmid)
