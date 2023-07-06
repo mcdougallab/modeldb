@@ -661,21 +661,25 @@ def get_reference_metadata(pmid):
 
 
 def insert_paper_with_references(pmid):
-    # returns new papers id
-    reference_metadata = get_reference_metadata(pmid)
     metadata = get_metadata(pmid)[str(pmid)]
     metadata["pubmed_id"] = {"value": pmid, "attr_id": 153}
-    # get_author_info([pmid], [metadata], do_update=False)
-    if "missing_references" in reference_metadata:
-        metadata["missing_references"] = reference_metadata["missing_references"]
-        del reference_metadata["missing_references"]
-    metadata["references"] = {
-        "value": [
-            {"object_id": item["id"], "object_name": item["name"]}
-            for item in reference_metadata.values()
-        ],
-        "attr_id": 140,
-    }
+    try:
+        # returns new papers id
+        reference_metadata = get_reference_metadata(pmid)
+        # get_author_info([pmid], [metadata], do_update=False)
+        if "missing_references" in reference_metadata:
+            metadata["missing_references"] = reference_metadata["missing_references"]
+            del reference_metadata["missing_references"]
+        metadata["references"] = {
+            "value": [
+                {"object_id": item["id"], "object_name": item["name"]}
+                for item in reference_metadata.values()
+            ],
+            "attr_id": 140,
+        }
+    except IndexError:
+        # this happens when no references
+        ...
     return insert_new_paper(metadata)
 
 
