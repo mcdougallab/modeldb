@@ -728,37 +728,35 @@ def add_missing_references_to_paper_collection():
                         paper["pubmed_id"]["value"],
                     )
 
-def manually_add_paper(dict):
+def manually_add_paper(input_dict):
     metadata = {}
     all_authors = []
 
     title_dict = {
-        "value": dict["title"],
+        "value": input_dict["title"],
         "attr_id": 139
     }
     metadata["title"] = title_dict
 
-    counter = 1
-    for author in dict["authors"].items():
+    for author in dict["authors"]:
         author_dict = {}
-        if dict["authors"][counter]["last_name"] and dict["authors"][counter]["initials"]:
-            author_object_name = dict["authors"][counter]["last_name"] + " " + dict["authors"][counter]["initials"]
+        if author['last_name'] and author['initials']:
+            author_object_name = author['last_name'] + " " + author['initials']
         else:
-            author_object_name = dict["authors"][counter]["last_name"]
+            author_object_name = author['last_name']
         if new_author_check(author_object_name):
             author_object_id = add_new_author_to_collection(
                 author_object_name,
-                dict["authors"][counter]["last_name"],
-                dict["authors"][counter]["first_name"],
-                dict["authors"][counter]["initials"],
-                dict["authors"][counter]["orcid"],
+                author["last_name"],
+                author["first_name"],
+                author["initials"],
+                author["orcid"],
             )
         else:
             author_object_id = retrieve_author_object_id(author_object_name)
         author_dict["object_id"] = author_object_id
         author_dict["object_name"] = author_object_name
         all_authors.append(author_dict)
-        counter += 1
 
     authors_dict = {
         "value": all_authors,
@@ -766,16 +764,16 @@ def manually_add_paper(dict):
     }
     metadata["authors"] = authors_dict
 
-    if dict['journal']:
+    if input_dict['journal']:
         journal_dict = {
-            "value": dict['journal'],
+            "value": input_dict['journal'],
             "attr_id": 158
         }
         metadata["journal"] = journal_dict
 
-    if dict['year']:
+    if input_dict['year']:
         year_dict = {
-            "value": str(dict['year']),
+            "value": str(input_dict['year']),
             "attr_id": 154
         }
         metadata["year"] = year_dict
