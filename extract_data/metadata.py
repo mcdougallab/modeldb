@@ -732,6 +732,59 @@ def add_missing_references_to_paper_collection():
                         paper["pubmed_id"]["value"],
                     )
 
+def manually_add_paper(input_dict):
+    metadata = {}
+    all_authors = []
+
+    title_dict = {
+        "value": input_dict["title"],
+        "attr_id": 139
+    }
+    metadata["title"] = title_dict
+
+    for author in dict["authors"]:
+        author_dict = {}
+        if author['last_name'] and author['initials']:
+            author_object_name = author['last_name'] + " " + author['initials']
+        else:
+            author_object_name = author['last_name']
+        if new_author_check(author_object_name):
+            author_object_id = add_new_author_to_collection(
+                author_object_name,
+                author["last_name"],
+                author["first_name"],
+                author["initials"],
+                author["orcid"],
+            )
+        else:
+            author_object_id = retrieve_author_object_id(author_object_name)
+        author_dict["object_id"] = author_object_id
+        author_dict["object_name"] = author_object_name
+        all_authors.append(author_dict)
+
+    authors_dict = {
+        "value": all_authors,
+        "attr_id": 148
+    }
+    metadata["authors"] = authors_dict
+
+    if input_dict['journal']:
+        journal_dict = {
+            "value": input_dict['journal'],
+            "attr_id": 158
+        }
+        metadata["journal"] = journal_dict
+
+    if input_dict['year']:
+        year_dict = {
+            "value": str(input_dict['year']),
+            "attr_id": 154
+        }
+        metadata["year"] = year_dict
+        
+    insert_new_paper(metadata)
+    return metadata
+
 
 if __name__ == "__main__":
     input("Type enter to run check_authors or ctrl^c to quit")
