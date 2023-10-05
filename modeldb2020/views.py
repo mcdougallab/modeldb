@@ -1109,9 +1109,7 @@ def _remap_src(model_id, match, base_filename):
     return 'src="' + src + '"'
 
 def _remap_img(model_id, match, base_filename): 
-    print("match", match)
     src = match.group()
-    print("src", src)
     src_lower = src.lower()
     alt_text, relative_name = re.findall(r"!\[(.*?)\]\((.*?)\)", src)[0]
 
@@ -1125,13 +1123,9 @@ def _remap_img(model_id, match, base_filename):
         relative_name = re.sub(r"(?i)(https?:)?//senselab\.med\.yale\.edu/", "/", relative_name)
         return f"![{alt_text}]({relative_name})"
     else:
-        print("before the thing")
-        print("alt_text", alt_text)
-        print("relative_name", relative_name)
         return f"![{alt_text}](/getmodelfile?model={model_id}&file={base_filename}{relative_name})"
 
 def _remap_href(model_id, match, base_filename):
-    print("warmest greetings from _remap_href")
     match_text = match.group()
     src = match_text[6:-1]
     src_lower = src.lower()
