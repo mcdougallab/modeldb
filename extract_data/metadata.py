@@ -741,6 +741,38 @@ def add_paper_to_model(paper_id, model_id):
     sdb.models.update_one({"id": model_id}, {"$set": {"model_paper": model_data}})
 
 
+def add_implementer_to_model(implementer_id, model_id):
+    model = sdb.models.find_one({"id": model_id})
+    model_data = model.get("implemented_by", {"value": [], "attr_id": 299})
+    all_implementers = sdb.models.distinct("implemented_by.value")
+    for implementer in all_implementers:
+        if implementer["object_id"] == implementer_id:
+            implementer_data = implementer["object_name"]
+            break
+    else:
+        raise ValueError("Unknown implementer")
+    model_data["value"].append({"object_id": implementer_id, "object_name": implementer_data})
+    current_date = datetime.now().isoformat()
+    sdb.models.update_one({"id": model_id}, {"$set": {"implemented_by": model_data, "ver_date": current_date, "ver_number": model["ver_number"] + 1}})
+
+
+def add_new_implementer_to_model(implementer_name, model_id):
+    model = sdb.models.find_one({"id": model_id})
+    model_data = model.get("implemented_by", {"value": [], "attr_id": 299})
+    implementer_id = new_object_id()
+    model_data["value"].append({"object_id": implementer_id, "object_name": implementer_name})
+    current_date = datetime.now().isoformat()
+    sdb.models.update_one({"id": model_id}, {"$set": {"implemented_by": model_data, "ver_date": current_date, "ver_number": model["ver_number"] + 1}})
+
+
+def find_implementer_containing(name):
+    return [
+        implementer
+        for implementer in sdb.models.distinct("implemented_by.value")
+        if name.lower() in implementer["object_name"].lower()
+    ]
+
+
 def manually_add_paper(input_dict):
     metadata = {}
     all_authors = []
