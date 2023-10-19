@@ -733,6 +733,14 @@ def add_missing_references_to_paper_collection():
                         paper["pubmed_id"]["value"],
                     )
 
+
+def add_paper_to_model(paper_id, model_id):
+    model_data = sdb.models.find_one({"id": model_id}).get("model_paper", {"value": [], "attr_id": 155})
+    paper_data = sdb.papers.find_one({"id": paper_id})["name"]
+    model_data["value"].append({"object_id": paper_id, "object_name": paper_data})
+    sdb.models.update_one({"id": model_id}, {"$set": {"model_paper": model_data}})
+
+
 def manually_add_paper(input_dict):
     metadata = {}
     all_authors = []
