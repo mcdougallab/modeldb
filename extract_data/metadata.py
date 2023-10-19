@@ -674,6 +674,7 @@ def insert_paper_with_references(pmid):
             "value": [
                 {"object_id": item["id"], "object_name": item["name"]}
                 for item in reference_metadata.values()
+                if "name" in item
             ],
             "attr_id": 140,
         }
