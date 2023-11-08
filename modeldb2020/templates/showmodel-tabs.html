@@ -8,8 +8,8 @@
       <a href="/download/{{Model.id2}}"><i title="Download zip" class="fas fa-download"></i></a>
     {% endif %}
     {% if access == 'rw' and tab == 1 %}
-      <input type="file" style="display:none" id="new_zip" name="filename">
-      <button id="edit_model_zip" title="Upload new zip (temporarily unavailable; email the curator instead)" disabled><i class="fas fa-upload" aria-hidden="true"></i></button>
+      <input type="file" accept=".zip" style="display:none" id="new_zip" name="new_zip">
+      <button id="edit_model_zip" title="Upload New Zip" ><i class="fas fa-upload" aria-hidden="true"></i></button>
     {% endif %}
   </input>
 

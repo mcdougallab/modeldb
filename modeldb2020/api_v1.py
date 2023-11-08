@@ -17,7 +17,8 @@ from .models import (
     celltypes,
     papers,
 )
-from .views import unprocessed_refs_access
+from .views import unprocessed_refs_access, new_zip_upload
+
 
 ModelDB = models.ModelDB()
 
@@ -131,6 +132,8 @@ def models_view(request, model_id=None, field=None):
             else:
                 return HttpResponse("404 Not Found", status=404)
         elif request.method == "POST":
+            if request.FILES.get("new_zip") is not None:
+                new_zip_upload(request, model_id)
             data = {
                 "name": request.POST["edit_model_name"],
                 "notes": {"value": request.POST["model_notes"], "attr_id": 24},

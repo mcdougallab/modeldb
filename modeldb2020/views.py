@@ -807,6 +807,35 @@ def update_context_based_on_modeling_application(model_app, context):
             context["is_xpp"] = True
 
 
+def new_zip_upload(request, model_id): 
+    access = request.session.get(model_id)
+    if all_model_access(request):
+        access = "rw"
+        
+    if access == "rw":
+        the_file = request.FILES["new_zip"] 
+
+        file_path = os.path.join(settings.security["modeldb_private_zip_dir"], f"{model_id}.zip")
+        old_file_path = os.path.join(settings.security["modeldb_private_zip_dir"], f"{model_id}_old.zip")
+        
+        if os.path.exists(old_file_path):
+            os.remove(old_file_path)
+
+        if os.path.exists(file_path):
+            os.rename(file_path, old_file_path)
+
+        with open(
+            file_path,
+            "wb",
+        ) as f:
+            for chunk in the_file.chunks():
+                f.write(chunk)
+        ModelDB.update_ver_number(model_id)
+        return "zip updated"
+    else:
+        return HttpResponse("Forbidden", status=403)
+
+
 @ensure_csrf_cookie
 def showmodel(request, model_id):
     # model_id = request.GET.get("model", -1)
@@ -921,12 +950,20 @@ def showmodel(request, model_id):
             return HttpResponse("404 not found", status=404)
 
     else:
-        if tab_id != 2:
+        if tab_id != 2: # and if not '__MACOSX' in filename
             filename = model.readme_file
             filename = filename.replace("\\", "/").strip("/")
         elif tab_id == 2 and filename is None:
             filename = model.readme_file
             filename = filename.replace("\\", "/").strip("/").split("/")[0]
+
+        # for connecting pubmed
+        # get model_citation or whatever the references section is known as
+        # pmid = re.search(r'PMID:\s*(\d+)', model_citation)
+        # base_url = "https://pubmed.ncbi.nlm.nih.gov/"
+        # full_url = f"{base_url}{pmid}"
+
+
 
         original_file_valid = model.has_path(filename)
         if not original_file_valid:
@@ -1108,8 +1145,30 @@ def _remap_src(model_id, match, base_filename):
         src = src.replace("/./", "/").replace("//", "/")
     return 'src="' + src + '"'
 
+def _remap_img(model_id, match, base_filename): 
+    print("match", match)
+    src = match.group()
+    print("src", src)
+    src_lower = src.lower()
+    alt_text, relative_name = re.findall(r"!\[(.*?)\]\((.*?)\)", src)[0]
+
+    if (
+        relative_name.lower().startswith("http://")
+        or relative_name.lower().startswith("//")
+        or relative_name.lower().startswith("https://")
+    ):
+        # if there is a reference to senselab, make it relative to this server,
+        # else do nothing because it's a full path
+        relative_name = re.sub(r"(?i)(https?:)?//senselab\.med\.yale\.edu/", "/", relative_name)
+        return f"![{alt_text}]({relative_name})"
+    else:
+        print("before the thing")
+        print("alt_text", alt_text)
+        print("relative_name", relative_name)
+        return f"![{alt_text}](/getmodelfile?model={model_id}&file={base_filename}{relative_name})"
 
 def _remap_href(model_id, match, base_filename):
+    print("warmest greetings from _remap_href")
     match_text = match.group()
     src = match_text[6:-1]
     src_lower = src.lower()
@@ -1191,7 +1250,6 @@ def download(request):
                     "f95",
                     "json",
                     "java",
-                    "md",
                     "r",
                     "sql",
                     "vba",
@@ -1209,6 +1267,30 @@ def download(request):
                     "cs",
                 ):
                     contents = f'<link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/styles/vs.min.css" rel="stylesheet" /><script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/highlight.min.js"></script><script>hljs.initHighlightingOnLoad();</script><pre><code class="{extension}">{html.escape(contents.decode("utf-8"))}</code></pre>'
+                if extension == "md":
+                    contents = re.sub(
+                        r"(!\[(.*?)\]\((.*?)\))",
+                        lambda match: _remap_img(model_id, match, base_filename),
+                        contents.decode("utf-8"),
+                    )
+                    contents = f"""
+
+                    <!DOCTYPE html>
+                    <body>
+                        <div class="readme-content" id="readme-content">{contents}</div>
+
+                        <script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.1.0/markdown-it.min.js"></script>
+                        <script>
+                            const md = window.markdownit();
+                            document.getElementById("readme-content").innerHTML=md.render(document.getElementsByClassName("readme-content")[0].textContent);
+                        </script>
+
+
+                    </body>
+                    </html>
+
+                    """
+                    print(contents)
                 elif extension in (
                     "eps",
                     "ps",

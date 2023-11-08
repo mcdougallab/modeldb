@@ -15,6 +15,7 @@ import pandas as pd
 import itertools
 import unicodedata
 import re
+import datetime
 
 mongodb = MongoClient()
 sdb = mongodb[settings.security["db_name"]]
@@ -504,12 +505,26 @@ class ModelDB(models.Model):
         rwac = raw_model["data_to_curate"]["rwac"]
         rac = raw_model["data_to_curate"].get("rac")
         print("rac", rac)
+
         if bcrypt.checkpw(pwd, rwac.encode("utf8")):
             return "rw"
         elif rac and bcrypt.checkpw(pwd, rac.encode("utf8")):
             return "r"
         else:
             return None
+
+    def update_ver_number(self, model_id):
+        m = PrivateModel(model_id)
+        
+        now = datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc).isoformat()
+
+        entry = {
+            "ver_number": m._model["ver_number"] + 1,
+            "ver_date": now,
+        }
+    
+        sdb.models.update_one({"id": model_id}, {"$set": entry})
+
 
     def find_private_models(self):
         # TODO: allow filtering like in find_models
