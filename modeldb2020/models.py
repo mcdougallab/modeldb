@@ -1077,8 +1077,9 @@ class Model:
                         "readme.md",
                         "readme",
                     )
-                ) and readme_file is None:
-                    readme_file = subfilename
+                ):
+                    if readme_file is None or len(subfilename) < len(readme_file):
+                        readme_file = subfilename
                 path = subfilename.split("/")
                 my_file_hierarchy = file_hierarchy
                 for i, item in enumerate(path):
