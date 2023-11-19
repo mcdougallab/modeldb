@@ -1108,7 +1108,8 @@ def _remap_src(model_id, match, base_filename):
         src = src.replace("/./", "/").replace("//", "/")
     return 'src="' + src + '"'
 
-def _remap_img(model_id, match, base_filename): 
+
+def _remap_img(model_id, match, base_filename):
     src = match.group()
     src_lower = src.lower()
     alt_text, relative_name = re.findall(r"!\[(.*?)\]\((.*?)\)", src)[0]
@@ -1120,10 +1121,13 @@ def _remap_img(model_id, match, base_filename):
     ):
         # if there is a reference to senselab, make it relative to this server,
         # else do nothing because it's a full path
-        relative_name = re.sub(r"(?i)(https?:)?//senselab\.med\.yale\.edu/", "/", relative_name)
+        relative_name = re.sub(
+            r"(?i)(https?:)?//senselab\.med\.yale\.edu/", "/", relative_name
+        )
         return f"![{alt_text}]({relative_name})"
     else:
         return f"![{alt_text}](/getmodelfile?model={model_id}&file={base_filename}{relative_name})"
+
 
 def _remap_href(model_id, match, base_filename):
     match_text = match.group()
