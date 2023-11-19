@@ -1108,6 +1108,22 @@ def _remap_src(model_id, match, base_filename):
         src = src.replace("/./", "/").replace("//", "/")
     return 'src="' + src + '"'
 
+def _remap_img(model_id, match, base_filename): 
+    src = match.group()
+    src_lower = src.lower()
+    alt_text, relative_name = re.findall(r"!\[(.*?)\]\((.*?)\)", src)[0]
+
+    if (
+        relative_name.lower().startswith("http://")
+        or relative_name.lower().startswith("//")
+        or relative_name.lower().startswith("https://")
+    ):
+        # if there is a reference to senselab, make it relative to this server,
+        # else do nothing because it's a full path
+        relative_name = re.sub(r"(?i)(https?:)?//senselab\.med\.yale\.edu/", "/", relative_name)
+        return f"![{alt_text}]({relative_name})"
+    else:
+        return f"![{alt_text}](/getmodelfile?model={model_id}&file={base_filename}{relative_name})"
 
 def _remap_href(model_id, match, base_filename):
     match_text = match.group()
@@ -1191,7 +1207,6 @@ def download(request):
                     "f95",
                     "json",
                     "java",
-                    "md",
                     "r",
                     "sql",
                     "vba",
@@ -1209,6 +1224,30 @@ def download(request):
                     "cs",
                 ):
                     contents = f'<link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/styles/vs.min.css" rel="stylesheet" /><script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/highlight.min.js"></script><script>hljs.initHighlightingOnLoad();</script><pre><code class="{extension}">{html.escape(contents.decode("utf-8"))}</code></pre>'
+                if extension == "md":
+                    contents = re.sub(
+                        r"(!\[(.*?)\]\((.*?)\))",
+                        lambda match: _remap_img(model_id, match, base_filename),
+                        contents.decode("utf-8"),
+                    )
+                    contents = f"""
+
+                    <!DOCTYPE html>
+                    <body>
+                        <div class="readme-content" id="readme-content">{contents}</div>
+
+                        <script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.1.0/markdown-it.min.js"></script>
+                        <script>
+                            const md = window.markdownit();
+                            document.getElementById("readme-content").innerHTML=md.render(document.getElementsByClassName("readme-content")[0].textContent);
+                        </script>
+
+
+                    </body>
+                    </html>
+
+                    """
+                    print(contents)
                 elif extension in (
                     "eps",
                     "ps",
