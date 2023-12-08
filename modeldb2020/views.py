@@ -1228,7 +1228,7 @@ def download(request):
                     "cs",
                 ):
                     contents = f'<link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/styles/vs.min.css" rel="stylesheet" /><script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/highlight.min.js"></script><script>hljs.initHighlightingOnLoad();</script><pre><code class="{extension}">{html.escape(contents.decode("utf-8"))}</code></pre>'
-                if extension == "md":
+                elif extension == "md":
                     contents = re.sub(
                         r"(!\[(.*?)\]\((.*?)\))",
                         lambda match: _remap_img(model_id, match, base_filename),
@@ -1251,7 +1251,6 @@ def download(request):
                     </html>
 
                     """
-                    print(contents)
                 elif extension in (
                     "eps",
                     "ps",
