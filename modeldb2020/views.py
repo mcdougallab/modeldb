@@ -1237,6 +1237,9 @@ def download(request):
                     contents = f"""
 
                     <!DOCTYPE html>
+                    <head>
+                    <base target="_parent">
+                    </head>
                     <body>
                         <div class="readme-content" id="readme-content">{contents}</div>
 
