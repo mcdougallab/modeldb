@@ -1260,10 +1260,15 @@ def download(request):
                 ):
                     contents = f"<a href='/getModelFile?model={model_id}&file={urllib.parse.quote(original_filename)}'>Download</a> to view this file."
                 else:
-                    contents = f'<pre>{html.escape(contents.decode("utf-8"))}</pre>'
+                    decoded_contents = contents.decode("utf-8")
+                    MAX_SIZE = 5_000_000
+                    if len(decoded_contents) < MAX_SIZE:
+                        contents = f'<pre>{html.escape(decoded_contents)}</pre>'
+                    else:
+                        contents = f"<b>This file is very large and has been truncated to display in your browser. <a href='/getModelFile?model={model_id}&file={urllib.parse.quote(original_filename)}'>Download</a> it to view the whole file. The truncated version follows:</b><br><br><pre>{html.escape(decoded_contents[:MAX_SIZE])}</pre>"
             except:
                 contents = f"This file is not encoded as UTF-8. <a href='/getModelFile?model={model_id}&file={urllib.parse.quote(original_filename)}'>Download it</a> to view."
-            contents = f"<html><body>{contents}</body></html>"
+            contents = f"<html><head><base target='_parent'></head><body>{contents}</body></html>"
         response.write(contents)
         return response
     else:
