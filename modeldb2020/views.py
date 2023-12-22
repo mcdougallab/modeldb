@@ -1197,8 +1197,12 @@ def download(request):
             try:
                 # TODO: be smarter about handling extensions
                 # workaround for HOC using C
+                # this isn't really extensions anyways, just highlighting rules
+                # the m extension is mapped by highlight.js to objective C
                 if extension in ("hoc", "ses"):
                     extension = "c"
+                if extension == "m":
+                    extension = "matlab"
                 if extension in (
                     "py",
                     "cpp",
@@ -1226,8 +1230,10 @@ def download(request):
                     "c++",
                     "hpp",
                     "cs",
+                    "matlab",
                 ):
-                    contents = f'<link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/styles/vs.min.css" rel="stylesheet" /><script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/highlight.min.js"></script><script>hljs.initHighlightingOnLoad();</script><pre><code class="{extension}">{html.escape(contents.decode("utf-8"))}</code></pre>'
+                    # <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/matlab.min.js"></script>
+                    contents = f'<link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/vs.min.css" rel="stylesheet" /><script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/matlab.min.js"></script><pre><code class="{extension}">{html.escape(contents.decode("utf-8"))}</code><script>hljs.highlightAll();</script></pre>'
                 elif extension == "md":
                     contents = re.sub(
                         r"(!\[(.*?)\]\((.*?)\))",
