@@ -1258,7 +1258,7 @@ def download(request):
                     "eps",
                     "ps",
                 ):
-                    contents = "Download to view this file."
+                    contents = f"<a href='/getModelFile?model={model_id}&file={urllib.parse.quote(original_filename)}'>Download</a> to view this file."
                 else:
                     contents = f'<pre>{html.escape(contents.decode("utf-8"))}</pre>'
             except:
