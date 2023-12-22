@@ -39,6 +39,68 @@ ModelDB = models.ModelDB()
 _newline = "\n"
 
 
+MOD_HIGHLIGHT_RULE = """<script>
+hljs.registerLanguage('nmodl', function(hljs) {
+  return {
+    aliases: ['NMODL'],
+    case_insensitive: false,
+    keywords: ['VERBATIM', 'INDEPENDENT', 'ENDVERBATIM', 'ENDCOMMENT', 'COMMENT', 'UNITS', 'NEURON', 'ASSIGNED', 'INITIAL', 'STATE', 'BREAKPOINT', 'DERIVARIVE',
+               'PARAMETER', 'SUFFIX', 'RANGE', 'READ', 'WRITE', 'GLOBAL', 'SOLVE', 'METHOD', 'USEION', 'DERIVATIVE', 'VALENCE', 'CHARGE', 'LONGITUDINAL_DIFFUSION',
+               'NET_RECEIVE', 'POINTER', 'LOCAL', 'if', 'else', 'while', 'REPRESENTS', 'NONSPECIFIC_CURRENT', 'POINT_PROCESS', 'ARTIFICIAL_CELL', 'ELECTRODE_CURRENT',
+               'UNITSOFF', 'UNITSON', 'FROM', 'TO', 'WITH'
+               ],
+    contains: [
+      { className: 'comment', begin: '(:).*$\\n?' },
+      {
+        className: 'keyword',
+        begin: '\\\\b(COMMENT)\\\\b',
+        end: '(?=\\\\b(ENDCOMMENT)\\\\b)',
+        contains: [
+            { className: 'comment', begin: '.', endsWithParent: true }
+        ]
+      },
+      {
+        className: 'keyword',
+        begin: '\\\\b(TITLE)\\\\b',
+        end: '\\n',
+        contains: [
+          { className: 'title', begin: '.', endsWithParent: true }
+        ]
+      },
+      {
+        begin: '(?=\\\\bVERBATIM\\\\b)',
+        end: '(?=\\\\b(ENDVERBATIM)\\\\b)',
+        contains: [
+          {
+            begin: '\\\\bVERBATIM\\\\b',
+            className: 'keyword',
+          },
+          {
+            begin: '.',
+            endsWithParent: true,
+            subLanguage: 'cpp' 
+          },
+
+        ]
+      },
+      {
+        begin: '\\\\b((FUNCTION)|(PROCEDURE))\\\\s+',
+        className: 'keyword',
+        end: '(?= |\\\\()',
+        contains: [
+            { className: 'function', begin: '.', endsWithParent: true }
+        ]
+      },
+      { className: 'title', begin: '\\\\b(celsius|t|dt)\\\\b' },
+      { className: 'function', begin: '\\\\b(net_send|exp)\\\\b' }  // why doesn't this work? using "title" works
+    ]
+  };
+});
+</script>
+"""
+
+
+
 def index(request):
     context = {"title": "ModelDB", "ModelDB": ModelDB, "request": request}
     return render(request, "index.html", context)
@@ -1203,6 +1265,8 @@ def download(request):
                     extension = "c"
                 if extension == "m":
                     extension = "matlab"
+                if extension == "mod":
+                    extension = "nmodl"
                 if extension in (
                     "py",
                     "cpp",
@@ -1231,9 +1295,15 @@ def download(request):
                     "hpp",
                     "cs",
                     "matlab",
+                    "nmodl",
                 ):
-                    # <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/matlab.min.js"></script>
-                    contents = f'<link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/vs.min.css" rel="stylesheet" /><script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/matlab.min.js"></script><pre><code class="{extension}">{html.escape(contents.decode("utf-8"))}</code><script>hljs.highlightAll();</script></pre>'
+                    if extension == "nmodl":
+                        special_syntax = MOD_HIGHLIGHT_RULE
+                    elif extension == "matlab":
+                        special_syntax = "<script src='https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/matlab.min.js'></script>"
+                    else:
+                        special_syntax = ""
+                    contents = f'<link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/vs.min.css" rel="stylesheet" /><script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>{special_syntax}<pre><code class="{extension}">{html.escape(contents.decode("utf-8"))}</code><script>hljs.highlightAll();</script></pre>'
                 elif extension == "md":
                     contents = re.sub(
                         r"(!\[(.*?)\]\((.*?)\))",
