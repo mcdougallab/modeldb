@@ -607,7 +607,7 @@ class ModelDB(models.Model):
     def models_by_name(self):
         return sorted(
             [{"id": key, "name": model["name"]} for key, model in modeldb.items()],
-            key=lambda item: item["name"],
+            key=lambda item: item["name"].lower(),
         )
 
     @property
@@ -740,7 +740,7 @@ class SenseLabClass:
                     if str(obj["object_id"]) == self._id:
                         result.append({"id": model_id, "name": data["name"]})
                         break
-        return sorted(result, key=lambda item: item["name"])
+        return sorted(result, key=lambda item: item["name"].lower())
 
 
 class Current(SenseLabClass):
