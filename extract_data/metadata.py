@@ -826,6 +826,19 @@ def manually_add_paper(input_dict):
     insert_new_paper(metadata)
     return metadata
 
+def change_model_title(model_id, new_title):
+    model = sdb.models.find_one({"id": model_id})
+    if not model:       
+        print(f"Model with id {model_id} not found.")
+        return
+    updated_model = {
+        "name": new_title,
+        "ver_date": datetime.now().isoformat(),
+        "ver_number": model.get("ver_number", 1) + 1
+    }
+    sdb.models.update_one({"id": model_id}, {"$set": updated_model})
+    print(f"Model {model_id} title has been updated to '{new_title}'.")
+    
 
 if __name__ == "__main__":
     input("Type enter to run check_authors or ctrl^c to quit")
