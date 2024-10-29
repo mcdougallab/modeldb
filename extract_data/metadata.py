@@ -755,6 +755,19 @@ def add_implementer_to_model(implementer_id, model_id):
     current_date = datetime.now().isoformat()
     sdb.models.update_one({"id": model_id}, {"$set": {"implemented_by": model_data, "ver_date": current_date, "ver_number": model["ver_number"] + 1}})
 
+def add_simulator_to_model(simulator_id, model_id):
+    model = sdb.models.find_one({"id": model_id})
+    model_data = model.get("modeling_application", {"value": [], "attr_id": 114})
+    all_simulators = sdb.models.distinct("modeling_application.value")
+    for simulator in all_simulators:
+        if simulator["object_id"] == simulator_id:
+            simulator_data = simulator["object_name"]
+            break
+    else:
+        raise ValueError("Unknown simulator")
+    model_data["value"].append({"object_id": simulator_id, "object_name": simulator_data})
+    current_date = datetime.now().isoformat()
+    sdb.models.update_one({"id": model_id}, {"$set": {"modeling_application": model_data, "ver_date": current_date, "ver_number": model["ver_number"] + 1}})
 
 def add_new_implementer_to_model(implementer_name, model_id):
     model = sdb.models.find_one({"id": model_id})
@@ -772,6 +785,13 @@ def find_implementer_containing(name):
         if name.lower() in implementer["object_name"].lower()
     ]
 
+
+def find_simulator_containing(name):
+    return [
+        simulator
+        for simulator in sdb.models.distinct("modeling_application.value")
+        if name.lower() in simulator["object_name"].lower()
+    ]
 
 def manually_add_paper(input_dict):
     metadata = {}
