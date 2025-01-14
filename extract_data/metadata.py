@@ -186,7 +186,6 @@ def paper_name(paper_metadata, paper=None):
                 + paper["year"]["value"]
                 + ")"
             )
-            
         else:
             name = str(paper_metadata["authors"]["value"][0]["object_name"]) + " et al."
 
@@ -582,25 +581,40 @@ def get_metadata_doi(doi):
     try:
         # Title
         try:
-            full_title = data['message']['title'][0] if 'title' in data['message'] else 'Title not found'
+            full_title = (
+                data["message"]["title"][0]
+                if "title" in data["message"]
+                else "Title not found"
+            )
             metadata["title"] = {"value": full_title, "attr_id": 139}
         except:
             metadata["title"] = {"value": "N/A", "attr_id": 139}
         # Authors
         try:
-            authors = data['message'].get('author', [])
-            all_authors = [{'object_id': i + 1, 'object_name': author['family'] + ', ' + author['given']} for i, author in enumerate(authors)]
+            authors = data["message"].get("author", [])
+            all_authors = [
+                {
+                    "object_id": i + 1,
+                    "object_name": author["family"] + ", " + author["given"],
+                }
+                for i, author in enumerate(authors)
+            ]
             metadata["authors"] = {"value": all_authors, "attr_id": 148}
         except:
             metadata["authors"] = {"value": "N/A", "attr_id": 148}
         # Year and Journal
         try:
-            year = data['message'].get('published', {}).get('date-parts', [[None]])[0][0]  # Extract year
+            year = (
+                data["message"].get("published", {}).get("date-parts", [[None]])[0][0]
+            )  # Extract year
             metadata["year"] = {"value": str(year), "attr_id": 154}
         except:
             metadata["year"] = {"value": "N/A", "attr_id": 154}
+
         try:
-            journal_title = data['message'].get('container-title', ['Unknown journal'])[0]  # Extract journal title
+            journal_title = data["message"].get("container-title", ["Unknown journal"])[
+                0
+            ]  # Extract journal title
             metadata["journal"] = {"value": journal_title, "attr_id": 158}
         except:
             metadata["journal"] = {"value": "N/A", "attr_id": 158}
@@ -609,7 +623,7 @@ def get_metadata_doi(doi):
         metadata["doi"] = {"value": doi, "attr_id": 339}
 
         # Volume and other optional fields
-        volume = data['message'].get('volume', 'Unknown volume')
+        volume = data["message"].get("volume", "Unknown volume")
         metadata["volume"] = {"value": volume, "attr_id": 149}
 
     except KeyError as e:
@@ -663,14 +677,14 @@ def get_reference_dois(doi):
     try:
         response = requests.get(crossref_url)
         response.raise_for_status()  # Check if the request was successful
-        metadata = response.json()['message']  # Parse the JSON response
+        metadata = response.json()["message"]  # Parse the JSON response
 
         # Extract the reference list if available
-        references = metadata.get('reference', [])
+        references = metadata.get("reference", [])
 
         # Step 2: Extract DOIs from references
         for reference in references:
-            reference_doi = reference.get('DOI', None)
+            reference_doi = reference.get("DOI", None)
             if reference_doi:
                 dois_list.append(reference_doi)
 
@@ -726,7 +740,7 @@ def insert_new_paper_doi(metadata_dict):
     sanitized_metadata_dict = {}
     for key, value in metadata_dict.items():
         # Sanitize fields (replace '.' with '_')
-        sanitized_key = key.replace('.', '_')
+        sanitized_key = key.replace(".", "_")
         sanitized_metadata_dict[sanitized_key] = value
 
     new_info_dict.update(sanitized_metadata_dict)
@@ -793,14 +807,14 @@ def get_reference_dois(doi):
     try:
         response = requests.get(crossref_url)
         response.raise_for_status()  # Check if the request was successful
-        metadata = response.json()['message']  # Parse the JSON response
+        metadata = response.json()["message"]  # Parse the JSON response
 
         # Extract the reference list if available
-        references = metadata.get('reference', [])
+        references = metadata.get("reference", [])
 
         # Step 2: Extract DOIs from references
         for reference in references:
-            reference_doi = reference.get('DOI', None)
+            reference_doi = reference.get("DOI", None)
             if reference_doi:
                 dois_list.append(reference_doi)
 
@@ -842,7 +856,7 @@ def get_reference_metadata_dois(doi):
         if doi_metadata:
             reference_metadata_dict[reference_doi] = doi_metadata
     missing_references = []
-    temp_metadata = {} # Temporary dictionary to hold new metadata for DOIs
+    temp_metadata = {}  # Temporary dictionary to hold new metadata for DOIs
 
     for doi in reference_metadata_dict:
         reference_doi_to_pmid = lookup_pmid_from_doi(doi)
@@ -851,9 +865,7 @@ def get_reference_metadata_dois(doi):
                 time.sleep(1)
                 doi_metadata = get_metadata(reference_doi_to_pmid)
                 temp_metadata[reference_doi_to_pmid] = doi_metadata
-                new_paper_id = insert_new_paper(
-                    temp_metadata[reference_doi_to_pmid]
-                )
+                new_paper_id = insert_new_paper(temp_metadata[reference_doi_to_pmid])
                 temp_metadata[reference_doi_to_pmid]["id"] = new_paper_id
             else:
                 paper = retrieve_paper(reference_doi_to_pmid)
@@ -952,7 +964,9 @@ def add_missing_references_to_paper_collection():
 
 
 def add_paper_to_model(paper_id, model_id):
-    model_data = sdb.models.find_one({"id": model_id}).get("model_paper", {"value": [], "attr_id": 155})
+    model_data = sdb.models.find_one({"id": model_id}).get(
+        "model_paper", {"value": [], "attr_id": 155}
+    )
     paper_data = sdb.papers.find_one({"id": paper_id})["name"]
     model_data["value"].append({"object_id": paper_id, "object_name": paper_data})
     sdb.models.update_one({"id": model_id}, {"$set": {"model_paper": model_data}})
@@ -968,9 +982,21 @@ def add_implementer_to_model(implementer_id, model_id):
             break
     else:
         raise ValueError("Unknown implementer")
-    model_data["value"].append({"object_id": implementer_id, "object_name": implementer_data})
+    model_data["value"].append(
+        {"object_id": implementer_id, "object_name": implementer_data}
+    )
     current_date = datetime.now().isoformat()
-    sdb.models.update_one({"id": model_id}, {"$set": {"implemented_by": model_data, "ver_date": current_date, "ver_number": model["ver_number"] + 1}})
+    sdb.models.update_one(
+        {"id": model_id},
+        {
+            "$set": {
+                "implemented_by": model_data,
+                "ver_date": current_date,
+                "ver_number": model["ver_number"] + 1,
+            }
+        },
+    )
+
 
 def add_simulator_to_model(simulator_id, model_id):
     model = sdb.models.find_one({"id": model_id})
@@ -982,17 +1008,40 @@ def add_simulator_to_model(simulator_id, model_id):
             break
     else:
         raise ValueError("Unknown simulator")
-    model_data["value"].append({"object_id": simulator_id, "object_name": simulator_data})
+    model_data["value"].append(
+        {"object_id": simulator_id, "object_name": simulator_data}
+    )
     current_date = datetime.now().isoformat()
-    sdb.models.update_one({"id": model_id}, {"$set": {"modeling_application": model_data, "ver_date": current_date, "ver_number": model["ver_number"] + 1}})
+    sdb.models.update_one(
+        {"id": model_id},
+        {
+            "$set": {
+                "modeling_application": model_data,
+                "ver_date": current_date,
+                "ver_number": model["ver_number"] + 1,
+            }
+        },
+    )
+
 
 def add_new_implementer_to_model(implementer_name, model_id):
     model = sdb.models.find_one({"id": model_id})
     model_data = model.get("implemented_by", {"value": [], "attr_id": 299})
     implementer_id = new_object_id()
-    model_data["value"].append({"object_id": implementer_id, "object_name": implementer_name})
+    model_data["value"].append(
+        {"object_id": implementer_id, "object_name": implementer_name}
+    )
     current_date = datetime.now().isoformat()
-    sdb.models.update_one({"id": model_id}, {"$set": {"implemented_by": model_data, "ver_date": current_date, "ver_number": model["ver_number"] + 1}})
+    sdb.models.update_one(
+        {"id": model_id},
+        {
+            "$set": {
+                "implemented_by": model_data,
+                "ver_date": current_date,
+                "ver_number": model["ver_number"] + 1,
+            }
+        },
+    )
 
 
 def find_implementer_containing(name):
@@ -1010,22 +1059,20 @@ def find_simulator_containing(name):
         if name.lower() in simulator["object_name"].lower()
     ]
 
+
 def manually_add_paper(input_dict):
     metadata = {}
     all_authors = []
 
-    title_dict = {
-        "value": input_dict["title"],
-        "attr_id": 139
-    }
+    title_dict = {"value": input_dict["title"], "attr_id": 139}
     metadata["title"] = title_dict
 
     for author in dict["authors"]:
         author_dict = {}
-        if author['last_name'] and author['initials']:
-            author_object_name = author['last_name'] + " " + author['initials']
+        if author["last_name"] and author["initials"]:
+            author_object_name = author["last_name"] + " " + author["initials"]
         else:
-            author_object_name = author['last_name']
+            author_object_name = author["last_name"]
         if new_author_check(author_object_name):
             author_object_id = add_new_author_to_collection(
                 author_object_name,
@@ -1040,26 +1087,17 @@ def manually_add_paper(input_dict):
         author_dict["object_name"] = author_object_name
         all_authors.append(author_dict)
 
-    authors_dict = {
-        "value": all_authors,
-        "attr_id": 148
-    }
+    authors_dict = {"value": all_authors, "attr_id": 148}
     metadata["authors"] = authors_dict
 
-    if input_dict['journal']:
-        journal_dict = {
-            "value": input_dict['journal'],
-            "attr_id": 158
-        }
+    if input_dict["journal"]:
+        journal_dict = {"value": input_dict["journal"], "attr_id": 158}
         metadata["journal"] = journal_dict
 
-    if input_dict['year']:
-        year_dict = {
-            "value": str(input_dict['year']),
-            "attr_id": 154
-        }
+    if input_dict["year"]:
+        year_dict = {"value": str(input_dict["year"]), "attr_id": 154}
         metadata["year"] = year_dict
-        
+
     insert_new_paper(metadata)
     return metadata
 
@@ -1072,7 +1110,7 @@ def change_model_title(model_id, new_title):
     updated_model = {
         "name": new_title,
         "ver_date": datetime.now().isoformat(),
-        "ver_number": model.get("ver_number", 1) + 1
+        "ver_number": model.get("ver_number", 1) + 1,
     }
     sdb.models.update_one({"id": model_id}, {"$set": updated_model})
     print(f"Model {model_id} title has been updated to '{new_title}'.")
@@ -1097,10 +1135,11 @@ def longest_common_substring(s1, s2):
                     x_longest = x
             else:
                 m[x][y] = 0
-    return s1[x_longest - longest: x_longest]
+    return s1[x_longest - longest : x_longest]
 
 
 import requests
+
 
 def fetch_crossref_data(doi):
     url = f"https://api.crossref.org/works/{doi}/transform/application/vnd.crossref.unixsd+xml"
@@ -1110,7 +1149,9 @@ def fetch_crossref_data(doi):
         if response.status_code == 200:
             return response.text  # Return the XML content as a string
         else:
-            print(f"Error fetching data from Crossref for DOI {doi}: Status code {response.status_code}")
+            print(
+                f"Error fetching data from Crossref for DOI {doi}: Status code {response.status_code}"
+            )
             return None
     except requests.exceptions.RequestException as e:
         print(f"Request error for DOI {doi}: {e}")
@@ -1119,22 +1160,29 @@ def fetch_crossref_data(doi):
 
 from bs4 import BeautifulSoup
 
+
 def parse_crossref_xml(xml_data):
-    soup = BeautifulSoup(xml_data, 'xml')
-    title = soup.find('title').text if soup.find('title') else ''
+    soup = BeautifulSoup(xml_data, "xml")
+    title = soup.find("title").text if soup.find("title") else ""
     title = title.lower().capitalize()
 
-    authors = soup.find('surname').text if soup.find('surname') else ''
+    authors = soup.find("surname").text if soup.find("surname") else ""
     authors = authors.lower().capitalize()
 
-    journal = soup.find('full_title').text if soup.find('full_title') else ''
-    publication_date = soup.find('publication_date', media_type='print')
+    journal = soup.find("full_title").text if soup.find("full_title") else ""
+    publication_date = soup.find("publication_date", media_type="print")
     if publication_date:
-        year = publication_date.find('year').text if publication_date.find('year') else ''
+        year = (
+            publication_date.find("year").text if publication_date.find("year") else ""
+        )
     else:
-        publication_date = soup.find('publication_date', media_type='online')
+        publication_date = soup.find("publication_date", media_type="online")
         if publication_date:
-            year = publication_date.find('year').text if publication_date.find('year') else ''
+            year = (
+                publication_date.find("year").text
+                if publication_date.find("year")
+                else ""
+            )
         else:
             year = None
 
@@ -1142,34 +1190,43 @@ def parse_crossref_xml(xml_data):
         "title": title,
         "authors": authors,
         "journal": journal,
-        "year": year
+        "year": year,
     }
     return crossref_data
 
 
 def search_papers_by_year(year):
-    return sdb.papers.find({'year.value': year})
+    return sdb.papers.find({"year.value": year})
+
 
 import tqdm
 import time
+
 
 def find_matching_paper_doi(doi):
     max_common_substring = ""
     max_paper = None
     xml = fetch_crossref_data(doi)
     crossref_data = parse_crossref_xml(xml)
-    year = crossref_data.get('year', '')
+    year = crossref_data.get("year", "")
     papers = search_papers_by_year(year)
 
     for paper in tqdm.tqdm(papers):
         paper_text = " ".join(
-            str(paper.get(field, {}).get('value', [{}])[0].get('object_name', ''))
-            if field == 'authors' and paper.get(field, {}).get('value', [{}])
-            else str(paper.get(field, ''))
-            for field in ['title', 'journal', 'authors', 'year']
+            str(paper.get(field, {}).get("value", [{}])[0].get("object_name", ""))
+            if field == "authors" and paper.get(field, {}).get("value", [{}])
+            else str(paper.get(field, ""))
+            for field in ["title", "journal", "authors", "year"]
         )
 
-        crossref_text = " ".join([crossref_data.get('title', ''), crossref_data.get('journal', ''), ' '.join(crossref_data.get('authors', [])), crossref_$
+        crossref_text = " ".join(
+            [
+                crossref_data.get("title", ""),
+                crossref_data.get("journal", ""),
+                " ".join(crossref_data.get("authors", [])),
+                crossref_data.get("year", ""),
+            ]
+        )
         common_substring = longest_common_substring(paper_text, crossref_text)
 
         if len(common_substring) > len(max_common_substring):
@@ -1186,17 +1243,29 @@ def merge_papers(existing_papers):
 
     for paper in existing_papers[1:]:
         # For each field, check if it's missing in the master paper and update it
-        for field in ['title', 'authors', 'year', 'journal', 'doi', 'references']:
+        for field in ["title", "authors", "year", "journal", "doi", "references"]:
             if field in paper and paper[field]:
                 # If the field in the master paper is empty or different, update it
                 if field not in merged_metadata or not merged_metadata[field]:
                     merged_metadata[field] = paper[field]
-                elif isinstance(merged_metadata[field], list) and isinstance(paper[field], list):
+                elif isinstance(merged_metadata[field], list) and isinstance(
+                    paper[field], list
+                ):
                     # If the field is a list (e.g., authors, references), merge them without duplicates
-                    merged_metadata[field] = list({item['object_name']: item for item in merged_metadata[field] + paper[field]}.values())
-                elif isinstance(merged_metadata[field], str) and merged_metadata[field] != paper[field]:
+                    merged_metadata[field] = list(
+                        {
+                            item["object_name"]: item
+                            for item in merged_metadata[field] + paper[field]
+                        }.values()
+                    )
+                elif (
+                    isinstance(merged_metadata[field], str)
+                    and merged_metadata[field] != paper[field]
+                ):
                     # If it's a string and they differ, merge them
-                    merged_metadata[field] = merged_metadata[field] + " / " + paper[field]
+                    merged_metadata[field] = (
+                        merged_metadata[field] + " / " + paper[field]
+                    )
 
     # Remove duplicates from the database
     for paper in existing_papers[1:]:
@@ -1205,14 +1274,18 @@ def merge_papers(existing_papers):
     # Update the master paper with the merged metadata
     sdb.papers.update_one({"id": master_paper["id"]}, {"$set": merged_metadata})
 
-    print(f"Merged {len(existing_papers)} papers into one. Retaining the paper with ID {master_paper['id']}.")
+    print(
+        f"Merged {len(existing_papers)} papers into one. Retaining the paper with ID {master_paper['id']}."
+    )
 
 
 def insert_paper_with_references_doi(doi):
     metadata = get_metadata_doi(doi)
 
     if doi:
-        existing_papers = list(sdb.papers.find({"doi.value": {'$regex': f'^{doi}$', '$options': 'i'}}))
+        existing_papers = list(
+            sdb.papers.find({"doi.value": {"$regex": f"^{doi}$", "$options": "i"}})
+        )
         if len(existing_papers) == 1:
             # Ideal case, paper found, print and stop
             print(f"Paper with DOI {doi} already exists in the database.")
@@ -1221,19 +1294,23 @@ def insert_paper_with_references_doi(doi):
 
         elif len(existing_papers) > 1:
             # Multiple papers found, need to merge
-            print(f"Multiple papers with DOI {doi} found in the database. Merging required.")
+            print(
+                f"Multiple papers with DOI {doi} found in the database. Merging required."
+            )
             merge_papers(existing_papers)
             return
 
     print("Searching for a matching paper with no DOI.")
-    matching_paper= find_matching_paper_doi(doi)
+    matching_paper = find_matching_paper_doi(doi)
 
     if matching_paper:
         print(f"Found a possible matching paper: {matching_paper['title']}")
         user_input = input("Does this match? (y/n): ")
-        if user_input.lower() == 'y':
+        if user_input.lower() == "y":
             print(f"Adding DOI to the paper: {matching_paper['title']}")
-            sdb.papers.update_one({"id": matching_paper['id']}, {"$set": {"doi": {"value": doi}}})
+            sdb.papers.update_one(
+                {"id": matching_paper["id"]}, {"$set": {"doi": {"value": doi}}}
+            )
             return matching_paper["id"]
         else:
             print("Fetching data from Crossref.")
@@ -1244,14 +1321,4 @@ def insert_paper_with_references_doi(doi):
         crossref_data = parse_crossref_xml(fetch_crossref_data(doi))
         metadata.update(crossref_data)
 
-
     return insert_new_paper(metadata)
-
-
-
-
-
-
-
-
-
