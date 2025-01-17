@@ -1281,13 +1281,14 @@ def merge_papers(existing_papers):
 
 def insert_paper_with_references_doi(doi):
     metadata = get_metadata_doi(doi)
+    metadata["doi"] = {"value": doi, "attr_id": 339}
 
     if doi:
         existing_papers = list(
             sdb.papers.find({"doi.value": {"$regex": f"^{doi}$", "$options": "i"}})
         )
         if len(existing_papers) == 1:
-            # Ideal case, paper found, print and stop
+            # Ideal case, paper found
             print(f"Paper with DOI {doi} already exists in the database.")
             print(f"Paper details: {existing_papers[0]}")
             return existing_papers[0]["id"]
@@ -1313,12 +1314,39 @@ def insert_paper_with_references_doi(doi):
             )
             return matching_paper["id"]
         else:
-            print("Fetching data from Crossref.")
-            crossref_data = parse_crossref_xml(fetch_crossref_data(doi))
-            metadata.update(crossref_data)
+            try:
+                reference_metadata = get_reference_metadata_dois(doi)
+                if "missing_references" in reference_metadata:
+                    metadata["missing_references"] = reference_metadata["missing_references"]
+                    del reference_metadata["missing_references"]
+                metadata["references"] = {
+                    "value": [
+                        {"object_id": item["id"], "object_name": item["name"]}
+                        for item in reference_metadata.values()
+                        if "name" in item
+                    ],
+                    "attr_id": 140,
+                }
+            except IndexError:
+            # this happens when no references
+                ...
+            return insert_new_paper_doi(metadata)
     else:
-        print(" Fetching new data from Crossref.")
-        crossref_data = parse_crossref_xml(fetch_crossref_data(doi))
-        metadata.update(crossref_data)
-
-    return insert_new_paper(metadata)
+        try:
+            reference_metadata = get_reference_metadata_dois(doi)
+            if "missing_references" in reference_metadata:
+                metadata["missing_references"] = reference_metadata["missing_references"]
+                del reference_metadata["missing_references"]
+            metadata["references"] = {
+                "value": [
+                    {"object_id": item["id"], "object_name": item["name"]}
+                    for item in reference_metadata.values()
+                    if "name" in item
+                ],
+                "attr_id": 140,
+            }
+        except IndexError:
+        # this happens when no references
+            ...
+    
+        return insert_new_paper_doi(metadata)
