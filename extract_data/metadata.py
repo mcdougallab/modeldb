@@ -1016,6 +1016,32 @@ def add_simulator_to_model(simulator_id, model_id):
         {"id": model_id},
         {
             "$set": {
+                "implemented_by": model_data,
+                "ver_date": current_date,
+                "ver_number": model["ver_number"] + 1,
+            }
+        },
+    )
+
+
+def add_simulator_to_model(simulator_id, model_id):
+    model = sdb.models.find_one({"id": model_id})
+    model_data = model.get("modeling_application", {"value": [], "attr_id": 114})
+    all_simulators = sdb.models.distinct("modeling_application.value")
+    for simulator in all_simulators:
+        if simulator["object_id"] == simulator_id:
+            simulator_data = simulator["object_name"]
+            break
+    else:
+        raise ValueError("Unknown simulator")
+    model_data["value"].append(
+        {"object_id": simulator_id, "object_name": simulator_data}
+    )
+    current_date = datetime.now().isoformat()
+    sdb.models.update_one(
+        {"id": model_id},
+        {
+            "$set": {
                 "modeling_application": model_data,
                 "ver_date": current_date,
                 "ver_number": model["ver_number"] + 1,
@@ -1322,6 +1348,7 @@ def insert_paper_with_references_doi(doi):
                     metadata["missing_references"] = reference_metadata[
                         "missing_references"
                     ]
+                    metadata["missing_references"] = reference_metadata["missing_references"]
                     del reference_metadata["missing_references"]
                 metadata["references"] = {
                     "value": [
@@ -1332,7 +1359,7 @@ def insert_paper_with_references_doi(doi):
                     "attr_id": 140,
                 }
             except IndexError:
-                # this happens when no references
+            # this happens when no references
                 ...
             return insert_new_paper_doi(metadata)
     else:
@@ -1342,7 +1369,6 @@ def insert_paper_with_references_doi(doi):
                 metadata["missing_references"] = reference_metadata[
                     "missing_references"
                 ]
-                del reference_metadata["missing_references"]
             metadata["references"] = {
                 "value": [
                     {"object_id": item["id"], "object_name": item["name"]}
@@ -1371,7 +1397,6 @@ def add_references_to_existing_paper_doi(doi):
         paper_metadata["missing_references"] = reference_metadata["missing_references"]
         del reference_metadata["missing_references"]
 
-    # the if statement here comes up with e.g. books (paper 267767's Ito reference)
     paper_metadata["references"] = {
         "value": [
             {"object_id": item["id"], "object_name": item["name"]}
