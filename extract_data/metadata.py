@@ -1136,7 +1136,7 @@ def change_model_title(model_id, new_title):
     updated_model = {
         "name": new_title,
         "ver_date": datetime.now().isoformat(),
-        "ver_number": model.get("ver_number", 1) + 1,
+        "ver_number": model.get("ver_number", 1) + 1
     }
     sdb.models.update_one({"id": model_id}, {"$set": updated_model})
     print(f"Model {model_id} title has been updated to '{new_title}'.")
