@@ -186,6 +186,7 @@ def paper_name(paper_metadata, paper=None):
                 + paper["year"]["value"]
                 + ")"
             )
+            
         else:
             name = str(paper_metadata["authors"]["value"][0]["object_name"]) + " et al."
 
@@ -807,14 +808,14 @@ def get_reference_dois(doi):
     try:
         response = requests.get(crossref_url)
         response.raise_for_status()  # Check if the request was successful
-        metadata = response.json()["message"]  # Parse the JSON response
+        metadata = response.json()['message']  # Parse the JSON response
 
         # Extract the reference list if available
-        references = metadata.get("reference", [])
+        references = metadata.get('reference', [])
 
         # Step 2: Extract DOIs from references
         for reference in references:
-            reference_doi = reference.get("DOI", None)
+            reference_doi = reference.get('DOI', None)
             if reference_doi:
                 dois_list.append(reference_doi)
 
@@ -865,7 +866,9 @@ def get_reference_metadata_dois(doi):
                 time.sleep(1)
                 doi_metadata = get_metadata(reference_doi_to_pmid)
                 temp_metadata[reference_doi_to_pmid] = doi_metadata
-                new_paper_id = insert_new_paper(temp_metadata[reference_doi_to_pmid])
+                new_paper_id = insert_new_paper(
+                    temp_metadata[reference_doi_to_pmid]
+                )
                 temp_metadata[reference_doi_to_pmid]["id"] = new_paper_id
             else:
                 paper = retrieve_paper(reference_doi_to_pmid)
@@ -1161,11 +1164,10 @@ def longest_common_substring(s1, s2):
                     x_longest = x
             else:
                 m[x][y] = 0
-    return s1[x_longest - longest : x_longest]
+    return s1[x_longest - longest: x_longest]
 
 
 import requests
-
 
 def fetch_crossref_data(doi):
     url = f"https://api.crossref.org/works/{doi}/transform/application/vnd.crossref.unixsd+xml"
@@ -1185,7 +1187,6 @@ def fetch_crossref_data(doi):
 
 
 from bs4 import BeautifulSoup
-
 
 def parse_crossref_xml(xml_data):
     soup = BeautifulSoup(xml_data, "xml")
@@ -1216,7 +1217,7 @@ def parse_crossref_xml(xml_data):
         "title": title,
         "authors": authors,
         "journal": journal,
-        "year": year,
+        "year": year
     }
     return crossref_data
 
@@ -1227,7 +1228,6 @@ def search_papers_by_year(year):
 
 import tqdm
 import time
-
 
 def find_matching_paper_doi(doi):
     max_common_substring = ""
