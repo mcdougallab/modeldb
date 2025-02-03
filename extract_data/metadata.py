@@ -151,11 +151,15 @@ def get_pmid_from_paper(paper):
 # creates paper "name" for papers collection metadata
 def paper_name(paper_metadata, paper=None):
     name = ""
-    num_of_authors = len(paper_metadata["authors"]["value"])
+    # Check if 'authors' and 'value' exist in paper_metadata
+    if "authors" in paper_metadata and "value" in paper_metadata["authors"]:
+        num_of_authors = len(paper_metadata["authors"]["value"])
+    else:
+        num_of_authors = 0  # Set to 0 if 'authors' or 'value' is missing
 
     if num_of_authors <= 5:
-        for author in paper_metadata["authors"]["value"]:
-            name += str(author["object_name"])
+        for author in paper_metadata.get("authors", {}).get("value", []):
+            name += str(author.get("object_name", "Unknown Author"))
             num_of_authors -= 1
             if num_of_authors > 0:
                 name += ", "
@@ -182,6 +186,7 @@ def paper_name(paper_metadata, paper=None):
                 + paper["year"]["value"]
                 + ")"
             )
+            
         else:
             name = str(paper_metadata["authors"]["value"][0]["object_name"]) + " et al."
 
@@ -558,6 +563,76 @@ def get_metadata(pmids):
     return metadata_w_pmid
 
 
+def get_metadata_doi(doi):
+    metadata = {}
+
+    # Step 1: Fetch metadata from Crossref using the DOI
+    crossref_url = f"https://api.crossref.org/works/{doi}"
+    try:
+        response = requests.get(crossref_url)
+        response.raise_for_status()  # Raise an exception for HTTP errors
+    except requests.exceptions.RequestException as e:
+        print(f"Error fetching data from Crossref for DOI {doi}: {e}")
+        return {}
+
+    # Step 2: Parse the JSON response
+    data = response.json()
+
+    # Extract the metadata from the JSON response
+    try:
+        # Title
+        try:
+            full_title = (
+                data["message"]["title"][0]
+                if "title" in data["message"]
+                else "Title not found"
+            )
+            metadata["title"] = {"value": full_title, "attr_id": 139}
+        except:
+            metadata["title"] = {"value": "N/A", "attr_id": 139}
+        # Authors
+        try:
+            authors = data["message"].get("author", [])
+            all_authors = [
+                {
+                    "object_id": i + 1,
+                    "object_name": author["family"] + ", " + author["given"],
+                }
+                for i, author in enumerate(authors)
+            ]
+            metadata["authors"] = {"value": all_authors, "attr_id": 148}
+        except:
+            metadata["authors"] = {"value": "N/A", "attr_id": 148}
+        # Year and Journal
+        try:
+            year = (
+                data["message"].get("published", {}).get("date-parts", [[None]])[0][0]
+            )  # Extract year
+            metadata["year"] = {"value": str(year), "attr_id": 154}
+        except:
+            metadata["year"] = {"value": "N/A", "attr_id": 154}
+
+        try:
+            journal_title = data["message"].get("container-title", ["Unknown journal"])[
+                0
+            ]  # Extract journal title
+            metadata["journal"] = {"value": journal_title, "attr_id": 158}
+        except:
+            metadata["journal"] = {"value": "N/A", "attr_id": 158}
+
+        # DOI
+        metadata["doi"] = {"value": doi, "attr_id": 339}
+
+        # Volume and other optional fields
+        volume = data["message"].get("volume", "Unknown volume")
+        metadata["volume"] = {"value": volume, "attr_id": 149}
+
+    except KeyError as e:
+        print(f"Missing expected field in the Crossref metadata for DOI {doi}: {e}")
+        return {}
+    return {doi: metadata}
+
+
 def get_reference_pmids(pmid):
     pmids_list = []
     dois_list = []
@@ -569,7 +644,7 @@ def get_reference_pmids(pmid):
     except:
         print(r.text)
         raise
-    reference_list = doc.getElementsByTagName("ReferenceList")[0]
+    reference_list = doc.getElementsByTagName("ReferenceList")
     ids = reference_list.getElementsByTagName("ArticleIdList")
 
     for article_id in ids:
@@ -587,6 +662,39 @@ def get_reference_pmids(pmid):
 
     pmids_string = ",".join(pmids_list)
     return pmids_string, dois_list
+
+
+def get_reference_dois(doi):
+    """
+    Fetches metadata for an article using the provided DOI and extracts the DOIs of its references.
+    :param doi: DOI of the article for which references are to be fetched.
+    :return: List of DOIs of the references.
+    """
+    dois_list = []
+
+    # Step 1: Fetch metadata using Crossref API
+    crossref_url = f"https://api.crossref.org/works/{doi}"
+
+    try:
+        response = requests.get(crossref_url)
+        response.raise_for_status()  # Check if the request was successful
+        metadata = response.json()["message"]  # Parse the JSON response
+
+        # Extract the reference list if available
+        references = metadata.get("reference", [])
+
+        # Step 2: Extract DOIs from references
+        for reference in references:
+            reference_doi = reference.get("DOI", None)
+            if reference_doi:
+                dois_list.append(reference_doi)
+
+        # Step 3: Return the list of DOIs
+        return dois_list
+
+    except requests.exceptions.RequestException as e:
+        print(f"Error fetching data from Crossref for DOI {doi}: {e}")
+        return []
 
 
 # check if reference is in the papers collection
@@ -616,13 +724,111 @@ def insert_new_paper(metadata_dict):
     return id_
 
 
+def insert_new_paper_doi(metadata_dict):
+    new_info_dict = {}
+
+    id_ = new_object_id()
+    new_info_dict["id"] = id_
+
+    new_paper_name = paper_name(metadata_dict)
+
+    new_info_dict["name"] = new_paper_name
+    new_info_dict["created"] = datetime.now().isoformat()
+    new_info_dict["ver_date"] = new_info_dict["created"]
+    new_info_dict["ver_number"] = 1
+
+    # Sanitize metadata_dict fields (e.g., replace '.' in DOI keys)
+    sanitized_metadata_dict = {}
+    for key, value in metadata_dict.items():
+        # Sanitize fields (replace '.' with '_')
+        sanitized_key = key.replace(".", "_")
+        sanitized_metadata_dict[sanitized_key] = value
+
+    new_info_dict.update(sanitized_metadata_dict)
+    sdb.papers.insert_one(new_info_dict)
+
+    return id_
+
+
 def retrieve_paper(pmid):
     paper = sdb.papers.find_one({"pubmed_id.value": str(pmid)})
     return paper
 
 
+def get_reference_pmids(pmid):
+    pmids_list = []
+    dois_list = []
+    r = requests.get(
+        f"https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id={pmid}&retmode=xml"
+    )
+    try:
+        doc = m.parseString(r.text)
+    except:
+        print(r.text)
+        raise
+    reference_list = doc.getElementsByTagName("ReferenceList")
+
+    # Check if ReferenceList exists and is not empty
+    if reference_list:
+        reference_list = reference_list[0]  # Get the first <ReferenceList> element
+    else:
+        # Return an empty list if ReferenceList is not found
+        reference_list = []
+
+    ids = reference_list.getElementsByTagName("ArticleIdList")
+
+    for article_id in ids:
+        pubmed = False
+        for i in article_id.getElementsByTagName("ArticleId"):
+            if "pubmed" == i.getAttributeNode("IdType").childNodes[0].nodeValue:
+                articleid_pmid = i.childNodes[0].nodeValue
+                pmids_list.append(articleid_pmid)
+                pubmed = True
+        if not pubmed:
+            for i in article_id.getElementsByTagName("ArticleId"):
+                if "doi" == i.getAttributeNode("IdType").childNodes[0].nodeValue:
+                    articleid_doi = i.childNodes[0].nodeValue
+                    dois_list.append(articleid_doi)
+
+    pmids_string = ",".join(pmids_list)
+    return pmids_string, dois_list
+
+
+def get_reference_dois(doi):
+    """
+    Fetches metadata for an article using the provided DOI and extracts the DOIs of its references.
+    :param doi: DOI of the article for which references are to be fetched.
+    :return: List of DOIs of the references.
+    """
+    dois_list = []
+
+    # Step 1: Fetch metadata using Crossref API
+    crossref_url = f"https://api.crossref.org/works/{doi}"
+
+    try:
+        response = requests.get(crossref_url)
+        response.raise_for_status()  # Check if the request was successful
+        metadata = response.json()['message']  # Parse the JSON response
+
+        # Extract the reference list if available
+        references = metadata.get('reference', [])
+
+        # Step 2: Extract DOIs from references
+        for reference in references:
+            reference_doi = reference.get('DOI', None)
+            if reference_doi:
+                dois_list.append(reference_doi)
+
+        # Step 3: Return the list of DOIs
+        return dois_list
+
+    except requests.exceptions.RequestException as e:
+        print(f"Error fetching data from Crossref for DOI {doi}: {e}")
+        return []
+
+
 def get_reference_metadata(pmid):
-    reference_pmids, reference_dois = get_reference_pmids(pmid)
+    reference_pmids = get_reference_pmids(pmid)
     reference_metadata_dict = get_metadata(reference_pmids)
     missing_references = []
 
@@ -634,22 +840,48 @@ def get_reference_metadata(pmid):
             paper = retrieve_paper(pmid)
             reference_metadata_dict[pmid] = paper
 
-    for doi in reference_dois:
+    if missing_references:
+        reference_metadata_dict.setdefault("missing_references", {})[
+            "value"
+        ] = missing_references
+        reference_metadata_dict["missing_references"]["attr_id"] = 211
+
+    return reference_metadata_dict
+
+
+def get_reference_metadata_dois(doi):
+    reference_dois = get_reference_dois(doi)
+    reference_metadata_dict = {}
+    for reference_doi in reference_dois:
+        doi_metadata = get_metadata_doi(reference_doi)
+        if doi_metadata:
+            reference_metadata_dict[reference_doi] = doi_metadata
+    missing_references = []
+    temp_metadata = {}  # Temporary dictionary to hold new metadata for DOIs
+
+    for doi in reference_metadata_dict:
         reference_doi_to_pmid = lookup_pmid_from_doi(doi)
         if reference_doi_to_pmid is not None:
             if check_new_reference(reference_doi_to_pmid, None):
                 time.sleep(1)
                 doi_metadata = get_metadata(reference_doi_to_pmid)
-                reference_metadata_dict.update(doi_metadata)
+                temp_metadata[reference_doi_to_pmid] = doi_metadata
                 new_paper_id = insert_new_paper(
-                    reference_metadata_dict[reference_doi_to_pmid]
+                    temp_metadata[reference_doi_to_pmid]
                 )
-                reference_metadata_dict[reference_doi_to_pmid]["id"] = new_paper_id
+                temp_metadata[reference_doi_to_pmid]["id"] = new_paper_id
             else:
                 paper = retrieve_paper(reference_doi_to_pmid)
-                reference_metadata_dict[reference_doi_to_pmid] = paper
+                temp_metadata[reference_doi_to_pmid] = paper
         elif reference_doi_to_pmid is None:
-            missing_references.append(doi)
+            if check_new_reference(None, doi):
+                new_paper_id = insert_new_paper_doi(reference_metadata_dict[doi])
+                reference_metadata_dict[doi]["id"] = new_paper_id
+            else:
+                paper = retrieve_paper(doi)
+                reference_metadata_dict[doi] = paper
+
+    reference_metadata_dict.update(temp_metadata)
 
     if missing_references:
         reference_metadata_dict.setdefault("missing_references", {})[
@@ -735,7 +967,9 @@ def add_missing_references_to_paper_collection():
 
 
 def add_paper_to_model(paper_id, model_id):
-    model_data = sdb.models.find_one({"id": model_id}).get("model_paper", {"value": [], "attr_id": 155})
+    model_data = sdb.models.find_one({"id": model_id}).get(
+        "model_paper", {"value": [], "attr_id": 155}
+    )
     paper_data = sdb.papers.find_one({"id": paper_id})["name"]
     model_data["value"].append({"object_id": paper_id, "object_name": paper_data})
     sdb.models.update_one({"id": model_id}, {"$set": {"model_paper": model_data}})
@@ -751,9 +985,21 @@ def add_implementer_to_model(implementer_id, model_id):
             break
     else:
         raise ValueError("Unknown implementer")
-    model_data["value"].append({"object_id": implementer_id, "object_name": implementer_data})
+    model_data["value"].append(
+        {"object_id": implementer_id, "object_name": implementer_data}
+    )
     current_date = datetime.now().isoformat()
-    sdb.models.update_one({"id": model_id}, {"$set": {"implemented_by": model_data, "ver_date": current_date, "ver_number": model["ver_number"] + 1}})
+    sdb.models.update_one(
+        {"id": model_id},
+        {
+            "$set": {
+                "implemented_by": model_data,
+                "ver_date": current_date,
+                "ver_number": model["ver_number"] + 1,
+            }
+        },
+    )
+
 
 def add_simulator_to_model(simulator_id, model_id):
     model = sdb.models.find_one({"id": model_id})
@@ -765,17 +1011,66 @@ def add_simulator_to_model(simulator_id, model_id):
             break
     else:
         raise ValueError("Unknown simulator")
-    model_data["value"].append({"object_id": simulator_id, "object_name": simulator_data})
+    model_data["value"].append(
+        {"object_id": simulator_id, "object_name": simulator_data}
+    )
     current_date = datetime.now().isoformat()
-    sdb.models.update_one({"id": model_id}, {"$set": {"modeling_application": model_data, "ver_date": current_date, "ver_number": model["ver_number"] + 1}})
+    sdb.models.update_one(
+        {"id": model_id},
+        {
+            "$set": {
+                "implemented_by": model_data,
+                "ver_date": current_date,
+                "ver_number": model["ver_number"] + 1,
+            }
+        },
+    )
+
+
+def add_simulator_to_model(simulator_id, model_id):
+    model = sdb.models.find_one({"id": model_id})
+    model_data = model.get("modeling_application", {"value": [], "attr_id": 114})
+    all_simulators = sdb.models.distinct("modeling_application.value")
+    for simulator in all_simulators:
+        if simulator["object_id"] == simulator_id:
+            simulator_data = simulator["object_name"]
+            break
+    else:
+        raise ValueError("Unknown simulator")
+    model_data["value"].append(
+        {"object_id": simulator_id, "object_name": simulator_data}
+    )
+    current_date = datetime.now().isoformat()
+    sdb.models.update_one(
+        {"id": model_id},
+        {
+            "$set": {
+                "modeling_application": model_data,
+                "ver_date": current_date,
+                "ver_number": model["ver_number"] + 1,
+            }
+        },
+    )
+
 
 def add_new_implementer_to_model(implementer_name, model_id):
     model = sdb.models.find_one({"id": model_id})
     model_data = model.get("implemented_by", {"value": [], "attr_id": 299})
     implementer_id = new_object_id()
-    model_data["value"].append({"object_id": implementer_id, "object_name": implementer_name})
+    model_data["value"].append(
+        {"object_id": implementer_id, "object_name": implementer_name}
+    )
     current_date = datetime.now().isoformat()
-    sdb.models.update_one({"id": model_id}, {"$set": {"implemented_by": model_data, "ver_date": current_date, "ver_number": model["ver_number"] + 1}})
+    sdb.models.update_one(
+        {"id": model_id},
+        {
+            "$set": {
+                "implemented_by": model_data,
+                "ver_date": current_date,
+                "ver_number": model["ver_number"] + 1,
+            }
+        },
+    )
 
 
 def find_implementer_containing(name):
@@ -793,22 +1088,20 @@ def find_simulator_containing(name):
         if name.lower() in simulator["object_name"].lower()
     ]
 
+
 def manually_add_paper(input_dict):
     metadata = {}
     all_authors = []
 
-    title_dict = {
-        "value": input_dict["title"],
-        "attr_id": 139
-    }
+    title_dict = {"value": input_dict["title"], "attr_id": 139}
     metadata["title"] = title_dict
 
     for author in dict["authors"]:
         author_dict = {}
-        if author['last_name'] and author['initials']:
-            author_object_name = author['last_name'] + " " + author['initials']
+        if author["last_name"] and author["initials"]:
+            author_object_name = author["last_name"] + " " + author["initials"]
         else:
-            author_object_name = author['last_name']
+            author_object_name = author["last_name"]
         if new_author_check(author_object_name):
             author_object_id = add_new_author_to_collection(
                 author_object_name,
@@ -823,26 +1116,17 @@ def manually_add_paper(input_dict):
         author_dict["object_name"] = author_object_name
         all_authors.append(author_dict)
 
-    authors_dict = {
-        "value": all_authors,
-        "attr_id": 148
-    }
+    authors_dict = {"value": all_authors, "attr_id": 148}
     metadata["authors"] = authors_dict
 
-    if input_dict['journal']:
-        journal_dict = {
-            "value": input_dict['journal'],
-            "attr_id": 158
-        }
+    if input_dict["journal"]:
+        journal_dict = {"value": input_dict["journal"], "attr_id": 158}
         metadata["journal"] = journal_dict
 
-    if input_dict['year']:
-        year_dict = {
-            "value": str(input_dict['year']),
-            "attr_id": 154
-        }
+    if input_dict["year"]:
+        year_dict = {"value": str(input_dict["year"]), "attr_id": 154}
         metadata["year"] = year_dict
-        
+
     insert_new_paper(metadata)
     return metadata
 
@@ -866,3 +1150,265 @@ if __name__ == "__main__":
     check_authors()
     # get_metadata(pmid)
     # get_reference_metadata(pmid)
+
+
+def longest_common_substring(s1, s2):
+    m = [[0] * (1 + len(s2)) for i in range(1 + len(s1))]
+    longest, x_longest = 0, 0
+    for x in range(1, 1 + len(s1)):
+        for y in range(1, 1 + len(s2)):
+            if s1[x - 1] == s2[y - 1]:
+                m[x][y] = m[x - 1][y - 1] + 1
+                if m[x][y] > longest:
+                    longest = m[x][y]
+                    x_longest = x
+            else:
+                m[x][y] = 0
+    return s1[x_longest - longest: x_longest]
+
+
+import requests
+
+def fetch_crossref_data(doi):
+    url = f"https://api.crossref.org/works/{doi}/transform/application/vnd.crossref.unixsd+xml"
+    try:
+        response = requests.get(url)
+        response.raise_for_status()  # Raise an error if the HTTP request failed
+        if response.status_code == 200:
+            return response.text  # Return the XML content as a string
+        else:
+            print(
+                f"Error fetching data from Crossref for DOI {doi}: Status code {response.status_code}"
+            )
+            return None
+    except requests.exceptions.RequestException as e:
+        print(f"Request error for DOI {doi}: {e}")
+        return None
+
+
+from bs4 import BeautifulSoup
+
+def parse_crossref_xml(xml_data):
+    soup = BeautifulSoup(xml_data, "xml")
+    title = soup.find("title").text if soup.find("title") else ""
+    title = title.lower().capitalize()
+
+    authors = soup.find("surname").text if soup.find("surname") else ""
+    authors = authors.lower().capitalize()
+
+    journal = soup.find("full_title").text if soup.find("full_title") else ""
+    publication_date = soup.find("publication_date", media_type="print")
+    if publication_date:
+        year = (
+            publication_date.find("year").text if publication_date.find("year") else ""
+        )
+    else:
+        publication_date = soup.find("publication_date", media_type="online")
+        if publication_date:
+            year = (
+                publication_date.find("year").text
+                if publication_date.find("year")
+                else ""
+            )
+        else:
+            year = None
+
+    crossref_data = {
+        "title": title,
+        "authors": authors,
+        "journal": journal,
+        "year": year
+    }
+    return crossref_data
+
+
+def search_papers_by_year(year):
+    return sdb.papers.find({"year.value": year})
+
+
+import tqdm
+import time
+
+def find_matching_paper_doi(doi):
+    max_common_substring = ""
+    max_paper = None
+    xml = fetch_crossref_data(doi)
+    crossref_data = parse_crossref_xml(xml)
+    year = crossref_data.get("year", "")
+    papers = search_papers_by_year(year)
+
+    for paper in tqdm.tqdm(papers):
+        paper_text = " ".join(
+            str(paper.get(field, {}).get("value", [{}])[0].get("object_name", ""))
+            if field == "authors" and paper.get(field, {}).get("value", [{}])
+            else str(paper.get(field, ""))
+            for field in ["title", "journal", "authors", "year"]
+        )
+
+        crossref_text = " ".join(
+            [
+                crossref_data.get("title", ""),
+                crossref_data.get("journal", ""),
+                " ".join(crossref_data.get("authors", [])),
+                crossref_data.get("year", ""),
+            ]
+        )
+        common_substring = longest_common_substring(paper_text, crossref_text)
+
+        if len(common_substring) > len(max_common_substring):
+            max_common_substring = common_substring
+            max_paper = paper
+
+    title = crossref_data.get("title", "N/A")
+    print(f"Crossref Title: {title}")
+    return max_paper
+
+
+def merge_papers(existing_papers):
+    # First paper as master_paper
+    master_paper = existing_papers[0]
+    merged_metadata = master_paper.copy()
+
+    for paper in existing_papers[1:]:
+        # For each field, check if it's missing in the master paper and update it
+        for field in ["title", "authors", "year", "journal", "doi", "references"]:
+            if field in paper and paper[field]:
+                # If the field in the master paper is empty or different, update it
+                if field not in merged_metadata or not merged_metadata[field]:
+                    merged_metadata[field] = paper[field]
+                elif isinstance(merged_metadata[field], list) and isinstance(
+                    paper[field], list
+                ):
+                    # If the field is a list (e.g., authors, references), merge them without duplicates
+                    merged_metadata[field] = list(
+                        {
+                            item["object_name"]: item
+                            for item in merged_metadata[field] + paper[field]
+                        }.values()
+                    )
+                elif (
+                    isinstance(merged_metadata[field], str)
+                    and merged_metadata[field] != paper[field]
+                ):
+                    # If it's a string and they differ, merge them
+                    merged_metadata[field] = (
+                        merged_metadata[field] + " / " + paper[field]
+                    )
+
+    # Remove duplicates from the database
+    for paper in existing_papers[1:]:
+        sdb.papers.delete_one({"id": paper["id"]})
+
+    # Update the master paper with the merged metadata
+    sdb.papers.update_one({"id": master_paper["id"]}, {"$set": merged_metadata})
+
+    print(
+        f"Merged {len(existing_papers)} papers into one. Retaining the paper with ID {master_paper['id']}."
+    )
+
+
+def insert_paper_with_references_doi(doi):
+    metadata = get_metadata_doi(doi)
+    metadata["doi"] = {"value": doi, "attr_id": 339}
+
+    if doi:
+        existing_papers = list(
+            sdb.papers.find({"doi.value": {"$regex": f"^{doi}$", "$options": "i"}})
+        )
+        if len(existing_papers) == 1:
+            # Ideal case, paper found
+            print(f"Paper with DOI {doi} already exists in the database.")
+            print(f"Paper details: {existing_papers[0]}")
+            return existing_papers[0]["id"]
+
+        elif len(existing_papers) > 1:
+            # Multiple papers found, need to merge
+            print(
+                f"Multiple papers with DOI {doi} found in the database. Merging required."
+            )
+            merge_papers(existing_papers)
+            return
+
+    print("Searching for a matching paper with no DOI.")
+    matching_paper = find_matching_paper_doi(doi)
+
+    if matching_paper:
+        print(f"Found a possible matching paper: {matching_paper['title']}")
+        user_input = input("Does this match? (y/n): ")
+        if user_input.lower() == "y":
+            print(f"Adding DOI to the paper: {matching_paper['title']}")
+            sdb.papers.update_one(
+                {"id": matching_paper["id"]}, {"$set": {"doi": {"value": doi}}}
+            )
+            return matching_paper["id"]
+        else:
+            try:
+                reference_metadata = get_reference_metadata_dois(doi)
+                if "missing_references" in reference_metadata:
+                    metadata["missing_references"] = reference_metadata[
+                        "missing_references"
+                    ]
+                    metadata["missing_references"] = reference_metadata["missing_references"]
+                    del reference_metadata["missing_references"]
+                metadata["references"] = {
+                    "value": [
+                        {"object_id": item["id"], "object_name": item["name"]}
+                        for item in reference_metadata.values()
+                        if "name" in item
+                    ],
+                    "attr_id": 140,
+                }
+            except IndexError:
+            # this happens when no references
+                ...
+            return insert_new_paper_doi(metadata)
+    else:
+        try:
+            reference_metadata = get_reference_metadata_dois(doi)
+            if "missing_references" in reference_metadata:
+                metadata["missing_references"] = reference_metadata[
+                    "missing_references"
+                ]
+            metadata["references"] = {
+                "value": [
+                    {"object_id": item["id"], "object_name": item["name"]}
+                    for item in reference_metadata.values()
+                    if "name" in item
+                ],
+                "attr_id": 140,
+            }
+        except IndexError:
+            # this happens when no references
+            ...
+        return insert_new_paper_doi(metadata)
+
+
+# Updates references for singular existing paper
+def add_references_to_existing_paper_doi(doi):
+    paper_metadata = sdb.papers.find_one(
+        {"doi.value": {"$regex": f"^{doi}$", "$options": "i"}}
+    )
+    if not paper_metadata:
+        print(f"Paper with DOI {doi} not found in the database.")
+        return
+    reference_metadata = get_reference_metadata_dois(doi)
+
+    if "missing_references" in reference_metadata:
+        paper_metadata["missing_references"] = reference_metadata["missing_references"]
+        del reference_metadata["missing_references"]
+
+    paper_metadata["references"] = {
+        "value": [
+            {"object_id": item["id"], "object_name": item["name"]}
+            for item in reference_metadata.values()
+            if item is not None and "name" in item and "id" in item
+        ],
+        "attr_id": 140,
+    }
+
+    paper_metadata["ver_date"] = datetime.now().isoformat()
+    paper_metadata["ver_number"] = 1 + paper_metadata.get("ver_number", 0)
+
+    sdb.papers.update_one({"id": paper_metadata["id"]}, {"$set": paper_metadata})
+
+    print(f"References for paper with DOI {doi} have been updated.")
