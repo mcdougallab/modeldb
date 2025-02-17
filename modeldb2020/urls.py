@@ -153,6 +153,7 @@ urlpatterns = (
             name="modelview_components",
         ),
         re_path(r"^getmodelfile$(?i)", views.download, name="download_file"),
+        re_path(r"^getmodelfileexplanation$(?i)", views.get_explanation, name="explain_file"),
         re_path(
             r"^metadata-predictor$(?i)",
             views.metadata_predictor,

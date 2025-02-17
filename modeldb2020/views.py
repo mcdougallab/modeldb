@@ -7,6 +7,7 @@ import smtplib
 import heapq
 import collections
 import itertools
+import hashlib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from urllib.parse import urlencode
@@ -1220,6 +1221,53 @@ def _get_model(request, model_id, permissions=None):
         model = None
     return model
 
+
+@xframe_options_sameorigin
+def get_explanation(request):
+    model_id = request.GET.get("model", -1)
+    model = _get_model(request, model_id)
+    if model is None:
+        return HttpResponse("Forbidden", status=403)
+    filename = request.GET.get("file")
+    if not model.has_path(filename):
+        return HttpResponse(f"Forbidden", status=403)
+    original_filename = filename
+    # discard path information; only keep filename
+    filename = filename.replace("\\", "/")
+    short_filename = filename.split("/")[-1]
+    base_filename = filename[: -len(short_filename)]
+    filename = short_filename
+    contents = model.file(original_filename)
+    response = HttpResponse()
+    if len(contents) < 10_240:
+        try:
+            hash_value = hashlib.sha256(contents).hexdigest()
+            extension = filename.split(".")[-1].lower()
+            contents = models.get_explanation(hash_value)
+            if contents:
+                contents = f"""
+                <!DOCTYPE html>
+                <head>
+                <base target="_parent">
+                </head>
+                <body>
+                    <div style="font-style:italic">The following explanation has been generated automatically by AI and may contain errors.</div>
+                    <div class="readme-content" id="readme-content">{contents}</div>
+
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.1.0/markdown-it.min.js"></script>
+                    <script>
+                        const md = window.markdownit();
+                        document.getElementById("readme-content").innerHTML=md.render(document.getElementsByClassName("readme-content")[0].textContent);
+                    </script>
+                </body>
+                </html>
+                """
+        except:
+            contents = ""
+    else:
+        contents = ""
+    response.write(contents)
+    return response
 
 @xframe_options_sameorigin
 def download(request):

@@ -15,6 +15,7 @@ import pandas as pd
 import itertools
 import unicodedata
 import re
+import sqlite3
 
 mongodb = MongoClient()
 sdb = mongodb[settings.security["db_name"]]
@@ -1326,4 +1327,23 @@ class PrivateModel(Model):
         return self._zip
 
 
+def get_explanation(hash_value):
+    ai_explanations = settings.security.get("ai_explanations")
+    if not ai_explanations:
+        return ""
+    
+    notes = ""
+    
+    try:
+        with sqlite3.connect(ai_explanations) as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT notes FROM model_files WHERE hash = ?", (hash_value,))
+            result = cursor.fetchone()
+            if result:
+                notes = result[0]
+    except sqlite3.Error as e:
+        ...
+
+    return notes
+    
 refresh()
