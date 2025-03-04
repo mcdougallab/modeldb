@@ -862,13 +862,13 @@ def change_model_title(model_id, new_title):
 
 
 def request_to_make_public(model_id):
-    document = {"id": model_id}
+    document = {"id": str(model_id)}
     if not sdb.requested_public.find_one(document):
         sdb.requested_public.insert_one(document)
 
 
 def remove_request_to_make_public(model_id):
-    document = {"id": model_id}
+    document = {"id": str(model_id)}
     if sdb.requested_public.find_one(document):
         sdb.requested_public.delete_one(document)
 
