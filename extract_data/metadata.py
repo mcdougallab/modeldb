@@ -621,6 +621,10 @@ def retrieve_paper(pmid):
     return paper
 
 
+def set_pmid(paper_id, pmid):
+    sdb.papers.update_one({"id": paper_id}, {"$set": {"pubmed_id": {'value': str(pmid), 'attr_id': 153}}})
+
+
 def get_reference_metadata(pmid):
     reference_pmids, reference_dois = get_reference_pmids(pmid)
     reference_metadata_dict = get_metadata(reference_pmids)
