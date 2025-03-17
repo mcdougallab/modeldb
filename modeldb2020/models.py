@@ -760,6 +760,21 @@ class Current(SenseLabClass):
             return ""
 
 
+    @property
+    def ions(self):
+        try:
+            return [item["object_name"] for item in self._data["Ions"]["value"]]
+        except KeyError:
+            return ""
+
+    @property
+    def description(self):
+        try:
+            return self._data["Description"]["value"]
+        except KeyError:
+            return ""
+
+
 class Gene(SenseLabClass):
     classname = "Gene"
     attr_name = "gene"

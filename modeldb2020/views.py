@@ -1529,13 +1529,12 @@ def trends(request):
 
 
 def findbycurrent(request):
+    sorted_currents = dict(sorted(currents.items(), key=lambda item: item[1]["name"]))
     context = {
         "title": "ModelDB: Browse by current",
-        "content": _render_tree(currents, "/ModelList"),
-        "header": "Find models that contain a particular ionic current",
-        "subhead": 'Click on an ionic current to show a list of models that contain or implement that current.<br/><br/>Click <a href="https://senselab.med.yale.edu/neurondb/ndbregions">here</a> to view brief definitions of currents in NeuronDB.',
+        "currents": sorted_currents,
     }
-    return render(request, "treepage.html", context)
+    return render(request, "findbycurrent.html", context)
 
 
 def findbyreceptor(request):

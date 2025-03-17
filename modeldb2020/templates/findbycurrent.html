@@ -1,0 +1,72 @@
+{% extends "main.html" %}
+{% load modeldb_filters %}
+
+{% block head %}
+<meta property="og:url" content="https://modeldb.science/findbycurrent"/>
+<meta property="og:title" content="Browse by current"/>
+<meta property="og:description" content="Browse our list of model currents."/>
+
+<style>
+.modellist>li {
+    padding-top: 1em;
+}
+</style>
+<script>
+    $(() => {
+        $('#currenttable').bootstrapTable({
+            pagination: false,
+            search: true,
+//            data: {{ datajson | safe}},
+            formatSearch: () => 'filter'
+        })
+    });
+/*    function name_link(name) {
+        return `<a href="/modellist/${uri}">${name.split("[")[0].trim()}</a>`
+    } */
+    </script>
+{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-lg-12">
+        <center><h3>Find models that contain a particular ionic current</h3>
+        Click on an ionic current to show a list of models that contain or implement that current.</center>
+
+        <table id="currenttable" data-toggle="currenttable">
+            <thead>
+                <tr>
+                    <th data-sortable="false">
+                        Ions
+                    </th>
+                    <th data-sortable="false">
+                        Name
+                    </th>
+                    <th data-sortable="false">
+                        Description
+                    </th>
+                    <th data-sortable="false">
+                        Function
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for current in currents.values %}
+                <tr>
+                    <td>
+                        {{ current.Ions.value|get_item:'object_name'|join:', ' }}
+                    </td>
+                    <td>
+                        <a href="/modellist/{{current.id}}">{{current.name}}</a>
+                    </td>
+                    <td>
+                        {{current.Description.value}}
+                    </td>
+                    <td>
+                        {{current.Function.value}}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
