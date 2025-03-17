@@ -34,7 +34,7 @@ try:
 except FileExistsError:
     pass
 
-prev_model_ids = [int(item.split(".")[0]) for item in os.listdir(zip_dir)]
+prev_model_ids = [int(item.split(".")[0]) for item in os.listdir(zip_dir) if "-" not in item]
 
 model_ids = [
     item["id"]
