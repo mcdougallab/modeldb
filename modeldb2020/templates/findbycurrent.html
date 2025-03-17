@@ -11,18 +11,27 @@
     padding-top: 1em;
 }
 </style>
+<!-- JSON solution via https://docs.djangoproject.com/en/5.1/ref/templates/builtins/ -->
+{{ currents | json_script:"modeldb-currents" }}
 <script>
+    const currents = JSON.parse(document.getElementById('modeldb-currents').textContent);
     $(() => {
         $('#currenttable').bootstrapTable({
             pagination: false,
             search: true,
-//            data: {{ datajson | safe}},
+            data: currents,
             formatSearch: () => 'filter'
         })
     });
-/*    function name_link(name) {
-        return `<a href="/modellist/${uri}">${name.split("[")[0].trim()}</a>`
-    } */
+
+    let current_id_from_name = {};
+    currents.forEach((current) => {
+        current_id_from_name[current.name] = current.id;
+    });
+
+    function name_link(name) {
+        return `<a href="/modellist/${current_id_from_name[name]}">${name}</a>`;
+    }
     </script>
 {% endblock %}
 {% block content %}
@@ -34,38 +43,20 @@
         <table id="currenttable" data-toggle="currenttable">
             <thead>
                 <tr>
-                    <th data-sortable="false">
+                    <th data-sortable="true" data-field="ions">
                         Ions
                     </th>
-                    <th data-sortable="false">
+                    <th data-sortable="true" data-field="name" data-formatter="name_link">
                         Name
                     </th>
-                    <th data-sortable="false">
+                    <th data-sortable="false" data-field="description">
                         Description
                     </th>
-                    <th data-sortable="false">
+                    <th data-sortable="false" data-field="function">
                         Function
                     </th>
                 </tr>
             </thead>
-            <tbody>
-                {% for current in currents.values %}
-                <tr>
-                    <td>
-                        {{ current.Ions.value|get_item:'object_name'|join:', ' }}
-                    </td>
-                    <td>
-                        <a href="/modellist/{{current.id}}">{{current.name}}</a>
-                    </td>
-                    <td>
-                        {{current.Description.value}}
-                    </td>
-                    <td>
-                        {{current.Function.value}}
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
         </table>
     </div>
 </div>

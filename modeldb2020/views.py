@@ -101,7 +101,6 @@ hljs.registerLanguage('nmodl', function(hljs) {
 """
 
 
-
 def index(request):
     context = {"title": "ModelDB", "ModelDB": ModelDB, "request": request}
     return render(request, "index.html", context)
@@ -1269,6 +1268,7 @@ def get_explanation(request):
     response.write(contents)
     return response
 
+
 @xframe_options_sameorigin
 def download(request):
     model_id = request.GET.get("model", -1)
@@ -1387,7 +1387,7 @@ def download(request):
                     decoded_contents = contents.decode("utf-8")
                     MAX_SIZE = 5_000_000
                     if len(decoded_contents) < MAX_SIZE:
-                        contents = f'<pre>{html.escape(decoded_contents)}</pre>'
+                        contents = f"<pre>{html.escape(decoded_contents)}</pre>"
                     else:
                         contents = f"<b>This file is very large and has been truncated to display in your browser. <a href='/getModelFile?model={model_id}&file={urllib.parse.quote(original_filename)}'>Download</a> it to view the whole file. The truncated version follows:</b><br><br><pre>{html.escape(decoded_contents[:MAX_SIZE])}</pre>"
             except:
@@ -1529,7 +1529,25 @@ def trends(request):
 
 
 def findbycurrent(request):
-    sorted_currents = dict(sorted(currents.items(), key=lambda item: item[1]["name"]))
+    sorted_currents = [
+        {
+            "ions": ", ".join(
+                sorted(
+                    [
+                        inner_item["object_name"]
+                        for inner_item in item.get(
+                            "Ions", {"value": [{"object_name": ""}]}
+                        )["value"]
+                    ]
+                )
+            ),
+            "name": item["name"],
+            "id": item["id"],
+            "function": item.get("Function", {}).get("value", ""),
+            "description": item.get("Description", {}).get("value", ""),
+        }
+        for item in sorted(currents.values(), key=lambda item: item["name"])
+    ]
     context = {
         "title": "ModelDB: Browse by current",
         "currents": sorted_currents,
