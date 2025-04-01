@@ -59,7 +59,7 @@ class Model:
 
 for i, model in enumerate(sdb.models.find()):
     print(f"Processing {i + 1}: {model['id']}")
-    if model["id"] == 267116:
+    if model["id"] in (2016219, 267116):
         print("  ... skipping for now because of known memory issues")
         continue
     new_data = Model(model["id"]).rows()
