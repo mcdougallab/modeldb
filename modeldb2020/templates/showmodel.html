@@ -352,7 +352,11 @@
 {% block belowshapeplot %}
 {% if Model.alternative_version.value %}
 <div>
+{% if Model.alternative_version.value|length == 1 %}
+There is 1 other version of this model. You may select a different one below:
+{% else %}
 There are {{Model.alternative_version.value|length}} other versions of this model. You may select a different one below:
+{% endif %}
 </div>
 <div>
 <center>
