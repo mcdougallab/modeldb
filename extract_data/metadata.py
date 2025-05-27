@@ -877,7 +877,34 @@ def remove_request_to_make_public(model_id):
         sdb.requested_public.delete_one(document)
 
 
+def associate_file_with_biology_type(file_hash, biology_type):
+    """
+    Associates a file (identified by its hash) with a biology_type identifier.
+    Adds the identifier to the biology_type field list in sdb.model_files.
+    """
+    # Find all entries with the given hash
+    files = sdb.model_files.find({"hash": file_hash})
 
+    has_files = False
+    for file in files:
+        has_files = True
+        # Ensure the biology_type field exists and is a list
+        if "biology_type" not in file:
+            file["biology_type"] = []
+        elif not isinstance(file["biology_type"], list):
+            file["biology_type"] = [file["biology_type"]]
+
+        # Add the biology_type identifier if it's not already in the list
+        if biology_type not in file["biology_type"]:
+            file["biology_type"].append(biology_type)
+            # Update the document in the database
+            sdb.model_files.update_one(
+                {"_id": file["_id"]},
+                {"$set": {"biology_type": file["biology_type"]}}
+            )
+    
+    if not has_files:
+        print(f"No files found with hash {file_hash}.")
 
 if __name__ == "__main__":
     input("Type enter to run check_authors or ctrl^c to quit")

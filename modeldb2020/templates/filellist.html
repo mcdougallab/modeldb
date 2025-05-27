@@ -1,0 +1,64 @@
+{% extends "main.html" %}
+
+{% block head %}
+<meta property="og:url" content="https://modeldb.science/filelist"/>
+<meta property="og:title" content="Find files modeling a property"/>
+<meta property="og:description" content="Find files matching a property."/>
+
+{{ results | json_script:"modeldb-results" }}
+<script>
+
+    const results = JSON.parse(document.getElementById('modeldb-results').textContent);
+    $(() => {
+        $('#resultstable').bootstrapTable({
+            pagination: false,
+            search: true,
+            data: results,
+            formatSearch: () => 'filter'
+        });
+    });
+
+    function path_link(value, row) {
+        return `<a href="/${row.model_id}?tab=2&file=${row.path}">Model: ${row.model_id}; ${row.path}</a>`;
+    }
+</script>
+{% endblock %}
+
+{% block header %}
+<h3>{{ obj.classname }}: {{ obj.name }}</h3>
+{% if obj.description and obj.classname != 'Simulation Environment' %}
+{{ obj.description }}
+<br>
+<br>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-12">
+        {% if results %}
+        <p>File curation is incomplete. You may also with check out the <a href="/modellist/{{ obj.id }}">list of models</a> known to contain {{obj.name}}.</p>
+        <table id="resultstable" data-toggle="resultstable">
+            <thead>
+                <tr>
+                    <th data-sortable="true" data-field="count">
+                        Number of models
+                    </th>
+                    <th data-sortable="true" data-field="path" data-formatter="path_link">
+                        Earliest known usage
+                    </th>
+                    <th data-sortable="true" data-field="context">
+                        Context
+                    </th>
+                </tr>
+            </thead>
+        </table>
+        {% else %}
+        <p>No files found for this identifier. Try browsing by <a href="/modellist/{{ obj.id }}">model</a> instead.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block sidecolumn %}
+{% endblock %}

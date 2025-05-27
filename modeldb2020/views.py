@@ -1788,3 +1788,20 @@ def search(request):
             "ModelDB": ModelDB,
         }
         return render(request, "search.html", context)
+
+
+def filelist(request, identifier):
+    sorted_files = models.get_files_by_biology_type(identifier)
+
+    # Check if identifier exists in the database
+    obj = ModelDB.object_by_id(identifier)
+    if not obj:
+        obj = {"name": identifier, "classname": "Unknown"}
+
+    context = {
+        "title": f"Files for {obj['name']}: {obj['classname']}",
+        "obj": obj,
+        "results": sorted_files,
+    }
+
+    return render(request, "filellist.html", context)

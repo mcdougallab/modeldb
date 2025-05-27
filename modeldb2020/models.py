@@ -1360,5 +1360,46 @@ def get_explanation(hash_value):
         ...
 
     return notes
+
+def get_files_by_biology_type(identifier):
+    """
+    Query files by biology_type, group by hash, count unique model instances, 
+    and select the smallest model_id for links.
+    """
+    try:
+        identifier = int(identifier)
+    except ValueError:
+        return []
+
+    files = sdb.model_files.find({"biology_type": {"$in": [identifier]}})
     
+    file_data = {}
+    models_with_matches = set()  # Track models that have already matched a file
+
+    for file in files:
+        file_hash = file["hash"]
+        model_id = file["model_id"]
+
+        # Initialize data for this hash if not already present
+        if file_hash not in file_data:
+            file_data[file_hash] = {
+                "count": 0,
+                "path": file["path"],
+                "model_id": model_id,
+            }
+
+        # Only increment count if this model_id hasn't been seen for this hash
+        if (file_hash, model_id) not in models_with_matches:
+            file_data[file_hash]["count"] += 1
+            models_with_matches.add((file_hash, model_id))
+
+        # Update to the smallest model_id if a smaller one is found
+        if model_id < file_data[file_hash]["model_id"]:
+            file_data[file_hash]["model_id"] = model_id
+            file_data[file_hash]["path"] = file["path"]
+
+    # Sort files by count (descending)
+    sorted_files = sorted(file_data.values(), key=lambda x: x["count"], reverse=True)
+    return sorted_files
+
 refresh()

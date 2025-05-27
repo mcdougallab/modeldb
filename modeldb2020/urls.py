@@ -131,6 +131,7 @@ urlpatterns = (
         re_path(
             r"^modellist/(?P<object_id>[0-9]+)$(?i)", views.modellist, name="modellist"
         ),
+        re_path(r"^filelist/(?P<identifier>.+)$(?i)", views.filelist, name="filelist"),
         re_path(
             r"^help(?:menu)?$(?i)",
             views.static,
