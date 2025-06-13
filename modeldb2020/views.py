@@ -1295,11 +1295,13 @@ def download(request):
                 "src=\"(.*?)\"|src='(.*?)'",
                 lambda match: _remap_src(model_id, match, base_filename),
                 contents,
+                flags=re.IGNORECASE,
             )
             contents = re.sub(
                 "href=\"(.*?)\"|href='(.*?)'",
                 lambda match: _remap_href(model_id, match, base_filename),
                 contents,
+                flags=re.IGNORECASE,
             )
             # have to specify a base target otherwise will try to load links inside the iframe
             contents = f'<base target="_parent">{contents}'
