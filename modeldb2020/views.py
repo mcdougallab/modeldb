@@ -1354,6 +1354,27 @@ def download(request):
                     else:
                         special_syntax = ""
                     contents = f'<link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/vs.min.css" rel="stylesheet" /><script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>{special_syntax}<pre><code class="{extension}">{html.escape(contents.decode("utf-8"))}</code><script>hljs.highlightAll();</script></pre>'
+                elif extension == "ipynb":
+                    contents = contents.decode("utf-8")
+
+                    contents = f"""
+
+                    <!DOCTYPE html>
+                    <head>
+                    <base target="_parent">
+                    </head>
+                    <body>
+                        <script id="ipynb-data" type="application/json">{contents}</script>
+                        <div id="ipynb-content"></div>
+
+                        <script src="https://cdn.jsdelivr.net/npm/notebookjs@0.8.3/notebook.min.js"></script>
+                        <script>
+                            document.getElementById("ipynb-content").appendChild(nb.parse(JSON.parse(document.getElementById("ipynb-data").textContent)).render());
+                        </script>
+                    </body>
+                    </html>
+
+                    """
                 elif extension == "md":
                     contents = re.sub(
                         r"(!\[(.*?)\]\((.*?)\))",
