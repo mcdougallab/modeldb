@@ -1406,6 +1406,49 @@ def download(request):
                     </html>
 
                     """
+                elif extension == "docx":
+                    contents = f"""
+
+                    <!DOCTYPE html>
+                    <head>
+                    <base target="_parent">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+                    <script src="https://cdn.jsdelivr.net/npm/docx-preview/dist/docx-preview.min.js"></script>
+                    <script>
+                    const docxURL = 'https://modeldb.science/getModelFile?model={model_id}&file={urllib.parse.quote(original_filename)}';
+                    </script>
+                    </head>
+                    <body style="height:800px">
+                        <div class="content" id="content"></div>
+
+                        <script>
+                            // Select the container element
+                            const container = document.getElementById('content');
+
+                            // Fetch the DOCX file from the URL
+                            fetch(docxURL)
+                            .then(response => {{
+                                if (!response.ok) {{
+                                    throw new Error('Network response was not ok');
+                                }}
+                                // Return the response as an ArrayBuffer
+                                return response.arrayBuffer();
+                            }})
+                            .then(data => {{
+                                // Render the document using docx-preview
+                                // The first argument is the ArrayBuffer, the second is the container element
+                                // The third argument is for options, we'll use an empty object for this minimal example
+                                docx.renderAsync(data, container, null)
+                                .then(x => console.log("docx-preview rendering completed"))
+                                .catch(err => console.error("Error rendering document:", err));
+                            }})
+                            .catch(err => console.error('Error fetching the DOCX file:', err));
+                        </script>
+
+                    </body>
+                    </html>
+
+                    """
                 elif extension in (
                     "eps",
                     "ps",
