@@ -1050,6 +1050,11 @@ class Model:
         ) as f:
             return f.read()
 
+    def zip_file_path(self):
+        """Returns the path to the zip file for streaming."""
+        filename = f"{self.id2}.zip"
+        return os.path.join(settings.security["modeldb_zip_dir"], filename)
+
     def folder_contents(self, path, _hierarchy=None):
         def _filter(items):
             return sorted(
@@ -1330,6 +1335,11 @@ class PrivateModel(Model):
             os.path.join(settings.security["modeldb_private_zip_dir"], filename), "rb"
         ) as f:
             return f.read()
+
+    def zip_file_path(self):
+        """Returns the path to the zip file for streaming."""
+        filename = f"{self._model['id']}.zip"
+        return os.path.join(settings.security["modeldb_private_zip_dir"], filename)
 
     def zip(self):
         if self._zip is None:

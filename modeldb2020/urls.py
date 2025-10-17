@@ -215,6 +215,7 @@ urlpatterns = (
     + [
         path("change-password", views.change_password),
         path("admin/", admin.site.urls),
+        re_path(r"^data/(?P<path>.+)$", views.download_data, name="download_data"),
         path("<int:model_id>", views.showmodel, name="showmodel"),
     ]
 )

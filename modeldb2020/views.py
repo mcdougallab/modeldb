@@ -8,10 +8,11 @@ import heapq
 import collections
 import itertools
 import hashlib
+from pathlib import Path
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from urllib.parse import urlencode
-from django.http import HttpResponse
+from django.http import HttpResponse, FileResponse
 from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.views.decorators.clickjacking import xframe_options_sameorigin
@@ -1146,10 +1147,22 @@ def download_zip(request, model_id):
     if model is None:
         return HttpResponse("Forbidden", status=403)
     filename = f"{model_id}.zip"
-    response = HttpResponse(content_type="application/zip")
-    response["Content-Disposition"] = f"attachment; filename={filename}"
-    response.write(model.zip_file())
-    return response
+    
+    # Use FileResponse for efficient streaming of large zip files
+    try:
+        zip_path = model.zip_file_path()
+        response = FileResponse(
+            open(zip_path, "rb"),
+            content_type="application/zip"
+        )
+        response["Content-Disposition"] = f"attachment; filename={filename}"
+        
+        # Set Content-Length for better download progress indication
+        response["Content-Length"] = os.path.getsize(zip_path)
+        
+        return response
+    except (IOError, FileNotFoundError):
+        return HttpResponse("Error reading file", status=500)
 
 
 def _remap_src(model_id, match, base_filename):
@@ -1876,3 +1889,64 @@ def filelist(request, identifier):
     }
 
     return render(request, "filellist.html", context)
+
+
+def download_data(request, path):
+    """
+    Securely serve files from the modeldb-data directory.
+    
+    Prevents directory traversal attacks by:
+    1. Resolving the requested path relative to the modeldb-data directory
+    2. Ensuring the resolved path is within the modeldb-data directory
+    3. Rejecting paths that attempt to escape the directory
+    """
+    # Get the base directory from settings
+    data_dir = settings.security.get("modeldb-data")
+    
+    if not data_dir:
+        return HttpResponse("Data directory not configured", status=500)
+    
+    # Convert to Path objects for secure path handling
+    base_path = Path(data_dir).resolve()
+    
+    # Reject requests for root directory
+    if not path or path == "/":
+        return HttpResponse("Forbidden", status=403)
+    
+    # Clean up the path: remove leading/trailing slashes
+    path = path.strip("/")
+    
+    # Construct the full path
+    requested_path = (base_path / path).resolve()
+    
+    # Security check: ensure the resolved path is within the base directory
+    # This prevents directory traversal attacks (e.g., "../../../etc/passwd")
+    try:
+        requested_path.relative_to(base_path)
+    except ValueError:
+        # The requested path is outside the base directory
+        return HttpResponse("Forbidden", status=403)
+    
+    # Check if the file exists
+    if not requested_path.exists():
+        return HttpResponse("Not Found", status=404)
+    
+    # Only serve files, not directories
+    if not requested_path.is_file():
+        return HttpResponse("Forbidden", status=403)
+    
+    # Serve the file in chunks to handle large files efficiently
+    try:
+        # Get the filename for the Content-Disposition header
+        filename = requested_path.name
+        
+        response = FileResponse(
+            open(requested_path, "rb"),
+            content_type="application/octet-stream"
+        )
+        response["Content-Disposition"] = f"attachment; filename={filename}"
+        response["Content-Length"] = requested_path.stat().st_size
+        
+        return response
+    except IOError:
+        return HttpResponse("Error reading file", status=500)
