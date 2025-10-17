@@ -38,6 +38,7 @@ This repository is currently intended to be bootstrapped from the classic EAV/CR
   - `mongodb_user`
   - `mongodb_pw`
   - `db_name` -- set this to `modeldb` or whatever you called the database you wish to use.
+  - `modeldb-data` -- path to the folder where model data files are stored (historically this was used for large files; these are served via `/data` URLs)
   - `modeldb_zip_dir` 
   - `modeldb_private_zip_dir`
   - `unprocessed_refs_dir`
