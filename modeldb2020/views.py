@@ -55,10 +55,17 @@ hljs.registerLanguage('nmodl', function(hljs) {
       { className: 'comment', begin: '(:).*$\\n?' },
       {
         className: 'keyword',
-        begin: '\\\\b(COMMENT)\\\\b',
-        end: '(?=\\\\b(ENDCOMMENT)\\\\b)',
+        beginKeywords: 'COMMENT',
+        end: '\\\\bENDCOMMENT\\\\b',
+        excludeEnd: true,
+        relevance: 10,
         contains: [
-            { className: 'comment', begin: '.', endsWithParent: true }
+            { 
+              className: 'comment', 
+              begin: '(?<=COMMENT)',
+              end: '(?=\\\\bENDCOMMENT\\\\b)',
+              relevance: 0
+            }
         ]
       },
       {
