@@ -830,20 +830,6 @@ def search_redirect(request):
     return redirect(f"/search?{args}")
 
 
-def uri_cleanup_redirect(request, uri=None):
-    uri_lower = uri.lower()
-    if uri_lower[-5:] == ".html":
-        uri = uri[:-5]
-    elif uri_lower[-7:] == ".cshtml":
-        uri = uri[:-7]
-
-    args = urlencode(request.GET)
-    if not args:
-        return redirect(f"/{uri}")
-    else:
-        return redirect(f"/{uri}?{args}")
-
-
 def forget_access(request):
     model_id = request.GET.get("model", -1)
     request.session[model_id] = None

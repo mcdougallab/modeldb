@@ -35,30 +35,17 @@ urlpatterns = (
             "favicon.ico",
             RedirectView.as_view(url=staticfiles_storage.url("favicon.ico")),
         ),
-        re_path("^(?:modeldb/)?login$(?i)", views.my_login, name="login"),
+        re_path("^login$(?i)", views.my_login, name="login"),
         re_path(
-            r"^(?:modeldb/)?processmodelsubmit?(?:\.(?:cs)?html)?$(?i)",
+            r"^processmodelsubmit$(?i)",
             views.process_model_submit,
             name="processmodelsubmit",
         ),
         re_path(
-            r"^(?:modeldb/)?showmodel(?:\.(?:cs)?html)?(?:\.asp)?$(?i)",
+            r"^showmodel(?:\.asp)?$(?i)",
             views.showmodel_redirect,
             name="showmodel_redirect",
         ),
-        # NOTE: anything that uses POST should appear above here or the redirects may lose POST data
-        # these next two lines standardize the URIs: no modeldb/, no .cshtml or .html
-        re_path(
-            r"^modeldb/(?P<uri>.+)$(?i)",
-            views.uri_cleanup_redirect,
-            name="uri_cleanup_redirect",
-        ),
-        re_path(
-            r"^(?P<uri>.+)\.(?:cs)?html$(?i)",
-            views.uri_cleanup_redirect,
-            name="uri_cleanup_redirect",
-        ),
-        # back to regular paths
         re_path(r"^index$(?i)", views.index, name="index"),
         re_path("^logout$(?i)", views.my_logout, name="logout"),
         re_path(
