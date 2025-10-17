@@ -1697,8 +1697,8 @@ def findbysimulator(request):
 
     context = {
         "title": "ModelDB: Browse by simulation environment",
-        "counts": sorted(
-            counts_processed.values(), key=lambda item: item["name"].lower()
+        "datajson": json.dumps(
+            sorted(counts_processed.values(), key=lambda item: item["name"].lower())
         ),
         "header": "Find models by simulation environment",
         "subhead": "Click on a link to show a list of models implemented in that simulation environment or programming language.<br/>",

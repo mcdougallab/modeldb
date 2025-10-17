@@ -5,55 +5,64 @@
 .modellist>li {
     padding-top: 1em;
 }
-.resultstable td {
-    padding-right: 1em;
-}
-.resultstable th {
-    padding-right: 1em;
-}
 </style>
+<script>
+$(() => {
+    $('#simulatortable').bootstrapTable({
+        pagination: false,
+        search: true,
+        data: {{ datajson | safe}},
+        formatSearch: () => 'filter'
+    })
+});
+
+function hosted_link(value, row) {
+    if (row.hosted > 0) {
+        return `<a href="/modellist/${row.id}">${row.hosted}</a>`;
+    }
+    return '0';
+}
+
+function link_link(value, row) {
+    if (row.link > 0) {
+        return `<a href="/modellist/${row.linkid}">${row.link}</a>`;
+    }
+    return '0';
+}
+
+function total_link(value, row) {
+    if (row.hosted > 0 || row.link > 0) {
+        const id = row.id || row.linkid;
+        return `<a href="/modellist/${id}?all_simu=true">${row.total}</a>`;
+    }
+    return row.total;
+}
+</script>
 {% endblock %}
+
 {% block content %}
 <div class="row">
-        <div class="col-lg-12">
-<center><h3>{{header}}</h3>{{subhead|safe}}</center>
-<br><br>
-<table class="resultstable">
-    <tr>
-        <th>Simulation Environment</th>
-        <th>Hosted</th>
-        <th>Links</th>
-        <th>Total</th>
-    </tr>
-    {% for item in counts %}
-        <tr class="{% cycle "lightgray" "" %}">
-            <td>
-                {{item.name}}
-            </td>
-            <td>
-                {% if item.hosted %}
-                    <a href="/modellist/{{item.id}}">{{item.hosted}}</a>
-                {% else %}
-                    0
-                {% endif %}
-            </td>
-            <td>
-                {% if item.link %}
-                    <a href="/modellist/{{item.linkid}}">{{item.link}}</a>
-                {% else %}
-                    0
-                {% endif %}
-            </td>
-            <td>
-                {% if item.hosted or item.link %}
-                    <a href="/modellist/{% firstof item.id item.linkid %}?all_simu=true">{{item.total}}</a>
-                {% else %}
-                    {{item.total}}
-                {% endif %}
-            </td>
-        </tr>
-    {% endfor %}
-</table>
-</div>
+    <div class="col-lg-12">
+        <center><h3>{{header}}</h3>{{subhead|safe}}</center>
+        <br><br>
+        <table id="simulatortable" data-toggle="simulatortable">
+            <thead>
+                <tr>
+                    <th data-sortable="true" data-field="name">
+                        Simulation Environment
+                    </th>
+                    <th data-sortable="true" data-field="hosted" data-formatter="hosted_link">
+                        Hosted
+                    </th>
+                    <th data-sortable="true" data-field="link" data-formatter="link_link">
+                        Links
+                    </th>
+                    <th data-sortable="true" data-field="total" data-formatter="total_link">
+                        Total
+                    </th>
+                </tr>
+            </thead>
+        </table>
+    </div>
 </div>
 {% endblock %}
