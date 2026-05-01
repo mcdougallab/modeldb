@@ -565,9 +565,10 @@ class ModelDB(models.Model):
         global _refresh_thread
         private_model = self.private_model(model_id)._model
         new_model = dict(private_model)
-        del new_model["data_to_curate"]
-        new_model["_citation_text"] = private_model["data_to_curate"].get("citation")
-        new_model["_implementers_text"] = private_model["data_to_curate"].get(
+        if "data_to_curate" in new_model:
+            del new_model["data_to_curate"]
+        new_model["_citation_text"] = private_model.get("data_to_curate", {}).get("citation")
+        new_model["_implementers_text"] = private_model.get("data_to_curate", {}).get(
             "implementers"
         )
         sdb.private_models.delete_one(private_model)
