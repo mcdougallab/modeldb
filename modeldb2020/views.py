@@ -1197,6 +1197,27 @@ def _remap_img(model_id, match, base_filename):
         return f"![{alt_text}](/getmodelfile?model={model_id}&file={base_filename}{relative_name})"
 
 
+def _remap_md_link(model_id, match, base_filename):
+    src = match.group()
+    link_text, relative_name = re.findall(r"\[(.*?)\]\((.*?)\)", src)[0]
+
+    if (
+        relative_name.lower().startswith("http://")
+        or relative_name.lower().startswith("//")
+        or relative_name.lower().startswith("https://")
+        or relative_name.lower().startswith("/")
+    ):
+        # if there is a reference to senselab, make it relative to this server,
+        # else do nothing because it's a full path or absolute path
+        relative_name = re.sub(
+            r"(?i)(https?:)?//senselab\.med\.yale\.edu/", "/", relative_name
+        )
+        return f"[{link_text}]({relative_name})"
+    else:
+        full_path = f"{base_filename}{relative_name}"
+        return f"[{link_text}](/{model_id}?tab=2&file={urllib.parse.quote(full_path)})"
+
+
 def _remap_href(model_id, match, base_filename):
     match_text = match.group()
     src = match_text[6:-1]
@@ -1208,6 +1229,12 @@ def _remap_href(model_id, match, base_filename):
     ):
         # TODO: we probably don't want this at all, but not clear what it's trying to do
         src = re.sub(r"(?i)(https?:)?//senselab\.med\.yale\.edu/", "/", src)
+    elif not src_lower.startswith("/"):
+        # Handle local links
+        while base_filename.startswith("/"):
+            base_filename = base_filename[1:]
+        full_path = f"{base_filename}{src}".replace("/./", "/").replace("//", "/")
+        src = f"/{model_id}?tab=2&file={urllib.parse.quote(full_path)}"
     return f'href="{src}"'
 
 
@@ -1387,10 +1414,18 @@ def download(request):
 
                     """
                 elif extension == "md":
+                    contents = contents.decode("utf-8")
+                    # Remap markdown images
                     contents = re.sub(
                         r"(!\[(.*?)\]\((.*?)\))",
                         lambda match: _remap_img(model_id, match, base_filename),
-                        contents.decode("utf-8"),
+                        contents,
+                    )
+                    # Remap markdown links (but not images which start with !)
+                    contents = re.sub(
+                        r"(?<!!)\[(.*?)\]\((.*?)\)",
+                        lambda match: _remap_md_link(model_id, match, base_filename),
+                        contents,
                     )
                     contents = f"""
 
