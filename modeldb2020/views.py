@@ -1432,6 +1432,12 @@ def download(request):
                     <!DOCTYPE html>
                     <head>
                     <base target="_parent">
+                    <style>
+                        img {{
+                            max-width: 100%;
+                            height: auto;
+                        }}
+                    </style>
                     </head>
                     <body>
                         <div class="readme-content" id="readme-content">{contents}</div>
