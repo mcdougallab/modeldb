@@ -983,6 +983,8 @@ def showmodel(request, model_id):
         elif tab_id == 2 and filename is None:
             filename = model.readme_file
             filename = filename.replace("\\", "/").strip("/").split("/")[0]
+        else:
+            filename = filename.replace("\\", "/")
 
         original_file_valid = model.has_path(filename)
         if not original_file_valid:
@@ -1438,6 +1440,7 @@ def download(request):
                             height: auto;
                         }}
                     </style>
+
                     </head>
                     <body>
                         <div class="readme-content" id="readme-content">{contents}</div>
