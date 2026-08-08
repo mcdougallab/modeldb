@@ -92,6 +92,41 @@ This repository is currently intended to be bootstrapped from the classic EAV/CR
 - wsgi.py needs the correct name of the settings module... e.g. if you put it in `Project` instead of `modeldb2020`, you should
   change `modeldb2020.settings` to `Project.settings`
  - the settings file may need the full path to `TEMPLATES["DIRS"]`
+- To prevent being overwhelmed by bots, enable cacheing. First, in `httpd.conf` be sure you have a `LoadModule` for `cache_module` and `cache_disk_module` then do:
+  ```
+    <IfModule cache_module>
+      <IfModule cache_disk_module>
+          CacheRoot "/opt/bitnami/apache2/var/cache"
+          CacheEnable disk "/getModelFile"
+          CacheEnable disk "/getModelFileExplanation"
+          CacheEnable disk "/citations"
+          CacheEnable disk "/1"
+          CacheEnable disk "/2"
+          CacheEnable disk "/3"
+          CacheEnable disk "/4"
+          CacheEnable disk "/5"
+          CacheEnable disk "/6"
+          CacheEnable disk "/7"
+          CacheEnable disk "/8"
+          CacheEnable disk "/9"
+
+          CacheDirLevels 2
+          CacheDirLength 1
+          CacheIgnoreNoLastMod On
+          CacheDefaultExpire 86400
+          CacheMaxExpire 86400
+
+          # --- CONDITION: DO NOT CACHE LOGGED-IN USERS ---
+          # 1. If an Authorization header is present (API tokens, basic auth)
+          CacheIgnoreHeaders Authorization
+
+          # 2. Prevent caching if a session or login cookie exists.
+          # (Replace 'sessionid' or 'csrftoken' with the actual cookie name Django uses)
+          SetEnvIf Cookie "sessionid=" no_cache=1
+          SetEnvIf Cookie "csrftoken=" no_cache=1
+      </IfModule>
+  </IfModule>
+  ```
 
 ## on Analysis
 The `analysis` folder contains scripts for analyzing ModelDB in ways that may
