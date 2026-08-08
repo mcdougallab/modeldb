@@ -11,7 +11,7 @@ import hashlib
 from pathlib import Path
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from urllib.parse import urlencode
+from urllib.parse import parse_qs, unquote, urlencode, urlparse
 from django.http import HttpResponse, FileResponse
 from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
@@ -717,16 +717,28 @@ def my_logout(request):
 
 
 def my_login(request):
+    def _normalize_next(next_url):
+        current = next_url or "/"
+        for _ in range(10):
+            parsed = urlparse(current)
+            if parsed.path.rstrip("/") != "/login":
+                return current
+            nested_next = parse_qs(parsed.query).get("next", [None])[0]
+            if not nested_next:
+                return "/"
+            current = unquote(nested_next)
+        return "/"
+
     username = request.POST.get("username")
     password = request.POST.get("password")
     if password is not None:
         user = authenticate(username=username, password=password)
-        next_url = request.POST.get("next", "/")
+        next_url = _normalize_next(request.POST.get("next", "/"))
         if user is not None:
             login(request, user)
             return redirect(next_url)
     else:
-        next_url = request.GET.get("next", "/")
+        next_url = _normalize_next(request.GET.get("next", "/"))
     context = {"next": next_url}
     # context.update(base_context)
     return render(request, "login.html", context)

@@ -165,7 +165,11 @@
                 </li>
             {% else %}
                 <li class="nav-item">
-                    <a class="nav-link" href="/login?next={{request.get_full_path | urlencode}}">Login</a>
+                    {% if request.path == "/login" %}
+                        <a class="nav-link" href="{{ request.get_full_path }}">Login</a>
+                    {% else %}
+                        <a class="nav-link" href="/login?next={{request.get_full_path | urlencode}}">Login</a>
+                    {% endif %}
                 </li>
             {% endif %}
 
