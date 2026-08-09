@@ -1300,7 +1300,6 @@ class Paper:
     def id(self):
         return self._id
 
-    @property
     def models(self):
         # print(self._id, models_by_paper.keys())
         if int(self._id) in models_by_paper:
