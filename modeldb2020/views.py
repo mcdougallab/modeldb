@@ -1137,7 +1137,11 @@ def _prep_citations(papers):
         tmp_sorted_list = sorted(reference_group, key=paper_sort_rule)
         sorted_references.append(tmp_sorted_list)
     # citations = [[paper.html for paper in model_paper.citations] for model_paper in papers]
-    citations = [[paper for paper in model_paper.citations] for model_paper in papers]
+    citations = [
+        [paper for paper in model_paper.citations] 
+        for model_paper in papers
+        if model_paper is not None and getattr(model_paper, 'citations', None) is not None
+    ]
     sorted_citations = []
     for citation_group in citations:
         # tmp_sorted_list=sorted(citation_group, key=lambda item: item.authors+[item.year])
