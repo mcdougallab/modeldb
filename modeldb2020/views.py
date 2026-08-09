@@ -1098,9 +1098,6 @@ def showmodel(request, model_id):
         elif tab_id == 2 and context["show_tab_2"] is False:
             return HttpResponse("404 not found", status=404)
         else:
-            print("modeling application", model.modeling_application)
-            print("filename", filename)
-
             return render(request, "showmodel.html", context)
 
 
