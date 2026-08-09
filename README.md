@@ -109,6 +109,7 @@ This repository is currently intended to be bootstrapped from the classic EAV/CR
           CacheEnable disk "/7"
           CacheEnable disk "/8"
           CacheEnable disk "/9"
+          CacheEnable disk "/robots.txt"
 
           CacheDirLevels 2
           CacheDirLength 1

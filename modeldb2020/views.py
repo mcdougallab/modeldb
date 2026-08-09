@@ -482,6 +482,13 @@ def static(request, page="", title=""):
     return render(request, f"{page}.html", context)
 
 
+def robots_txt(request):
+    return HttpResponse(
+        "User-agent: *\nDisallow: /search\nDisallow: /login\n",
+        content_type="text/plain",
+    )
+
+
 def cookie_accept(request):
     request.session["cookieaccepted"] = True
     return HttpResponse("ok")
@@ -1120,7 +1127,11 @@ def mdbcitations(request, paper_id):
 
 
 def _prep_citations(papers):
-    references = [[paper for paper in model_paper.references] for model_paper in papers]
+    references = [
+        [paper for paper in model_paper.references] 
+        for model_paper in papers 
+        if model_paper is not None and getattr(model_paper, 'references', None) is not None
+    ]
     sorted_references = []
     for reference_group in references:
         tmp_sorted_list = sorted(reference_group, key=paper_sort_rule)

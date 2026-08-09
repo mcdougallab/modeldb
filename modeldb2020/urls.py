@@ -30,6 +30,7 @@ except ImportError:
 urlpatterns = (
     [
         path("", views.index, name="index"),
+        path("robots.txt", views.robots_txt, name="robots_txt"),
         path("cookieaccept", views.cookie_accept, name="cookieaccept"),
         path(
             "favicon.ico",
